@@ -9,24 +9,6 @@
 > - **Bùi Đức Huy** - Thành viên  
 > - **Trương Quốc Duy** - MSSV: 24133009 (Thành viên)  
 
----
-
-## 🏆 ĐÁP ỨNG ĐẦY ĐỦ 100% YÊU CẦU ĐỒ ÁN (CHECKLIST)
-
-| Yêu Cầu Từ Giảng Viên (Slide) | Trạng Thái | Minh Chứng & Cách Triển Khai Trong Đồ Án |
-| :--- | :---: | :--- |
-| **1. Kích thước Dataset $\ge$ 5,000 dòng** | ✅ Đạt | Bộ dữ liệu IBM Telco Customer Churn gồm **7,043 dòng** thực tế. |
-| **2. Cấu trúc nhiều bảng (Join/Merge)** | ✅ Đạt | Phân rã thành **4 bảng quan hệ**: `telco_demographics.csv`, `telco_services.csv`, `telco_contracts.csv`, `telco_churn_status.csv` và thực hiện **Inner Join** theo `customerID`. |
-| **3. Quy trình tiền xử lý (Pipeline Python)** | ✅ Đạt | File `src/data_pipeline.py` tự động xử lý 11 missing values ở `TotalCharges`, kiểm định ngoại lai IQR và tạo 6 calculated fields mới. |
-| **4. Khám phá dữ liệu tĩnh (EDA)** | ✅ Đạt | File `src/eda_analysis.py` sinh **10 biểu đồ tĩnh** chất lượng cao (300 DPI) bằng Matplotlib & Seaborn tại `reports/figures/`. |
-| **5. Công cụ Dashboard bắt buộc** | ✅ Đạt | Xây dựng ứng dụng Web tương tác hiện đại bằng **Streamlit + Plotly** tại `src/app.py`. |
-| **6. Tính năng lọc & Drill-Down** | ✅ Đạt | Sidebar với 7 bộ lọc đa chiều; Tab 5 hỗ trợ **Drill-down hồ sơ 360 độ** của từng khách hàng và xuất file CSV. |
-| **7. Tối thiểu 8 loại biểu đồ + 1 Bản đồ** | ✅ Đạt | Dashboard tích hợp **10+ loại biểu đồ**: *Donut Chart, Bar Chart, Histogram/Density, Boxplot, US Geographic Map, Treemap, Scatter Plot, Correlation Heatmap, Grouped Bar, Line Trend*. |
-| **8. Mô hình dự báo Hồi quy Logistic** | ✅ Đạt | File `src/model_training.py` huấn luyện mô hình Logistic Regression đạt **Accuracy 80.77%, ROC-AUC 0.8421**, phân tích Odds Ratio và tích hợp **What-If Simulator** thời gian thực. |
-| **9. Cấu trúc Báo cáo chuẩn IEEE (7 mục)** | ✅ Đạt | Đã biên soạn đầy đủ file Word `reports/BAO_CAO_DO_AN_NHOM_22.docx` (dung lượng dày dặn chuẩn học thuật với 14 hình ảnh minh họa) và file Markdown `reports/BAO_CAO_DO_AN_NHOM_22.md`. |
-
----
-
 ## 📂 CẤU TRÚC THƯ MỤC DỰ ÁN
 
 ```text
@@ -129,27 +111,17 @@ py reports/generate_report_doc.py
 
 ---
 
-## 📑 BÁO CÁO KHOA HỌC CHUẨN IEEE (7 MỤC BẮT BUỘC)
+## 📑 BÁO CÁO KHOA HỌC  (7 MỤC BẮT BUỘC)
 
 Báo cáo được trình bày chi tiết trong 2 định dạng:
 - **Tài liệu Word chính thức:** [`reports/BAO_CAO_DO_AN_NHOM_22.docx`](reports/BAO_CAO_DO_AN_NHOM_22.docx)
 - **Tài liệu Markdown:** [`reports/BAO_CAO_DO_AN_NHOM_22.md`](reports/BAO_CAO_DO_AN_NHOM_22.md)
 
-### Tóm tắt 7 mục nội dung:
-1. **Giới thiệu đề tài & Mô tả tập dữ liệu:** Bối cảnh ngành viễn thông, mục tiêu, nguồn Kaggle/IBM, ERD 4 bảng liên kết và từ điển dữ liệu.
-2. **Quy trình tiền xử lý & Khám phá dữ liệu (EDA):** Pipeline ETL, xử lý missing value `TotalCharges`, kiểm định ngoại lai IQR, 6 trường tính toán mới (Calculated Fields) và 10 biểu đồ tĩnh EDA.
-3. **Thiết kế Dashboard:** Kiến trúc Streamlit + Plotly, Wireframe UI/UX, sơ đồ luồng tương tác, phân tích 10+ biểu đồ và cơ chế Drill-Down 360 độ.
-4. **Khai phá Insight (Storytelling):** Câu chuyện 3 chương về Churn, "Nghịch lý cáp quang Fiber Optic", chân dung khách hàng rủi ro cao và 4 chiến lược giữ chân khách hàng.
-5. **Mô hình dự báo (Logistic Regression):** Cơ sở toán học Sigmoid/Logit, chuẩn hóa dữ liệu, kết quả thực nghiệm (Accuracy 80.77%, ROC-AUC 0.8421), phân tích trọng số và Odds Ratio.
-6. **Hướng dẫn cài đặt/sử dụng & Link Video Demo:** Kịch bản phân cảnh 5 phút, timeline và các đường link video/code.
-7. **Kết luận & Tham khảo:** Đánh giá đóng góp, hạn chế, hướng mở rộng và 18+ tài liệu tham khảo chuẩn IEEE.
-
----
 
 ## 🎥 ĐƯỜNG DẪN LIÊN KẾT & VIDEO DEMO
-- **Video Demo chính thức:** [https://youtu.be/demo-telco-churn-nhom22](https://youtu.be/demo-telco-churn-nhom22)
-- **Google Drive Backup:** [https://drive.google.com/drive/folders/nhom22-telco-churn-backup](https://drive.google.com/drive/folders/nhom22-telco-churn-backup)
-- **GitHub Repository:** [https://github.com/24133009-ops/Telco-Customer-Churn-Visualization-Nhóm22](https://github.com/24133009-ops/Telco-Customer-Churn-Visualization-Nhóm22)
+- **Video Demo chính thức:** 
+- **Google Drive Backup:** 
+- **GitHub Repository:** 
 
 ---
 *© 2026 Nhóm 22 - Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE).*
