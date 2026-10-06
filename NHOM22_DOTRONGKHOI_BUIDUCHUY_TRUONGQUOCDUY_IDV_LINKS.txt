@@ -51,6 +51,6 @@ $ streamlit run src/app.py
 (Truy cập trên trình duyệt web tại địa chỉ: http://localhost:8501)
 
 ================================================================================
-Kính chúc Quý Thầy/Cô nhiều sức khỏe và công tác tốt!
+Kính chúc Quý Thầy nhiều sức khỏe và công tác tốt!
 Nhóm 22 xin trân trọng cảm ơn!
 ================================================================================
