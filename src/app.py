@@ -17,6 +17,7 @@ try:
 except Exception:
     pass
 
+import base64
 import joblib
 import numpy as np
 import pandas as pd
@@ -32,31 +33,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Logo SVG HCMUTE chính thức (Vector sắc nét)
-HCMUTE_LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4)); flex-shrink: 0;">
-  <defs>
-    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0054A6"/>
-      <stop offset="100%" stop-color="#002D62"/>
-    </linearGradient>
-    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF5722"/>
-      <stop offset="100%" stop-color="#D32F2F"/>
-    </linearGradient>
-    <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFD54F"/>
-      <stop offset="100%" stop-color="#FFA000"/>
-    </linearGradient>
-  </defs>
-  <circle cx="50" cy="50" r="48" fill="url(#blueGrad)" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="50" cy="50" r="42" fill="none" stroke="#FFD54F" stroke-width="1.2" stroke-dasharray="3,2"/>
-  <path d="M50,22 L52,28 L57,26 L57,32 L62,31 L61,37 L66,38 L63,43 L68,46 L64,50 L68,54 L63,57 L66,62 L61,63 L62,69 L57,68 L57,74 L52,72 L50,78 L48,72 L43,74 L43,68 L38,69 L39,63 L34,62 L37,57 L32,54 L36,50 L32,46 L37,43 L34,38 L39,37 L38,31 L43,32 L43,26 L48,28 Z" fill="url(#gearGrad)" opacity="0.4"/>
-  <path d="M30,58 Q50,66 70,58 L70,62 Q50,70 30,62 Z" fill="#FFFFFF"/>
-  <path d="M30,53 Q50,61 70,53 L70,57 Q50,65 30,57 Z" fill="#E2E8F0"/>
-  <path d="M50,26 Q56,38 50,48 Q44,38 50,26 Z" fill="url(#flameGrad)"/>
-  <path d="M50,32 Q53,39 50,46 Q47,39 50,32 Z" fill="#FFE082"/>
-  <text x="50" y="86" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="8.5" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HCMUTE</text>
-</svg>"""
+# Đọc Logo chính thức Trường ĐH Sư Phạm Kỹ Thuật TP.HCM (HCMUTE)
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute.png")
+if os.path.exists(LOGO_PATH):
+    with open(LOGO_PATH, "rb") as _f:
+        _b64 = base64.b64encode(_f.read()).decode("utf-8")
+        HCMUTE_LOGO_HTML = f'<img src="data:image/png;base64,{_b64}" style="height: 50px; width: 50px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); flex-shrink: 0;" alt="HCMUTE Logo" />'
+else:
+    HCMUTE_LOGO_HTML = '<div style="width:48px;height:48px;border-radius:50%;background:#004B91;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;">HCMUTE</div>'
 
 # Custom CSS giao diện Dashboard
 st.markdown("""
@@ -68,82 +52,88 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Top Institutional Navbar (HCMUTE Brand Blue - Chuẩn nhận diện trường) */
-    .uni-navbar {
-        background: linear-gradient(135deg, #07386d 0%, #0d47a1 50%, #1565c0 100%);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 14px;
-        padding: 16px 22px;
-        margin-bottom: 18px;
-        box-shadow: 0 10px 25px -5px rgba(13, 71, 161, 0.35);
+    /* Tối ưu layout tràn viền không bị khoảng trắng trên cùng */
+    .block-container {
+        padding-top: 0rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        max-width: 100% !important;
+    }
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        height: 0px !important;
+    }
+
+    /* Top Institutional Navbar Full-Width (Chuẩn nhận diện trường HCMUTE như mẫu) */
+    .uni-navbar-full {
+        background: linear-gradient(90deg, #07386d 0%, #0c56b3 50%, #1565c0 100%);
+        padding: 12px 28px;
+        margin: -1rem -1.5rem 18px -1.5rem;
+        box-shadow: 0 4px 18px rgba(7, 56, 109, 0.45);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
         flex-wrap: wrap;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     }
-    .uni-left {
+    .uni-brand-group {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 14px;
         flex-wrap: wrap;
     }
-    .uni-logo-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .uni-title-box {
+    .uni-text-col {
         display: flex;
         flex-direction: column;
     }
-    .uni-name {
-        font-size: 1.05rem;
+    .uni-sub-label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+    .uni-main-title {
+        font-size: 1.15rem;
         font-weight: 800;
         color: #FFFFFF;
         letter-spacing: 0.02em;
         text-transform: uppercase;
         line-height: 1.25;
     }
-    .uni-faculty {
-        font-size: 0.78rem;
-        color: #BFDBFE;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        margin-top: 3px;
-    }
-    .uni-divider {
-        width: 1px;
+    .uni-v-divider {
+        width: 1.5px;
         height: 38px;
-        background: rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.3);
+        margin: 0 6px;
     }
-    .uni-lab-box {
-        display: flex;
-        flex-direction: column;
-    }
-    .uni-lab-name {
-        font-size: 1.02rem;
+    .lab-main-title {
+        font-size: 1.15rem;
         font-weight: 800;
         color: #FFFFFF;
         letter-spacing: 0.04em;
         line-height: 1.25;
     }
-    .uni-lab-desc {
-        font-size: 0.78rem;
+    .lab-sub-title {
+        font-size: 0.72rem;
         color: #93C5FD;
         font-weight: 600;
-        margin-top: 3px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        line-height: 1.2;
     }
-    .uni-right {
+    .uni-badge-group {
         display: flex;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
     }
-    .uni-badge {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.22);
+    .uni-pill {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: 20px;
         padding: 6px 14px;
         font-size: 0.78rem;
@@ -152,7 +142,7 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(10px);
     }
 
     /* Container Header */
@@ -595,11 +585,11 @@ model_bundle = load_model()
 with st.sidebar:
     st.markdown(f"""
     <div class="sidebar-brand">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
-            {HCMUTE_LOGO_SVG}
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+            {HCMUTE_LOGO_HTML}
             <div style="text-align: left;">
-                <div style="font-size: 0.85rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.05em;">HCMUTE</div>
-                <div style="font-size: 0.7rem; color: #93C5FD; font-weight: 600;">KHOA CNTT • IDV LAB</div>
+                <div style="font-size: 0.9rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.03em;">HCMUTE</div>
+                <div style="font-size: 0.68rem; color: #93C5FD; font-weight: 600;">KHOA CNTT • IDV LAB</div>
             </div>
         </div>
         <div class="brand-title">📡 DỰ BÁO CUSTOMER CHURN</div>
@@ -704,40 +694,29 @@ filtered_df = filtered_df[
 ]
 
 # ==============================================================================
-# PHẦN HEADER ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE) & HERO BANNER
+# PHẦN HEADER ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE) & TELCO CHURN LAB
 # ==============================================================================
 st.markdown(f"""
-<div class="uni-navbar">
-    <div class="uni-left">
-        <div class="uni-logo-box">
-            {HCMUTE_LOGO_SVG}
+<div class="uni-navbar-full">
+    <div class="uni-brand-group">
+        {HCMUTE_LOGO_HTML}
+        <div class="uni-text-col">
+            <span class="uni-sub-label">TRƯỜNG ĐẠI HỌC</span>
+            <span class="uni-main-title">SƯ PHẠM KỸ THUẬT TP. HỒ CHÍ MINH</span>
         </div>
-        <div class="uni-title-box">
-            <span class="uni-name">TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP. HỒ CHÍ MINH</span>
-            <span class="uni-faculty">KHOA CÔNG NGHỆ THÔNG TIN • BỘ MÔN KỸ THUẬT DỮ LIỆU & TRÍ TUỆ NHÂN TẠO</span>
-        </div>
-        <div class="uni-divider"></div>
-        <div class="uni-lab-box">
-            <span class="uni-lab-name">TELCO ANALYTICS LAB</span>
-            <span class="uni-lab-desc">HỆ THỐNG TRỰC QUAN HÓA & DỰ BÁO CUSTOMER CHURN (IDV)</span>
+        <div class="uni-v-divider"></div>
+        <div class="uni-text-col">
+            <span class="lab-main-title">TELCO CHURN LAB</span>
+            <span class="lab-sub-title">PHÂN TÍCH & DỰ BÁO DỮ LIỆU RỜI MẠNG (IDV)</span>
         </div>
     </div>
-    <div class="uni-right">
-        <div class="uni-badge">
+    <div class="uni-badge-group">
+        <div class="uni-pill">
             <span>📅 PHẠM VI DỮ LIỆU: 50 TIỂU BANG ({len(df_raw):,} KH)</span>
         </div>
-        <div class="uni-badge" style="background: rgba(99, 102, 241, 0.25); border-color: rgba(99, 102, 241, 0.45);">
+        <div class="uni-pill" style="background: rgba(255, 255, 255, 0.22); font-weight: 700;">
             <span>👥 NHÓM 22 - HCMUTE</span>
         </div>
-    </div>
-</div>
-
-<div class="hero-header">
-    <h1 class="hero-title">
-        <span>📡 Bảng Điều Khiển Trực Quan Hóa & Dự Báo Customer Churn Viễn Thông</span>
-    </h1>
-    <div class="hero-subtitle">
-        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | <b>Trường ĐH Sư Phạm Kỹ Thuật TP.HCM</b> | <b>Nhóm 22:</b> Đỗ Trọng Khôi (20133056) • Bùi Đức Huy (24133021) • Trương Quốc Duy (24133009)
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1011,22 +990,23 @@ with tab_geo:
         col_main_map, col_side_charts = st.columns([1.35, 1])
 
         with col_main_map:
-            # Bảng điều khiển góc nhìn Bản đồ: Địa cầu vs Bản đồ phẳng
-            ctrl_col1, ctrl_col2 = st.columns([1.3, 1])
+            # Bảng điều khiển góc nhìn Bản đồ: Địa cầu vs Bản đồ phẳng (Chuẩn style nút bấm)
+            ctrl_col1, ctrl_col2 = st.columns([1.2, 1])
             with ctrl_col1:
                 map_proj_mode = st.segmented_control(
-                    "Góc nhìn trực quan:",
-                    options=["🌐 Địa cầu 3D", "🗺️ Bản đồ phẳng", "📍 Tọa độ điểm"],
-                    default="🌐 Địa cầu 3D",
-                    help="Chọn chế độ hiển thị: Quả địa cầu 3D (Orthographic) xoay tương tác hoặc Bản đồ phẳng 50 bang."
+                    "Chế độ hiển thị:",
+                    options=["Địa cầu", "Bản đồ phẳng"],
+                    default="Địa cầu",
+                    label_visibility="collapsed"
                 )
                 if not map_proj_mode:
-                    map_proj_mode = "🌐 Địa cầu 3D"
+                    map_proj_mode = "Địa cầu"
             with ctrl_col2:
                 metric_geo_choice = st.selectbox(
                     "Chỉ số thể hiện:",
                     ["Tỷ lệ Churn (%)", "Quy mô Khách hàng", "Cước phí TB ($)", "Tổng Doanh thu CLV ($)"],
-                    index=0
+                    index=0,
+                    label_visibility="collapsed"
                 )
 
             # Map settings mapping
@@ -1038,8 +1018,8 @@ with tab_geo:
             }
             m_cfg = metric_configs[metric_geo_choice]
 
-            if map_proj_mode == "🌐 Địa cầu 3D":
-                # Render Quả địa cầu 3D (Orthographic Projection - Giống hệ thống đối chiếu)
+            if map_proj_mode == "Địa cầu":
+                # Render Quả địa cầu 3D (Orthographic Projection - Full Sphere Centered, No White Box)
                 fig_map = go.Figure(
                     go.Choropleth(
                         locations=state_agg['StateCode'],
@@ -1054,7 +1034,7 @@ with tab_geo:
                             orientation="h",
                             x=0.5,
                             xanchor="center",
-                            y=-0.08,
+                            y=-0.12,
                             len=0.75,
                             thickness=12,
                             tickfont=dict(color="#CBD5E1", size=10)
@@ -1071,6 +1051,8 @@ with tab_geo:
                 )
                 fig_map.update_geos(
                     projection_type="orthographic",
+                    projection_rotation=dict(lon=-98, lat=38, roll=0),
+                    bgcolor="rgba(0,0,0,0)",
                     showocean=True,
                     oceancolor="#0A192F",
                     showland=True,
@@ -1080,18 +1062,18 @@ with tab_geo:
                     showlakes=True,
                     lakecolor="#0A192F",
                     showsubunits=True,
-                    subunitcolor="rgba(255, 255, 255, 0.3)",
-                    center=dict(lat=38, lon=-97)
+                    subunitcolor="rgba(255, 255, 255, 0.3)"
                 )
                 fig_map.update_layout(
-                    height=510,
-                    margin=dict(l=0, r=0, t=10, b=40),
+                    height=480,
+                    margin=dict(l=10, r=10, t=10, b=50),
                     paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
                     dragmode="orbit"
                 )
                 st.plotly_chart(fig_map, use_container_width=True)
 
-            elif map_proj_mode == "🗺️ Bản đồ phẳng":
+            else:
                 # Render Bản đồ phẳng 2D 50 tiểu bang Hoa Kỳ
                 fig_map = px.choropleth(
                     state_agg,
@@ -1118,55 +1100,12 @@ with tab_geo:
                         showlakes=True,
                         subunitcolor='rgba(255, 255, 255, 0.3)'
                     ),
-                    height=510,
-                    margin=dict(l=0, r=0, t=10, b=10),
+                    height=480,
+                    margin=dict(l=10, r=10, t=10, b=10),
                     paper_bgcolor='rgba(0,0,0,0)'
                 )
                 st.plotly_chart(fig_map, use_container_width=True)
 
-            else:
-                # Render Bản đồ Điểm Tọa độ Khách Hàng (Scatter Geo)
-                city_cols = [c for c in ['State', 'StateName', 'StateCode', 'City'] if c in filtered_df.columns]
-                city_geo = filtered_df.groupby(city_cols, as_index=False).agg(
-                    Lat=('Latitude', 'mean'),
-                    Lon=('Longitude', 'mean'),
-                    Total=('customerID', 'count'),
-                    Churned=('ChurnNumeric', 'sum'),
-                    AvgMonthly=('MonthlyCharges', 'mean')
-                )
-                city_geo['ChurnRate'] = (city_geo['Churned'] / city_geo['Total'] * 100).round(1)
-
-                fig_map = px.scatter_geo(
-                    city_geo,
-                    lat='Lat',
-                    lon='Lon',
-                    size='Total',
-                    color='ChurnRate',
-                    hover_name='City',
-                    hover_data={
-                        'State': True,
-                        'StateCode': True,
-                        'Total': ':,',
-                        'Churned': ':,',
-                        'ChurnRate': ':.1f%',
-                        'AvgMonthly': ':.2f$'
-                    },
-                    color_continuous_scale='Reds',
-                    scope='usa',
-                    size_max=28
-                )
-                fig_map.update_layout(
-                    geo=dict(
-                        bgcolor='rgba(0,0,0,0)',
-                        lakecolor='rgba(15, 23, 42, 0.4)',
-                        showlakes=True,
-                        subunitcolor='rgba(255, 255, 255, 0.2)'
-                    ),
-                    height=510,
-                    margin=dict(l=0, r=0, t=10, b=10),
-                    paper_bgcolor='rgba(0,0,0,0)'
-                )
-                st.plotly_chart(fig_map, use_container_width=True)
 
             # Thanh chú thích độ chênh lệch bên dưới bản đồ
             st.markdown("""
