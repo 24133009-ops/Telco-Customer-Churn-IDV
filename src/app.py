@@ -1366,16 +1366,7 @@ elif "3." in nav_choice or "Dự báo AI" in nav_choice:
             </div>
             """, unsafe_allow_html=True)
 
-            trend_df = filtered_df.groupby('TenureGroup', observed=True)['ChurnNumeric'].mean().reset_index()
-            trend_df['ChurnPct'] = (trend_df['ChurnNumeric'] * 100).round(1)
 
-            st.markdown("""
-            <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px; font-size: 0.82rem; color: #CBD5E1; line-height: 1.6;">
-                <b>Đánh giá Data Scientist:</b><br>
-                - Mô hình Logistic Regression đạt chuẩn phân loại tốt (ROC-AUC > 0.84), cân bằng tối ưu giữa việc tránh bỏ sót khách Churn (Recall) và duy trì độ chính xác (Precision).<br>
-                - Biến <code>TotalServicesSubscribed</code> và <code>Contract_Two year</code> có tác dụng triệt tiêu nguy cơ rời bỏ mạnh nhất.
-            </div>
-            """, unsafe_allow_html=True)
 
     # WHAT-IF REAL-TIME SIMULATOR & GAUGE CHART (HERO CHART 7)
     st.markdown("---")
