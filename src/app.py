@@ -499,6 +499,100 @@ st.markdown("""
         color: #FFFFFF !important;
         font-weight: 700 !important;
     }
+
+    /* Executive Financial Impact Banner */
+    .exec-financial-banner {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.88) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        border-left: 5px solid #EF4444;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-top: 16px;
+        margin-bottom: 22px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    }
+    .exec-financial-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+    }
+    .exec-financial-title {
+        font-size: 0.96rem;
+        font-weight: 800;
+        color: #F8FAFC;
+        letter-spacing: 0.03em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .exec-financial-badge {
+        font-size: 0.72rem;
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+    }
+    .exec-financial-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+    .exec-financial-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 9px;
+        padding: 10px 12px;
+    }
+    .exec-financial-label {
+        font-size: 0.7rem;
+        color: #94A3B8;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    .exec-financial-value {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-top: 3px;
+    }
+    .exec-financial-sub {
+        font-size: 0.72rem;
+        color: #94A3B8;
+        margin-top: 2px;
+    }
+
+    /* Strategy Pillar Cards */
+    .strategy-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 20px;
+        height: 100%;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .strategy-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(96, 165, 250, 0.45);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .strategy-pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 12px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -710,6 +804,7 @@ with st.sidebar:
             "🗺️ Bản đồ địa lý (50 Bang)",
             "📡 Dịch vụ & Hành vi",
             "🤖 Dự báo AI & Simulator",
+            "💡 Khuyến nghị & Chiến lược (ROI)",
             "📋 Hồ sơ khách hàng (Drill-down)",
             "⚡ Quy trình dữ liệu & ETL"
         ],
@@ -965,6 +1060,54 @@ if nav_choice == "📊 Tổng quan":
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại. Vui lòng điều chỉnh lại bộ lọc ở Sidebar.")
     else:
+        # TÍNH TOÁN CÁC CHỈ SỐ TÀI CHÍNH C-LEVEL (FINANCIAL IMPACT & REVENUE AT RISK)
+        churned_sub = filtered_df[filtered_df['Churn'] == 'Yes']
+        mrr_lost = churned_sub['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+        arr_lost = mrr_lost * 12
+        avg_lost_mrr = churned_sub['MonthlyCharges'].mean() if len(churned_sub) > 0 else 0.0
+        retained_pot_15 = arr_lost * 0.15
+
+        # Tỷ trọng mất doanh thu
+        m2m_lost = churned_sub[churned_sub['Contract'] == 'Month-to-month']['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+        m2m_pct = (m2m_lost / mrr_lost * 100) if mrr_lost > 0 else 0.0
+
+        fiber_lost = churned_sub[churned_sub['InternetService'] == 'Fiber optic']['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+        fiber_pct = (fiber_lost / mrr_lost * 100) if mrr_lost > 0 else 0.0
+
+        st.markdown(f"""
+        <div class="exec-financial-banner">
+            <div class="exec-financial-header">
+                <div class="exec-financial-title">
+                    <span>💼</span>
+                    <span>ĐỊNH LƯỢNG TỔN THẤT DOANH THU & TIỀM NĂNG THU HỒI (EXECUTIVE FINANCIAL IMPACT)</span>
+                </div>
+                <div class="exec-financial-badge">C-LEVEL BRIEFING</div>
+            </div>
+            <div class="exec-financial-grid">
+                <div class="exec-financial-item">
+                    <div class="exec-financial-label">Doanh thu bốc hơi / Tháng (MRR at Risk)</div>
+                    <div class="exec-financial-value" style="color: #F87171;">${mrr_lost:,.0f} <span style="font-size:0.75rem; color:#94A3B8;">USD/tháng</span></div>
+                    <div class="exec-financial-sub">Cước trung bình khách churn: <b>${avg_lost_mrr:.2f}/tháng</b></div>
+                </div>
+                <div class="exec-financial-item">
+                    <div class="exec-financial-label">Tổn thất doanh thu quy năm (ARR Loss)</div>
+                    <div class="exec-financial-value" style="color: #EF4444;">${arr_lost/1e6:.2f}M <span style="font-size:0.75rem; color:#94A3B8;">USD/năm</span></div>
+                    <div class="exec-financial-sub">Dự báo thất thoát lũy kế nếu không can thiệp</div>
+                </div>
+                <div class="exec-financial-item">
+                    <div class="exec-financial-label">Tiềm năng bảo vệ (Giữ chân 15%)</div>
+                    <div class="exec-financial-value" style="color: #34D399;">+${retained_pot_15:,.0f} <span style="font-size:0.75rem; color:#94A3B8;">USD/năm</span></div>
+                    <div class="exec-financial-sub">Mục tiêu giữ chân khả thi theo chuẩn Telco</div>
+                </div>
+                <div class="exec-financial-item">
+                    <div class="exec-financial-label">Điểm nóng rủi ro tài chính</div>
+                    <div class="exec-financial-value" style="color: #FBBF24;">{m2m_pct:.1f}% <span style="font-size:0.75rem; color:#94A3B8;">từ HĐ Tháng</span></div>
+                    <div class="exec-financial-sub">{fiber_pct:.1f}% thiệt hại từ khách dùng Cáp quang</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
         col1_1, col1_2 = st.columns(2)
 
         with col1_1:
@@ -1576,6 +1719,85 @@ elif nav_choice == "📡 Dịch vụ & Hành vi":
             apply_de_chart_theme(fig_svc, height=380, title="<b>Biểu đồ 10: Tác Động Của Dịch Vụ GTGT Lên Tỷ Lệ Rời Mạng</b>")
             st.plotly_chart(fig_svc, use_container_width=True)
 
+        deep_c5, deep_c6 = st.columns(2)
+
+        with deep_c5:
+            # Biểu đồ 11: Đường Cong Duy Trì Khách Hàng (Customer Retention Decay Curve 1 - 72 tháng)
+            # Tính toán tỷ lệ duy trì (Retained %) theo từng khoảng thâm niên 6 tháng cho từng loại hợp đồng
+            decay_df = filtered_df.copy()
+            bins = [0, 6, 12, 18, 24, 36, 48, 60, 72]
+            labels = ['0-6 th', '7-12 th', '13-18 th', '19-24 th', '25-36 th', '37-48 th', '49-60 th', '61-72 th']
+            decay_df['TenureBucket'] = pd.cut(decay_df['tenure'], bins=bins, labels=labels, include_lowest=True)
+
+            retention_cohort = decay_df.groupby(['Contract', 'TenureBucket'], observed=True).agg(
+                Total=('customerID', 'count'),
+                Retained=('ChurnNumeric', lambda x: (x == 0).sum())
+            ).reset_index()
+            retention_cohort['RetentionRate'] = (retention_cohort['Retained'] / retention_cohort['Total'] * 100).round(1)
+
+            contract_vn_map = {'Month-to-month': 'Theo tháng (Rủi ro cao)', 'One year': 'Hợp đồng 1 năm', 'Two year': 'Hợp đồng 2 năm (Bền vững)'}
+            retention_cohort['Loại hợp đồng'] = retention_cohort['Contract'].map(contract_vn_map).fillna(retention_cohort['Contract'])
+
+            fig_retention = px.line(
+                retention_cohort,
+                x='TenureBucket',
+                y='RetentionRate',
+                color='Loại hợp đồng',
+                markers=True,
+                color_discrete_map={
+                    'Theo tháng (Rủi ro cao)': '#EF4444',
+                    'Hợp đồng 1 năm': '#3B82F6',
+                    'Hợp đồng 2 năm (Bền vững)': '#10B981'
+                },
+                labels={'TenureBucket': 'Cột mốc vòng đời thâm niên', 'RetentionRate': 'Tỷ lệ khách hàng duy trì (%)'}
+            )
+            fig_retention.update_traces(line=dict(width=3), marker=dict(size=8))
+            apply_de_chart_theme(fig_retention, height=380, title="<b>Biểu đồ 11: Đường Cong Duy Trì Khách Hàng (Retention Decay Curve)</b>")
+            fig_retention.update_yaxes(range=[20, 105])
+            st.plotly_chart(fig_retention, use_container_width=True)
+            st.caption("💡 **Phát hiện cốt lõi**: Khách hàng hợp đồng theo tháng tụt dốc duy trì mạnh nhất trong 12 tháng đầu, trong khi hợp đồng 2 năm giữ tỷ lệ ở lại trên 95%.")
+
+        with deep_c6:
+            # Biểu đồ 12: Ma Trận 4 Phân Khúc Chiến Lược (Strategic Value vs Churn Risk Matrix)
+            matrix_df = filtered_df.copy()
+            high_val_threshold = 70.0  # Mốc ARPU cao
+
+            def assign_segment(row):
+                is_high_val = row['MonthlyCharges'] >= high_val_threshold
+                is_churn = row['Churn'] == 'Yes'
+                if is_high_val and is_churn:
+                    return '🚨 VIP Rủi Ro Cao (Cần Giữ Chân Gấp)'
+                elif is_high_val and not is_churn:
+                    return '💎 VIP Trung Thành (Duy Trì & Upsell)'
+                elif not is_high_val and is_churn:
+                    return '⚠️ Phổ Thông Rủi Ro (Can Thiệp Tự Động)'
+                else:
+                    return '🛡️ Phổ Thông Ổn Định (Nhóm An Toàn)'
+
+            matrix_df['Segment'] = matrix_df.apply(assign_segment, axis=1)
+
+            sample_mat = matrix_df.sample(min(1000, len(matrix_df)), random_state=42) if len(matrix_df) > 1000 else matrix_df
+
+            fig_matrix = px.scatter(
+                sample_mat,
+                x='tenure',
+                y='MonthlyCharges',
+                color='Segment',
+                opacity=0.75,
+                color_discrete_map={
+                    '🚨 VIP Rủi Ro Cao (Cần Giữ Chân Gấp)': '#EF4444',
+                    '💎 VIP Trung Thành (Duy Trì & Upsell)': '#10B981',
+                    '⚠️ Phổ Thông Rủi Ro (Can Thiệp Tự Động)': '#F59E0B',
+                    '🛡️ Phổ Thông Ổn Định (Nhóm An Toàn)': '#60A5FA'
+                },
+                labels={'tenure': 'Thâm niên (Tháng)', 'MonthlyCharges': 'Cước hàng tháng (USD)', 'Segment': 'Phân khúc'}
+            )
+            fig_matrix.add_hline(y=high_val_threshold, line_dash="dash", line_color="rgba(255,255,255,0.3)", annotation_text="Ngưỡng cước VIP ($70)")
+            fig_matrix.update_traces(marker=dict(size=7, line=dict(width=0.5, color='rgba(255,255,255,0.4)')))
+            apply_de_chart_theme(fig_matrix, height=380, title="<b>Biểu đồ 12: Ma Trận 4 Phân Khúc Chiến Lược (Value vs Risk)</b>")
+            st.plotly_chart(fig_matrix, use_container_width=True)
+            st.caption("💡 **Ra quyết định**: Ưu tiên 100% nguồn lực CSKH cho nhóm **VIP Rủi Ro Cao (đỏ)** để bảo vệ dòng tiền doanh thu định kỳ lớn nhất.")
+
 elif nav_choice == "🤖 Dự báo AI & Simulator":
     st.markdown("### 🤖 Mô Hình Hồi Quy Logistic & Công Cụ Dự Báo Nguy Cơ Rời Mạng")
     st.markdown("Mô hình Scikit-Learn **Logistic Regression** đã được huấn luyện và tối ưu hàm mất mát Log-loss, cung cấp khả năng giải thích nhân tố (Feature Explainability) và dự báo trực tiếp.")
@@ -1899,6 +2121,215 @@ elif nav_choice == "🤖 Dự báo AI & Simulator":
                 <div style="font-size: 0.8rem; color: #60A5FA; font-weight: 700;">{'▼ Giảm ' + f'{diff3:.1f}% nguy cơ' if diff3 > 0 else 'Không đổi'}</div>
             </div>
             """, unsafe_allow_html=True)
+
+elif nav_choice == "💡 Khuyến nghị & Chiến lược (ROI)":
+    st.markdown("### 💡 Khuyến Nghị Chiến Lược Prescriptive & Mô Phỏng Tỷ Suất Hoàn Vốn (ROI)")
+    st.markdown("Chuyển dịch từ Phân tích dự báo (Predictive) sang Phân tích đề xuất hành động (Prescriptive Analytics) — Đỉnh cao của tháp năng lực phân tích dữ liệu Gartner.")
+
+    st.markdown("#### 🏛️ 1. Khung Chiến Lược Hành Động 3 Trụ Cột (Actionable Playbook)")
+    st.caption("Các giải pháp can thiệp mục tiêu được kiểm chứng trực tiếp từ kết quả phân tích dữ liệu và mô hình AI:")
+
+    str_c1, str_c2, str_c3 = st.columns(3)
+
+    with str_c1:
+        st.markdown("""
+        <div class="strategy-card">
+            <div>
+                <span class="strategy-pill" style="background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4);">
+                    TRỤ CỘT 1 • SẢN PHẨM & MẠNG LƯỚI
+                </span>
+                <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-bottom: 8px;">
+                    🛡️ Gói "Fiber Shield Bundle"
+                </div>
+                <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px;">
+                    <b>Vấn đề:</b> Khách hàng Cáp quang (Fiber optic) có tỷ lệ Churn lên đến <b>41.9%</b> (gói tháng đạt <b>54.6%</b>), cước cao nhưng thiếu dịch vụ bảo vệ.
+                </div>
+                <div style="font-size: 0.82rem; color: #E2E8F0; line-height: 1.5;">
+                    <b>Hành động cụ thể:</b>
+                    <ul style="padding-left: 18px; margin: 6px 0;">
+                        <li>Tặng <b>3-6 tháng miễn phí</b> dịch vụ <code>OnlineSecurity</code> & <code>TechSupport 24/7</code> khi đăng ký mới hoặc gia hạn.</li>
+                        <li><b>Hiệu quả thực nghiệm:</b> Tỷ lệ Churn của khách có 2 gói này giảm xuống chỉ còn <b>15.8%</b>.</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: rgba(239, 68, 68, 0.1); border-radius: 8px; padding: 8px 12px; margin-top: 14px; font-size: 0.78rem; color: #FCA5A5; font-weight: 600;">
+                🎯 Mục tiêu: Giảm 25% Churn tệp Cáp quang
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with str_c2:
+        st.markdown("""
+        <div class="strategy-card">
+            <div>
+                <span class="strategy-pill" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4);">
+                    TRỤ CỘT 2 • TÀI CHÍNH & THANH TOÁN
+                </span>
+                <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-bottom: 8px;">
+                    💳 Chuyển Đổi Sang Auto-Pay
+                </div>
+                <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px;">
+                    <b>Vấn đề:</b> Khách hàng thanh toán qua Séc điện tử (Electronic check) Churn tới <b>45.3%</b> (so với Thẻ tự động AutoPay chỉ <b>16.7%</b>).
+                </div>
+                <div style="font-size: 0.82rem; color: #E2E8F0; line-height: 1.5;">
+                    <b>Hành động cụ thể:</b>
+                    <ul style="padding-left: 18px; margin: 6px 0;">
+                        <li>Tặng voucher giảm <b>$5/tháng trong 3 tháng liên tiếp</b> cho khách hàng chuyển từ Séc sang Bank Transfer / Credit Card tự động.</li>
+                        <li><b>Hiệu quả thực nghiệm:</b> Khách dùng AutoPay có tỷ lệ gắn kết cao hơn <b>2.7 lần</b>.</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.1); border-radius: 8px; padding: 8px 12px; margin-top: 14px; font-size: 0.78rem; color: #FDE68A; font-weight: 600;">
+                🎯 Mục tiêu: Chuyển đổi 35% tệp Electronic check
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with str_c3:
+        st.markdown("""
+        <div class="strategy-card">
+            <div>
+                <span class="strategy-pill" style="background: rgba(59, 130, 246, 0.2); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.4);">
+                    TRỤ CỘT 3 • VÒNG ĐỜI & HỢP ĐỒNG
+                </span>
+                <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-bottom: 8px;">
+                    🔒 Khóa Hợp Đồng & Vượt Vùng Tử Thần
+                </div>
+                <div style="font-size: 0.82rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px;">
+                    <b>Vấn đề:</b> <b>65% khách Churn</b> rơi vào 12 tháng đầu (Tenure < 12) do dùng hợp đồng theo tháng (Month-to-month).
+                </div>
+                <div style="font-size: 0.82rem; color: #E2E8F0; line-height: 1.5;">
+                    <b>Hành động cụ thể:</b>
+                    <ul style="padding-left: 18px; margin: 6px 0;">
+                        <li>Chủ động tiếp cận CSKH vào tháng thứ 4 & tháng thứ 8 để khảo sát CSAT và xử lý khiếu nại.</li>
+                        <li>Tặng ưu đãi chiết khấu <b>12% cước năm</b> khi chuyển đổi từ gói tháng sang hợp đồng 1-2 năm.</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: rgba(59, 130, 246, 0.1); border-radius: 8px; padding: 8px 12px; margin-top: 14px; font-size: 0.78rem; color: #BFDBFE; font-weight: 600;">
+                🎯 Mục tiêu: Cắt giảm 40% Churn trong năm đầu
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("#### 🎯 2. Trình Mô Phỏng Chiến Dịch Giữ Chân & Tỷ Suất Hoàn Vốn (ROI Simulator)")
+    st.caption("Công cụ giả lập kinh tế dành cho Ban Điều Hành (C-Level): Điều chỉnh các tham số chiến dịch để đo lường lợi nhuận ròng và ROI thời gian thực:")
+
+    sim_col1, sim_col2 = st.columns([1, 2])
+
+    # Dữ liệu khách hàng Churn hiện tại
+    churn_sub = filtered_df[filtered_df['Churn'] == 'Yes']
+    total_churn_pool = len(churn_sub)
+    avg_churn_mrr = churn_sub['MonthlyCharges'].mean() if total_churn_pool > 0 else 74.44
+
+    with sim_col1:
+        st.markdown("##### ⚙️ Thiết Lập Tham Số Chiến Dịch:")
+        reach_pct = st.slider(
+            "Tỷ lệ khách hàng Churn được tiếp cận (%):",
+            min_value=10, max_value=100, value=40, step=5,
+            help="Tỷ lệ khách hàng có nguy cơ rời mạng mà bộ phận CSKH sẽ chủ động gọi điện hoặc gửi ưu đãi"
+        )
+        success_pct = st.slider(
+            "Tỷ lệ giữ chân thành công dự kiến (%):",
+            min_value=5, max_value=60, value=25, step=5,
+            help="Tỷ lệ khách hàng đồng ý ở lại sau khi nhận được gói ưu đãi hỗ trợ"
+        )
+        cost_per_user = st.slider(
+            "Ngân sách ưu đãi / khách hàng ($ USD):",
+            min_value=3, max_value=40, value=12, step=1,
+            help="Chi phí quà tặng voucher, cước giảm giá hoặc chi phí CSKH cho mỗi khách hàng được tiếp cận"
+        )
+
+        # Tính toán kinh tế
+        targeted_users = int(total_churn_pool * (reach_pct / 100))
+        saved_users = int(targeted_users * (success_pct / 100))
+        annual_saved_rev = saved_users * avg_churn_mrr * 12
+        total_campaign_cost = targeted_users * cost_per_user
+        net_profit = annual_saved_rev - total_campaign_cost
+        roi_rate = (net_profit / total_campaign_cost * 100) if total_campaign_cost > 0 else 0
+
+    with sim_col2:
+        st.markdown("##### 📊 Kết Quả Dự Phóng Tài Chính C-Level:")
+
+        m_kpi1, m_kpi2, m_kpi3, m_kpi4 = st.columns(4)
+        with m_kpi1:
+            st.metric("Khách Giữ Chân Được", f"{saved_users:,} người", f"Tiếp cận {targeted_users:,}")
+        with m_kpi2:
+            st.metric("Doanh Thu Cứu Vãn", f"${annual_saved_rev:,.0f}", f"+${annual_saved_rev/12:,.0f}/th")
+        with m_kpi3:
+            st.metric("Ngân Sách Chiến Dịch", f"${total_campaign_cost:,.0f}", f"${cost_per_user}/khách")
+        with m_kpi4:
+            st.metric("Lợi Nhuận Ròng", f"${net_profit:,.0f}", f"ROI: {roi_rate:.0f}%")
+
+        # Biểu đồ Plotly so sánh dòng tiền
+        waterfall_df = pd.DataFrame({
+            'Khoản mục': ['Tổn thất ban đầu (Chưa can thiệp)', 'Ngân sách đầu tư', 'Doanh thu bảo vệ được', 'Lợi nhuận ròng thu về'],
+            'Giá trị': [total_churn_pool * avg_churn_mrr * 12, total_campaign_cost, annual_saved_rev, net_profit],
+            'Loại': ['Thất thoát', 'Chi phí', 'Doanh thu', 'Lợi nhuận']
+        })
+
+        fig_roi_bar = px.bar(
+            waterfall_df,
+            x='Khoản mục',
+            y='Giá trị',
+            color='Loại',
+            text='Giá trị',
+            color_discrete_map={
+                'Thất thoát': '#EF4444',
+                'Chi phí': '#F59E0B',
+                'Doanh thu': '#3B82F6',
+                'Lợi nhuận': '#10B981'
+            },
+            labels={'Giá trị': 'Giá trị quy năm (USD)', 'Khoản mục': 'Hạng mục tài chính'}
+        )
+        fig_roi_bar.update_traces(
+            texttemplate='$%{text:,.0f}',
+            textposition='outside',
+            textfont=dict(color='#F8FAFC', size=11)
+        )
+        apply_de_chart_theme(fig_roi_bar, height=310, title="<b>So Sánh Hiệu Quả Kinh Tế Của Chiến Dịch Giữ Chân (Quy Năm USD)</b>")
+        st.plotly_chart(fig_roi_bar, use_container_width=True)
+
+    # NÚT XUẤT BÁO CÁO CHIẾN LƯỢC QUẢN TRỊ (EXECUTIVE BRIEF)
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("#### 📄 3. Báo Cáo Tóm Tắt Chiến Lược Dành Cho Ban Điều Hành (Executive Brief)")
+    st.caption("Trích xuất bản tóm tắt chiến lược đã được cá nhân hóa theo các tham số bạn vừa mô phỏng:")
+
+    churn_cur_count = int((filtered_df['Churn'] == 'Yes').sum()) if total_cust > 0 else 0
+    churn_cur_rate = (churn_cur_count / total_cust * 100) if total_cust > 0 else 0.0
+    brief_content = f"""# BÁO CÁO ĐIỀU HÀNH CHIẾN LƯỢC GIỮ CHÂN KHÁCH HÀNG (EXECUTIVE RETENTION BRIEF)
+Đơn vị: Đồ án Tương tác Dữ liệu Trực quan | Trường Đại học Công nghệ Kỹ thuật TP.HCM (HCMUTE)
+Nhóm 22: Trương Quốc Duy (Trưởng nhóm) - Đỗ Trọng Khôi - Bùi Đức Huy
+
+---
+## 1. TỔNG QUAN TÌNH TRẠNG THẤT THOÁT KHÁCH HÀNG
+- Quy mô mẫu phân tích: {total_cust:,} khách hàng.
+- Tỷ lệ Churn hiện tại: {churn_cur_rate:.1f}% ({churn_cur_count:,} khách hàng đã hủy dịch vụ).
+- Doanh thu định kỳ bốc hơi mỗi tháng (MRR at Risk): ${mrr_lost:,.2f} USD/tháng.
+- Tổn thất doanh thu hàng năm ước tính: ${arr_lost:,.2f} USD/năm.
+
+## 2. BA TRỤ CỘT HÀNH ĐỘNG CHIẾN LƯỢC
+1. Trụ cột Sản phẩm: Triển khai gói "Fiber Shield Bundle" tặng 3-6 tháng OnlineSecurity & TechSupport cho khách dùng Cáp quang (giảm churn từ 54.6% xuống dưới 16%).
+2. Trụ cột Thanh toán: Khuyến khích chuyển đổi thanh toán sang AutoPay bằng mã giảm $5/tháng (giảm Churn từ 45.3% xuống 16.7%).
+3. Trụ cột Hợp đồng: Đề xuất chuyển từ hợp đồng Tháng sang hợp đồng 1-2 năm với chiết khấu 12% để vượt qua giai đoạn rủi ro thâm niên < 1 năm.
+
+## 3. DỰ PHÓNG KINH TẾ TỪ CHIẾN DỊCH GIỮ CHÂN (SIMULATION RESULTS)
+- Tỷ lệ tiếp cận: {reach_pct}% ({targeted_users:,} khách hàng được chăm sóc).
+- Tỷ lệ cứu vãn thành công: {success_pct}% ({saved_users:,} khách hàng được giữ lại).
+- Doanh thu hàng năm giữ lại được: ${annual_saved_rev:,.2f} USD.
+- Chi phí đầu tư chiến dịch: ${total_campaign_cost:,.2f} USD.
+- LỢI NHUẬN RÒNG ĐEM LẠI: ${net_profit:,.2f} USD.
+- TỶ SUẤT SINH LỜI TRÊN ĐẦU TƯ (ROI): {roi_rate:.1f}%.
+"""
+
+    st.download_button(
+        label="📥 Tải Báo Cáo Điều Hành Chiến Lược (.MD)",
+        data=brief_content.encode('utf-8'),
+        file_name="Telco_Churn_Executive_Retention_Brief.md",
+        mime="text/markdown"
+    )
 
 elif nav_choice == "📋 Hồ sơ khách hàng (Drill-down)":
     st.markdown("### 📋 Bảng Dữ Liệu Tương Tác & Tính Năng Drill-Down Hồ Sơ 360°")
