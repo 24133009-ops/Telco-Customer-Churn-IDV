@@ -666,6 +666,11 @@ with st.sidebar:
 
     st.markdown("### 🎛️ Bộ Lọc Dữ Liệu Tương Tác")
 
+    if "filter_reset_ver" not in st.session_state:
+        st.session_state.filter_reset_ver = 0
+
+    fv = st.session_state.filter_reset_ver
+
     # 1. BỘ LỌC 50 TIỂU BANG HOA KỲ ĐẦY ĐỦ TÊN
     all_states_list = sorted(list(df_raw['State'].dropna().unique()))
     state_options = ["Tất cả 50 tiểu bang Hoa Kỳ (All 50 States)"] + all_states_list
@@ -673,6 +678,7 @@ with st.sidebar:
         "📍 Địa bàn Viễn thông (50 Tiểu bang):",
         options=state_options,
         index=0,
+        key=f"filter_state_{fv}",
         help="Chọn từng tiểu bang trong số 50 tiểu bang của Hoa Kỳ với tên đầy đủ và mã bang."
     )
 
@@ -681,7 +687,8 @@ with st.sidebar:
     selected_contracts = st.multiselect(
         "📝 Loại hợp đồng (Contract):",
         options=all_contracts,
-        default=all_contracts
+        default=all_contracts,
+        key=f"filter_contract_{fv}"
     )
 
     # 3. BỘ LỌC CÔNG NGHỆ INTERNET
@@ -689,7 +696,8 @@ with st.sidebar:
     selected_internets = st.multiselect(
         "🌐 Công nghệ Internet:",
         options=all_internets,
-        default=all_internets
+        default=all_internets,
+        key=f"filter_internet_{fv}"
     )
 
     # 4. BỘ LỌC PHƯƠNG THỨC THANH TOÁN
@@ -697,33 +705,39 @@ with st.sidebar:
     selected_payments = st.multiselect(
         "💳 Hình thức thanh toán:",
         options=all_payments,
-        default=all_payments
+        default=all_payments,
+        key=f"filter_payment_{fv}"
     )
 
     # 5. BỘ LỌC NHÂN KHẨU HỌC
     senior_opt = st.radio(
         "👥 Đối tượng khách hàng:",
         ["Tất cả", "Khách hàng trẻ/trung niên", "Người cao tuổi (Senior)"],
-        horizontal=True
+        index=0,
+        horizontal=True,
+        key=f"filter_senior_{fv}"
     )
 
     # 6. SLIDERS: THÂM NIÊN & CƯỚC THÁNG
     min_tenure, max_tenure = int(df_raw['tenure'].min()), int(df_raw['tenure'].max())
     selected_tenure = st.slider(
         "⏳ Thâm niên sử dụng (Tháng):",
-        min_tenure, max_tenure, (min_tenure, max_tenure)
+        min_tenure, max_tenure, (min_tenure, max_tenure),
+        key=f"filter_tenure_{fv}"
     )
 
     min_charge, max_charge = float(df_raw['MonthlyCharges'].min()), float(df_raw['MonthlyCharges'].max())
     selected_charge = st.slider(
         "💵 Cước phí tháng (USD):",
-        min_charge, max_charge, (min_charge, max_charge)
+        min_charge, max_charge, (min_charge, max_charge),
+        key=f"filter_charge_{fv}"
     )
 
     st.markdown("---")
     
-    # Nút Reset bộ lọc
-    if st.button("🔄 Đặt lại bộ lọc ban đầu", use_container_width=True):
+    # Nút Reset bộ lọc: Đưa toàn bộ các tiêu chí về trạng thái ban đầu
+    if st.button("🔄 Đặt lại bộ lọc ban đầu", use_container_width=True, help="Khôi phục toàn bộ các bộ lọc dữ liệu về mặc định ban đầu (tất cả 50 tiểu bang, mọi hợp đồng và toàn bộ 7,043 khách hàng)."):
+        st.session_state.filter_reset_ver += 1
         st.rerun()
 
     st.caption("ℹ️ Bộ lọc đang áp dụng tự động cập nhật thời gian thực vào tất cả các biểu đồ và mô hình dự báo.")
