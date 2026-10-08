@@ -437,30 +437,67 @@ st.markdown("""
         color: #94A3B8;
     }
 
-    /* Streamlit Tab Bar Styling (Chuẩn Senior BI Dashboard) */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-        background-color: rgba(15, 23, 42, 0.45);
-        padding: 6px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 42px;
-        border-radius: 8px;
-        padding: 0px 16px;
-        font-weight: 600;
-        font-size: 0.88rem;
+    /* Sidebar Navigation Menu - Chuẩn giao diện chuyên nghiệp như ảnh mẫu */
+    .sidebar-nav-header {
+        font-size: 0.72rem;
         color: #94A3B8;
-        background-color: transparent;
-        border: none;
-        transition: all 0.2s ease;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 14px 0 8px 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%) !important;
+
+    /* Style khối Radio trong Sidebar thành menu dạng danh sách nút bo tròn */
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] {
+        gap: 4px;
+    }
+
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label {
+        padding: 9px 14px !important;
+        border-radius: 10px !important;
+        cursor: pointer !important;
+        margin-bottom: 2px !important;
+        transition: all 0.2s ease !important;
+        background: transparent !important;
+        display: flex !important;
+        align-items: center !important;
+        border: 1px solid transparent !important;
+    }
+
+    /* Ẩn dấu tròn radio mặc định */
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
+        display: none !important;
+    }
+
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:last-child {
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
+        color: #CBD5E1 !important;
+        width: 100% !important;
+    }
+
+    /* Hover effect */
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover > div:last-child {
         color: #FFFFFF !important;
-        border: 1px solid rgba(99, 102, 241, 0.5) !important;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Active Menu Item (Nút xanh nổi bật chuẩn như hình mẫu của nhóm kia) */
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+        box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) > div:last-child {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -664,12 +701,46 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    # MENU ĐIỀU HƯỚNG DỌC (KHÁM PHÁ DỮ LIỆU) - CHUẨN GIAO DIỆN MẪU
+    st.markdown('<div class="sidebar-nav-header">🧭 KHÁM PHÁ DỮ LIỆU</div>', unsafe_allow_html=True)
+    nav_choice = st.radio(
+        "Mục khám phá:",
+        [
+            "📊 Tổng quan",
+            "🗺️ Bản đồ địa lý (50 Bang)",
+            "📡 Dịch vụ & Hành vi",
+            "🤖 Dự báo AI & Simulator",
+            "📋 Hồ sơ khách hàng (Drill-down)",
+            "⚡ Quy trình dữ liệu & ETL"
+        ],
+        index=0,
+        label_visibility="collapsed"
+    )
+
+    st.markdown("---")
     st.markdown("### 🎛️ Bộ Lọc Dữ Liệu Tương Tác")
 
     if "filter_reset_ver" not in st.session_state:
         st.session_state.filter_reset_ver = 0
 
     fv = st.session_state.filter_reset_ver
+
+    # 0. BỘ LỌC CHU KỲ THÂM NIÊN (TƯƠNG ĐƯƠNG CHU KỲ NĂM SỬ DỤNG)
+    cohort_options = [
+        "Toàn bộ chu kỳ (1 - 6 năm)",
+        "Năm 1 (< 12 tháng - Khách mới)",
+        "Năm 2 (12 - 24 tháng)",
+        "Năm 3 (24 - 36 tháng)",
+        "Năm 4 (36 - 48 tháng)",
+        "Năm 5 - 6 (> 48 tháng - Khách trung thành)"
+    ]
+    selected_cohort = st.selectbox(
+        "📅 Chu kỳ thâm niên (Năm sử dụng):",
+        options=cohort_options,
+        index=0,
+        key=f"filter_cohort_{fv}",
+        help="Lọc khách hàng theo từng chu kỳ năm gắn bó, tương tự như các chu kỳ thời gian phân tích."
+    )
 
     # 1. BỘ LỌC 50 TIỂU BANG HOA KỲ ĐẦY ĐỦ TÊN
     all_states_list = sorted(list(df_raw['State'].dropna().unique()))
@@ -746,6 +817,18 @@ with st.sidebar:
 # ÁP DỤNG BỘ LỌC DỮ LIỆU
 # ==============================================================================
 filtered_df = df_raw.copy()
+
+# Lọc theo chu kỳ năm thâm niên (Tương tự phân kỳ thời gian như nhóm mẫu)
+if selected_cohort == "Năm 1 (< 12 tháng - Khách mới)":
+    filtered_df = filtered_df[filtered_df['tenure'] < 12]
+elif selected_cohort == "Năm 2 (12 - 24 tháng)":
+    filtered_df = filtered_df[(filtered_df['tenure'] >= 12) & (filtered_df['tenure'] < 24)]
+elif selected_cohort == "Năm 3 (24 - 36 tháng)":
+    filtered_df = filtered_df[(filtered_df['tenure'] >= 24) & (filtered_df['tenure'] < 36)]
+elif selected_cohort == "Năm 4 (36 - 48 tháng)":
+    filtered_df = filtered_df[(filtered_df['tenure'] >= 36) & (filtered_df['tenure'] < 48)]
+elif selected_cohort == "Năm 5 - 6 (> 48 tháng - Khách trung thành)":
+    filtered_df = filtered_df[filtered_df['tenure'] >= 48]
 
 if "Tất cả" not in selected_state:
     filtered_df = filtered_df[filtered_df['State'] == selected_state]
@@ -876,21 +959,9 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# HỆ THỐNG 6 TABS ĐIỀU HƯỚNG TƯƠNG TÁC
+# ĐIỀU HƯỚNG NỘI DUNG THEO MENU CỘT TRÁI (KHÁM PHÁ DỮ LIỆU)
 # ==============================================================================
-tab_overview, tab_geo, tab_deepdive, tab_ml, tab_drilldown, tab_arch = st.tabs([
-    "📊 1. Tổng Quan & Phân Phối",
-    "🗺️ 2. Bản Đồ Địa Lý (50 Tiểu Bang)",
-    "🔍 3. Dịch Vụ & Tương Quan",
-    "🤖 4. Dự Báo AI & Simulator",
-    "📋 5. Drill-down Hồ Sơ 360°",
-    "🏗️ 6. Quy Trình Dữ Liệu & ETL"
-])
-
-# ------------------------------------------------------------------------------
-# TAB 1: TỔNG QUAN & PHÂN PHỐI (Biểu đồ 1, 2, 3, 4)
-# ------------------------------------------------------------------------------
-with tab_overview:
+if nav_choice == "📊 Tổng quan":
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại. Vui lòng điều chỉnh lại bộ lọc ở Sidebar.")
     else:
@@ -967,10 +1038,7 @@ with tab_overview:
             fig_box.update_layout(showlegend=False)
             st.plotly_chart(fig_box, use_container_width=True)
 
-# ------------------------------------------------------------------------------
-# TAB 2: BẢN ĐỒ ĐỊA LÝ & VÙNG MIỀN (50 TIỂU BANG HOA KỲ ĐẦY ĐỦ TÊN)
-# ------------------------------------------------------------------------------
-with tab_geo:
+elif nav_choice == "🗺️ Bản đồ địa lý (50 Bang)":
     st.markdown("### 🗺️ Trực Quan Hóa Không Gian Địa Lý Khách Hàng (Toàn Bộ 50 Tiểu Bang Hoa Kỳ)")
     st.caption("Phân tích tỷ lệ rời mạng và phân bổ khách hàng trên toàn lãnh thổ Hoa Kỳ với định dạng Địa Cầu 3D và Bản Đồ Phẳng tương tác.")
 
@@ -1404,10 +1472,7 @@ with tab_geo:
                 mime="text/csv"
             )
 
-# ------------------------------------------------------------------------------
-# TAB 3: DỊCH VỤ & TƯƠNG QUAN ĐA CHIỀU (Biểu đồ 7, 8, 9, 10)
-# ------------------------------------------------------------------------------
-with tab_deepdive:
+elif nav_choice == "📡 Dịch vụ & Hành vi":
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại.")
     else:
@@ -1477,10 +1542,7 @@ with tab_deepdive:
             apply_de_chart_theme(fig_svc, height=380, title="<b>Biểu đồ 10: Tác Động Của Dịch Vụ GTGT Lên Tỷ Lệ Rời Mạng</b>")
             st.plotly_chart(fig_svc, use_container_width=True)
 
-# ------------------------------------------------------------------------------
-# TAB 4: DỰ BÁO AI & TRÌNH MÔ PHỎNG WHAT-IF
-# ------------------------------------------------------------------------------
-with tab_ml:
+elif nav_choice == "🤖 Dự báo AI & Simulator":
     st.markdown("### 🤖 Mô Hình Hồi Quy Logistic & Công Cụ Dự Báo Nguy Cơ Rời Mạng")
     st.markdown("Mô hình Scikit-Learn **Logistic Regression** đã được huấn luyện và tối ưu hàm mất mát Log-loss, cung cấp khả năng giải thích nhân tố (Feature Explainability) và dự báo trực tiếp.")
 
@@ -1804,10 +1866,7 @@ with tab_ml:
             </div>
             """, unsafe_allow_html=True)
 
-# ------------------------------------------------------------------------------
-# TAB 5: DRILL-DOWN HỒ SƠ 360° CHI TIẾT
-# ------------------------------------------------------------------------------
-with tab_drilldown:
+elif nav_choice == "📋 Hồ sơ khách hàng (Drill-down)":
     st.markdown("### 📋 Bảng Dữ Liệu Tương Tác & Tính Năng Drill-Down Hồ Sơ 360°")
     st.markdown("Khám phá từng khách hàng cụ thể hoặc trích xuất dữ liệu phục vụ nghiên cứu & báo cáo chuyên sâu.")
 
@@ -1907,10 +1966,7 @@ with tab_drilldown:
         mime="text/csv"
     )
 
-# ------------------------------------------------------------------------------
-# TAB 6: QUY TRÌNH DỮ LIỆU & TIỀN XỬ LÝ (DATA PIPELINE)
-# ------------------------------------------------------------------------------
-with tab_arch:
+elif nav_choice == "⚡ Quy trình dữ liệu & ETL":
     st.markdown("### 🏗️ Quy Trình Thu Thập, Tiền Xử Lý & Chuẩn Hóa Dữ Liệu")
     st.markdown("Mô tả quy trình xử lý dữ liệu viễn thông từ 4 bảng gốc, các bước làm sạch, ghép nối bảng và chuẩn bị cho mô hình hóa.")
 
