@@ -5,9 +5,9 @@
 > **Trường:** Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh (HCMUTE)  
 > **Nhóm thực hiện:** Nhóm 22  
 > **Thành viên nhóm:**  
-> 1. **Đỗ Trọng Khôi** - MSSV: 20133056 (Trưởng nhóm)  
-> 2. **Bùi Đức Huy** - Thành viên  
-> 3. **Trương Quốc Duy** - MSSV: 24133009 (Thành viên)  
+> 1. **Trương Quốc Duy** - MSSV: 24133009 (Trưởng nhóm)  
+> 2. **Đỗ Trọng Khôi** - MSSV: 20133056 (Thành viên)  
+> 3. **Bùi Đức Huy** - MSSV: 24133021 (Thành viên)  
 
 ---
 

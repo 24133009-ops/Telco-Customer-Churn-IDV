@@ -1,9 +1,9 @@
 """
 HỆ THỐNG TRỰC QUAN HÓA TƯƠNG TÁC VÀ DỰ BÁO KHÁCH HÀNG RỜI MẠNG (CUSTOMER CHURN)
 Đồ án môn học: Tương tác Dữ liệu Trực quan | Nhóm 22:
-- Đỗ Trọng Khôi  - 20133056 (Trưởng nhóm)
-- Bùi Đức Huy    - 24133021
-- Trương Quốc Duy - 24133009
+- Trương Quốc Duy - 24133009 (Trưởng nhóm)
+- Đỗ Trọng Khôi   - 20133056
+- Bùi Đức Huy     - 24133021
 """
 
 import os
@@ -656,9 +656,9 @@ with st.sidebar:
         </div>
         <div class="brand-title">📡 DỰ BÁO CUSTOMER CHURN</div>
         <div class="brand-members">
-            <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056 (Trưởng nhóm)</div>
+            <div>👑 <b>Trương Quốc Duy</b> - 24133009 (Trưởng nhóm)</div>
+            <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056</div>
             <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
-            <div>👤 <b>Trương Quốc Duy</b> - 24133009</div>
         </div>
         <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 8px; font-weight: 500;">Trường ĐH Sư phạm Kỹ thuật TP.HCM</div>
     </div>
@@ -1081,6 +1081,51 @@ with tab_geo:
             m_cfg = metric_configs[metric_geo_choice]
 
             if map_proj_mode == "Địa cầu":
+                # Điều khiển xoay Quả Địa Cầu
+                rot_c1, rot_c2 = st.columns([1.5, 1])
+                with rot_c1:
+                    globe_lon = st.slider(
+                        "🔄 Xoay góc kinh độ (Kéo để xoay địa cầu):",
+                        min_value=-180,
+                        max_value=180,
+                        value=-98,
+                        step=5,
+                        help="Kéo thanh trượt để xoay quả địa cầu 360° quanh trục Trái Đất (-98° là trung tâm Hoa Kỳ)."
+                    )
+                with rot_c2:
+                    globe_preset = st.selectbox(
+                        "🎯 Vùng góc nhìn nhanh:",
+                        [
+                            "Tùy chỉnh theo thanh trượt",
+                            "🇺🇸 Toàn cảnh Hoa Kỳ (-98°)",
+                            "🗽 Bờ Đông Hoa Kỳ (-75°)",
+                            "🌉 Bờ Tây & TBD (-125°)",
+                            "🇻🇳 Châu Á & Việt Nam (+105°)",
+                            "🌍 Châu Âu (0°)"
+                        ],
+                        index=1,
+                        help="Chọn nhanh góc nhìn về các khu vực trên thế giới."
+                    )
+
+                # Xác định góc kinh độ áp dụng
+                current_lon = globe_lon
+                current_lat = 38
+                if globe_preset == "🇺🇸 Toàn cảnh Hoa Kỳ (-98°)":
+                    current_lon = -98
+                    current_lat = 38
+                elif globe_preset == "🗽 Bờ Đông Hoa Kỳ (-75°)":
+                    current_lon = -75
+                    current_lat = 39
+                elif globe_preset == "🌉 Bờ Tây & TBD (-125°)":
+                    current_lon = -125
+                    current_lat = 37
+                elif globe_preset == "🇻🇳 Châu Á & Việt Nam (+105°)":
+                    current_lon = 105
+                    current_lat = 16
+                elif globe_preset == "🌍 Châu Âu (0°)":
+                    current_lon = 0
+                    current_lat = 50
+
                 # Render Quả địa cầu 3D (Orthographic Projection - Full Sphere Centered, No White Box)
                 fig_map = go.Figure(
                     go.Choropleth(
@@ -1111,9 +1156,19 @@ with tab_geo:
                         customdata=state_agg[['Total', 'Churned', 'AvgMonthly', 'TotalRevenue']].values
                     )
                 )
+
+                # Tạo các khung hình chuyển động xoay 360 độ liên tục (Animation Frames)
+                rot_frames = [
+                    go.Frame(
+                        name=f"rot_{l}",
+                        layout=dict(geo=dict(projection_rotation=dict(lon=l, lat=current_lat, roll=0)))
+                    ) for l in range(-180, 181, 15)
+                ]
+                fig_map.frames = rot_frames
+
                 fig_map.update_geos(
                     projection_type="orthographic",
-                    projection_rotation=dict(lon=-98, lat=38, roll=0),
+                    projection_rotation=dict(lon=current_lon, lat=current_lat, roll=0),
                     bgcolor="rgba(0,0,0,0)",
                     showocean=True,
                     oceancolor="#0A192F",
@@ -1127,13 +1182,55 @@ with tab_geo:
                     subunitcolor="rgba(255, 255, 255, 0.3)"
                 )
                 fig_map.update_layout(
-                    height=480,
+                    height=500,
                     margin=dict(l=10, r=10, t=10, b=50),
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    dragmode="orbit"
+                    updatemenus=[
+                        dict(
+                            type='buttons',
+                            direction='left',
+                            showactive=True,
+                            x=0.01,
+                            y=0.04,
+                            xanchor='left',
+                            yanchor='bottom',
+                            bgcolor='rgba(15, 23, 42, 0.9)',
+                            bordercolor='rgba(255, 255, 255, 0.25)',
+                            borderwidth=1,
+                            font=dict(color='#FFFFFF', size=11),
+                            buttons=[
+                                dict(
+                                    label='▶ Tự Động Xoay 360°',
+                                    method='animate',
+                                    args=[
+                                        None,
+                                        dict(
+                                            frame=dict(duration=130, redraw=True),
+                                            fromcurrent=True,
+                                            transition=dict(duration=0),
+                                            mode='immediate',
+                                            loop=True
+                                        )
+                                    ]
+                                ),
+                                dict(
+                                    label='⏸ Dừng Lại',
+                                    method='animate',
+                                    args=[
+                                        [None],
+                                        dict(
+                                            frame=dict(duration=0, redraw=False),
+                                            mode='immediate'
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    ]
                 )
                 st.plotly_chart(fig_map, use_container_width=True)
+                st.caption("💡 **Tương tác**: Bấm nút **▶ Tự Động Xoay 360°** để quả địa cầu quay tròn liên tục, hoặc kéo thanh trượt / chọn góc nhìn để xoay quả địa cầu theo ý muốn.")
 
             else:
                 # Render Bản đồ phẳng 2D 50 tiểu bang Hoa Kỳ

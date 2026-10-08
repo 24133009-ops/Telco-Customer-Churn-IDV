@@ -2,9 +2,9 @@
 Mô hình Dự báo Khách hàng Rời mạng (Customer Churn Prediction)
 Sử dụng Hồi quy Logistic (Logistic Regression) theo chuẩn khoa học IEEE.
 Đề tài 5 - Nhóm 22:
+- Trương Quốc Duy - 24133009 (Trưởng nhóm)
 - Đỗ Trọng Khôi - 20133056
-- Bùi Đức Huy
-- Trương Quốc Duy - 24133009
+- Bùi Đức Huy - 24133021
 """
 
 import os

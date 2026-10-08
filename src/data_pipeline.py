@@ -1,9 +1,9 @@
 """
 Pipeline Thu thập, Kết nối nhiều bảng, Làm sạch và Tiền xử lý dữ liệu viễn thông (Telco Customer Churn)
 Đề tài 5 - Nhóm 22:
+- Trương Quốc Duy - 24133009 (Trưởng nhóm)
 - Đỗ Trọng Khôi - 20133056
-- Bùi Đức Huy
-- Trương Quốc Duy - 24133009
+- Bùi Đức Huy - 24133021
 """
 
 import os
