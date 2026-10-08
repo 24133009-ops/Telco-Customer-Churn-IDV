@@ -1176,7 +1176,7 @@ with tab_arch:
         st.markdown("""
         - ✅ **Inner Join Integrity:** Khóa chính `customerID` ánh xạ 1-1 chính xác 100% giữa cả 4 bảng.
         - ✅ **Missing Value Handling:** Tự động phát hiện và điền thế 11 giá trị khuyết thiếu ở `TotalCharges` cho khách hàng mới ký hợp đồng (`tenure = 0`).
-        - ✅ **Outlier Verification:** Kiểm định dải phân vị $Q_1, Q_3$ và khoảng $1.5 \times IQR$ trên các cột liên tục.
+        - ✅ **Outlier Verification:** Kiểm định dải phân vị $Q_1, Q_3$ và khoảng $1.5 × IQR$ trên các cột liên tục.
         - ✅ **Feature Store Enrichment:** Bổ sung 6 trường tính toán mới: `TenureGroup`, `TotalServicesSubscribed`, `HasProtectionPackage`, `CalculatedAvgMonthly`, `CLV_Category`, `ChurnNumeric`.
         """)
 
