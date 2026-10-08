@@ -31,24 +31,58 @@ DATA_URLS = [
     "https://raw.githubusercontent.com/treselle-systems/Customer_Churn_Analysis_EDA_and_ML/master/WA_Fn-UseC_-Telco-Customer-Churn.csv"
 ]
 
-# Danh sách tọa độ các thành phố / bang viễn thông tại Hoa Kỳ để phục vụ bản đồ
-US_LOCATIONS = [
-    {"City": "Los Angeles", "State": "CA", "Latitude": 34.0522, "Longitude": -118.2437},
-    {"City": "San Francisco", "State": "CA", "Latitude": 37.7749, "Longitude": -122.4194},
-    {"City": "San Diego", "State": "CA", "Latitude": 32.7157, "Longitude": -117.1611},
-    {"City": "Houston", "State": "TX", "Latitude": 29.7604, "Longitude": -95.3698},
-    {"City": "Dallas", "State": "TX", "Latitude": 32.7767, "Longitude": -96.7970},
-    {"City": "Austin", "State": "TX", "Latitude": 30.2672, "Longitude": -97.7431},
-    {"City": "New York", "State": "NY", "Latitude": 40.7128, "Longitude": -74.0060},
-    {"City": "Buffalo", "State": "NY", "Latitude": 42.8864, "Longitude": -78.8784},
-    {"City": "Miami", "State": "FL", "Latitude": 25.7617, "Longitude": -80.1918},
-    {"City": "Orlando", "State": "FL", "Latitude": 28.5383, "Longitude": -81.3792},
-    {"City": "Chicago", "State": "IL", "Latitude": 41.8781, "Longitude": -87.6298},
-    {"City": "Seattle", "State": "WA", "Latitude": 47.6062, "Longitude": -122.3321},
-    {"City": "Denver", "State": "CO", "Latitude": 39.7392, "Longitude": -104.9903},
-    {"City": "Phoenix", "State": "AZ", "Latitude": 33.4484, "Longitude": -112.0740},
-    {"City": "Atlanta", "State": "GA", "Latitude": 33.7490, "Longitude": -84.3880},
-    {"City": "Boston", "State": "MA", "Latitude": 42.3601, "Longitude": -71.0589},
+# Danh sách tọa độ và phân bổ 50 bang viễn thông tại Hoa Kỳ (Chuẩn Data Engineering)
+US_50_STATES = [
+    {"StateCode": "AL", "StateName": "Alabama", "City": "Birmingham", "Latitude": 33.5186, "Longitude": -86.8104, "Weight": 0.015},
+    {"StateCode": "AK", "StateName": "Alaska", "City": "Anchorage", "Latitude": 61.2181, "Longitude": -149.9003, "Weight": 0.005},
+    {"StateCode": "AZ", "StateName": "Arizona", "City": "Phoenix", "Latitude": 33.4484, "Longitude": -112.0740, "Weight": 0.025},
+    {"StateCode": "AR", "StateName": "Arkansas", "City": "Little Rock", "Latitude": 34.7465, "Longitude": -92.2896, "Weight": 0.010},
+    {"StateCode": "CA", "StateName": "California", "City": "Los Angeles", "Latitude": 34.0522, "Longitude": -118.2437, "Weight": 0.110},
+    {"StateCode": "CO", "StateName": "Colorado", "City": "Denver", "Latitude": 39.7392, "Longitude": -104.9903, "Weight": 0.020},
+    {"StateCode": "CT", "StateName": "Connecticut", "City": "Hartford", "Latitude": 41.7658, "Longitude": -72.6734, "Weight": 0.012},
+    {"StateCode": "DE", "StateName": "Delaware", "City": "Wilmington", "Latitude": 39.7447, "Longitude": -75.5484, "Weight": 0.006},
+    {"StateCode": "FL", "StateName": "Florida", "City": "Miami", "Latitude": 25.7617, "Longitude": -80.1918, "Weight": 0.065},
+    {"StateCode": "GA", "StateName": "Georgia", "City": "Atlanta", "Latitude": 33.7490, "Longitude": -84.3880, "Weight": 0.033},
+    {"StateCode": "HI", "StateName": "Hawaii", "City": "Honolulu", "Latitude": 21.3069, "Longitude": -157.8583, "Weight": 0.007},
+    {"StateCode": "ID", "StateName": "Idaho", "City": "Boise", "Latitude": 43.6150, "Longitude": -116.2023, "Weight": 0.008},
+    {"StateCode": "IL", "StateName": "Illinois", "City": "Chicago", "Latitude": 41.8781, "Longitude": -87.6298, "Weight": 0.040},
+    {"StateCode": "IN", "StateName": "Indiana", "City": "Indianapolis", "Latitude": 39.7684, "Longitude": -86.1581, "Weight": 0.020},
+    {"StateCode": "IA", "StateName": "Iowa", "City": "Des Moines", "Latitude": 41.5868, "Longitude": -93.6250, "Weight": 0.010},
+    {"StateCode": "KS", "StateName": "Kansas", "City": "Wichita", "Latitude": 37.6872, "Longitude": -97.3301, "Weight": 0.010},
+    {"StateCode": "KY", "StateName": "Kentucky", "City": "Louisville", "Latitude": 38.2527, "Longitude": -85.7585, "Weight": 0.014},
+    {"StateCode": "LA", "StateName": "Louisiana", "City": "New Orleans", "Latitude": 29.9511, "Longitude": -90.0715, "Weight": 0.015},
+    {"StateCode": "ME", "StateName": "Maine", "City": "Portland", "Latitude": 43.6591, "Longitude": -70.2568, "Weight": 0.006},
+    {"StateCode": "MD", "StateName": "Maryland", "City": "Baltimore", "Latitude": 39.2904, "Longitude": -76.6122, "Weight": 0.020},
+    {"StateCode": "MA", "StateName": "Massachusetts", "City": "Boston", "Latitude": 42.3601, "Longitude": -71.0589, "Weight": 0.025},
+    {"StateCode": "MI", "StateName": "Michigan", "City": "Detroit", "Latitude": 42.3314, "Longitude": -83.0458, "Weight": 0.030},
+    {"StateCode": "MN", "StateName": "Minnesota", "City": "Minneapolis", "Latitude": 44.9778, "Longitude": -93.2650, "Weight": 0.018},
+    {"StateCode": "MS", "StateName": "Mississippi", "City": "Jackson", "Latitude": 32.2988, "Longitude": -90.1848, "Weight": 0.010},
+    {"StateCode": "MO", "StateName": "Missouri", "City": "Kansas City", "Latitude": 39.0997, "Longitude": -94.5786, "Weight": 0.018},
+    {"StateCode": "MT", "StateName": "Montana", "City": "Billings", "Latitude": 45.7833, "Longitude": -108.5007, "Weight": 0.005},
+    {"StateCode": "NE", "StateName": "Nebraska", "City": "Omaha", "Latitude": 41.2565, "Longitude": -95.9345, "Weight": 0.008},
+    {"StateCode": "NV", "StateName": "Nevada", "City": "Las Vegas", "Latitude": 36.1699, "Longitude": -115.1398, "Weight": 0.012},
+    {"StateCode": "NH", "StateName": "New Hampshire", "City": "Manchester", "Latitude": 42.9956, "Longitude": -71.4548, "Weight": 0.006},
+    {"StateCode": "NJ", "StateName": "New Jersey", "City": "Newark", "Latitude": 40.7357, "Longitude": -74.1724, "Weight": 0.030},
+    {"StateCode": "NM", "StateName": "New Mexico", "City": "Albuquerque", "Latitude": 35.0844, "Longitude": -106.6504, "Weight": 0.009},
+    {"StateCode": "NY", "StateName": "New York", "City": "New York", "Latitude": 40.7128, "Longitude": -74.0060, "Weight": 0.065},
+    {"StateCode": "NC", "StateName": "North Carolina", "City": "Charlotte", "Latitude": 35.2271, "Longitude": -80.8431, "Weight": 0.032},
+    {"StateCode": "ND", "StateName": "North Dakota", "City": "Fargo", "Latitude": 46.8772, "Longitude": -96.7898, "Weight": 0.005},
+    {"StateCode": "OH", "StateName": "Ohio", "City": "Columbus", "Latitude": 39.9612, "Longitude": -82.9988, "Weight": 0.035},
+    {"StateCode": "OK", "StateName": "Oklahoma", "City": "Oklahoma City", "Latitude": 35.4676, "Longitude": -97.5164, "Weight": 0.012},
+    {"StateCode": "OR", "StateName": "Oregon", "City": "Portland", "Latitude": 45.5152, "Longitude": -122.6784, "Weight": 0.015},
+    {"StateCode": "PA", "StateName": "Pennsylvania", "City": "Philadelphia", "Latitude": 39.9526, "Longitude": -75.1652, "Weight": 0.038},
+    {"StateCode": "RI", "StateName": "Rhode Island", "City": "Providence", "Latitude": 41.8240, "Longitude": -71.4128, "Weight": 0.005},
+    {"StateCode": "SC", "StateName": "South Carolina", "City": "Charleston", "Latitude": 32.7765, "Longitude": -79.9311, "Weight": 0.016},
+    {"StateCode": "SD", "StateName": "South Dakota", "City": "Sioux Falls", "Latitude": 43.5446, "Longitude": -96.7311, "Weight": 0.005},
+    {"StateCode": "TN", "StateName": "Tennessee", "City": "Nashville", "Latitude": 36.1627, "Longitude": -86.7816, "Weight": 0.022},
+    {"StateCode": "TX", "StateName": "Texas", "City": "Houston", "Latitude": 29.7604, "Longitude": -95.3698, "Weight": 0.085},
+    {"StateCode": "UT", "StateName": "Utah", "City": "Salt Lake City", "Latitude": 40.7608, "Longitude": -111.8910, "Weight": 0.012},
+    {"StateCode": "VT", "StateName": "Vermont", "City": "Burlington", "Latitude": 44.4759, "Longitude": -73.2121, "Weight": 0.005},
+    {"StateCode": "VA", "StateName": "Virginia", "City": "Virginia Beach", "Latitude": 36.8529, "Longitude": -75.9780, "Weight": 0.027},
+    {"StateCode": "WA", "StateName": "Washington", "City": "Seattle", "Latitude": 47.6062, "Longitude": -122.3321, "Weight": 0.025},
+    {"StateCode": "WV", "StateName": "West Virginia", "City": "Charleston", "Latitude": 38.3498, "Longitude": -81.6326, "Weight": 0.007},
+    {"StateCode": "WI", "StateName": "Wisconsin", "City": "Milwaukee", "Latitude": 43.0389, "Longitude": -87.9065, "Weight": 0.018},
+    {"StateCode": "WY", "StateName": "Wyoming", "City": "Cheyenne", "Latitude": 41.1400, "Longitude": -104.8202, "Weight": 0.005}
 ]
 
 def fetch_or_generate_raw_data():
@@ -147,17 +181,22 @@ def fetch_or_generate_raw_data():
             "Churn": churn
         })
 
-    # Bổ sung thông tin địa lý và bảng chi tiết để tách thành CSDL quan hệ nhiều bảng
+    # Bổ sung thông tin địa lý và bảng chi tiết để tách thành CSDL quan hệ nhiều bảng (50 bang Hoa Kỳ)
     n = len(df_raw)
     np.random.seed(123)
-    loc_indices = np.random.choice(len(US_LOCATIONS), n)
-    locations = [US_LOCATIONS[i] for i in loc_indices]
+    loc_weights = np.array([loc["Weight"] for loc in US_50_STATES], dtype=float)
+    loc_weights = loc_weights / loc_weights.sum()
+    loc_indices = np.random.choice(len(US_50_STATES), n, p=loc_weights)
+    locations = [US_50_STATES[i] for i in loc_indices]
     
-    df_raw["State"] = [loc["State"] for loc in locations]
+    # Định dạng State hiển thị đầy đủ tên bang và mã: e.g. "California (CA)"
+    df_raw["State"] = [f"{loc['StateName']} ({loc['StateCode']})" for loc in locations]
+    df_raw["StateName"] = [loc["StateName"] for loc in locations]
+    df_raw["StateCode"] = [loc["StateCode"] for loc in locations]
     df_raw["City"] = [loc["City"] for loc in locations]
-    # Thêm chút nhiễu tọa độ để khi hiển thị bản đồ các điểm phân tán tự nhiên
-    df_raw["Latitude"] = [loc["Latitude"] + np.random.uniform(-0.15, 0.15) for loc in locations]
-    df_raw["Longitude"] = [loc["Longitude"] + np.random.uniform(-0.15, 0.15) for loc in locations]
+    # Thêm chút nhiễu tọa độ để khi hiển thị bản đồ các điểm phân tán tự nhiên quanh thành phố
+    df_raw["Latitude"] = [round(loc["Latitude"] + np.random.uniform(-0.15, 0.15), 4) for loc in locations]
+    df_raw["Longitude"] = [round(loc["Longitude"] + np.random.uniform(-0.15, 0.15), 4) for loc in locations]
 
     # Tạo Churn Category & Reason
     reasons = [
@@ -176,9 +215,9 @@ def fetch_or_generate_raw_data():
         np.random.choice([3, 4, 5], n, p=[0.15, 0.45, 0.40])
     )
 
-    print(f"[*] Tiến hành phân rã thành 4 bảng quan hệ theo cấu trúc RDBMS...")
+    print(f"[*] Tiến hành phân rã thành 4 bảng quan hệ theo cấu trúc RDBMS (50 bang)...")
     # Bảng 1: Demographics & Geography
-    df_demographics = df_raw[["customerID", "gender", "SeniorCitizen", "Partner", "Dependents", "State", "City", "Latitude", "Longitude"]]
+    df_demographics = df_raw[["customerID", "gender", "SeniorCitizen", "Partner", "Dependents", "State", "StateName", "StateCode", "City", "Latitude", "Longitude"]]
     df_demographics.to_csv(os.path.join(RAW_DIR, "telco_demographics.csv"), index=False)
 
     # Bảng 2: Services

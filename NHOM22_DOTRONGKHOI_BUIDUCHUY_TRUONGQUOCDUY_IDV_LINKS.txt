@@ -17,19 +17,19 @@ DANH SÁCH THÀNH VIÊN:
 1. LIÊN KẾT VIDEO DEMO (YOUTUBE & GOOGLE DRIVE BACKUP)
 --------------------------------------------------------------------------------
 - Link Video Demo chính thức (YouTube):
-  https://youtu.be/demo-telco-churn-nhom22
+  https://youtu.be/1MD8Ldf3zAo
 
 - Link Google Drive Thư mục Backup Video + File Báo cáo:
-  https://drive.google.com/drive/folders/nhom22-telco-churn-backup
+  https://drive.google.com/file/d/1kE76h7QvDENRsIagD9k1Sq7ncRwSKCr9/view?usp=sharing
 
 --------------------------------------------------------------------------------
 2. LIÊN KẾT MÃ NGUỒN (SOURCE CODE DASHBOARD & GITHUB REPOSITORY)
 --------------------------------------------------------------------------------
 - GitHub Repository chính thức:
-  https://github.com/24133009-ops/Telco-Customer-Churn-Visualization-Nhóm22
+  https://github.com/24133009-ops/Telco-Customer-Churn-IDV
 
 - Kho lưu trữ Dashboard trực tuyến (Streamlit Community Cloud):
-  https://nhom22-telco-churn-dashboard.streamlit.app
+  https://nhom22-telco-churn.streamlit.app
 
 --------------------------------------------------------------------------------
 3. HƯỚNG DẪN KHỞI CHẠY DASHBOARD CỤC BỘ (LOCAL SETUP)

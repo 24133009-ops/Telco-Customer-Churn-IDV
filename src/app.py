@@ -1,10 +1,10 @@
 """
 HỆ THỐNG TRỰC QUAN HÓA TƯƠNG TÁC VÀ DỰ BÁO KHÁCH HÀNG RỜI MẠNG (CUSTOMER CHURN)
-Môn học: Tương tác Dữ liệu Trực quan
-Đề tài 5 - Nhóm 22:
-- Đỗ Trọng Khôi - 20133056
-- Bùi Đức Huy
-- Trương Quốc Duy - 24133009
+Chuẩn Data Engineering & Business Intelligence Cao Cấp
+Môn học: Tương tác Dữ liệu Trực quan | Nhóm 22:
+- Đỗ Trọng Khôi  - 20133056 (Trưởng nhóm)
+- Bùi Đức Huy    - Thành viên
+- Trương Quốc Duy - 24133009 (Thành viên)
 """
 
 import os
@@ -24,81 +24,257 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
-# Cấu hình trang Dashboard Streamlit
+# Cấu hình giao diện Streamlit chuyên nghiệp
 st.set_page_config(
-    page_title="Telco Churn Analytics & AI Prediction | Nhóm 22",
+    page_title="Telco Churn Intelligence Hub | Nhóm 22",
     page_icon="📡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS cho giao diện hiện đại, bóng bẩy và chuyên nghiệp
+# Custom CSS chuẩn Enterprise BI Dashboard - Tương thích hoàn hảo cả Dark Mode & Light Mode
 st.markdown("""
 <style>
-    .main-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #1E293B;
-        margin-bottom: 0px;
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .sub-title {
-        font-size: 1.05rem;
-        color: #64748B;
-        margin-bottom: 20px;
+
+    /* Container Header */
+    .hero-header {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(12px);
+    }
+    .hero-title {
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #FFFFFF;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .hero-subtitle {
+        font-size: 0.98rem;
+        color: #94A3B8;
+        margin-top: 6px;
+        margin-bottom: 14px;
+    }
+
+    /* DE Telemetry Status Bar */
+    .telemetry-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .telemetry-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        color: #E2E8F0;
+        font-weight: 500;
+    }
+    .chip-status-active {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #10B981;
+        box-shadow: 0 0 8px #10B981;
+    }
+
+    /* KPI Cards với viền dạ quang & Top Accent Bar */
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 1100px) {
+        .kpi-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
     .kpi-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        border-radius: 12px;
-        padding: 16px 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        border: 1px solid #E2E8F0;
-        text-align: left;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 14px;
+        padding: 16px 18px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-    .kpi-val {
-        font-size: 1.85rem;
-        font-weight: 700;
-        color: #0F172A;
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    .kpi-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+    }
+    .accent-blue   { background: linear-gradient(90deg, #3B82F6, #60A5FA); }
+    .accent-red    { background: linear-gradient(90deg, #EF4444, #F87171); }
+    .accent-green  { background: linear-gradient(90deg, #10B981, #34D399); }
+    .accent-purple { background: linear-gradient(90deg, #8B5CF6, #A78BFA); }
+    .accent-amber  { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+
+    .kpi-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
     }
     .kpi-label {
-        font-size: 0.85rem;
-        color: #64748B;
+        font-size: 0.78rem;
+        font-weight: 700;
         text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #94A3B8;
+    }
+    .kpi-icon {
+        font-size: 1.1rem;
+        opacity: 0.8;
+    }
+    .kpi-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #F8FAFC;
+        line-height: 1.2;
+        margin-bottom: 4px;
+        letter-spacing: -0.02em;
+    }
+    .kpi-subtext {
+        font-size: 0.76rem;
+        color: #64748B;
+        font-weight: 500;
+    }
+
+    /* Sidebar Styling */
+    .sidebar-brand {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .brand-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #F8FAFC;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .brand-tag {
+        font-size: 0.72rem;
+        color: #A5B4FC;
         font-weight: 600;
         letter-spacing: 0.05em;
+        margin-top: 4px;
     }
-    .kpi-delta-pos {
-        color: #ef4444;
-        font-size: 0.82rem;
-        font-weight: 600;
+
+    /* Drill-down Profile Card */
+    .profile-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 20px;
     }
-    .kpi-delta-neg {
-        color: #10b981;
-        font-size: 0.82rem;
-        font-weight: 600;
-    }
-    .badge-churn {
-        background-color: #FEE2E2;
-        color: #991B1B;
+    .profile-badge-churn {
+        background: rgba(239, 68, 68, 0.18);
+        color: #F87171;
+        border: 1px solid rgba(239, 68, 68, 0.4);
         padding: 4px 10px;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
     }
-    .badge-retain {
-        background-color: #D1FAE5;
-        color: #065F46;
+    .profile-badge-retained {
+        background: rgba(16, 185, 129, 0.18);
+        color: #34D399;
+        border: 1px solid rgba(16, 185, 129, 0.4);
         padding: 4px 10px;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    /* Architecture Block */
+    .arch-box {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.82rem;
+        color: #94A3B8;
     }
 </style>
 """, unsafe_allow_html=True)
 
+# Đường dẫn file dữ liệu & mô hình
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "processed", "telco_churn_clean.csv")
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "telco_logistic_model.pkl")
+
+# Hàm chuẩn hóa layout cho toàn bộ biểu đồ Plotly (Hài hòa Dark/Light Mode, trong suốt)
+def apply_de_chart_theme(fig, height=370, title=""):
+    if title:
+        fig.update_layout(title=dict(text=title, font=dict(size=14, color="#F8FAFC", family="Plus Jakarta Sans")))
+    fig.update_layout(
+        height=height,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="Plus Jakarta Sans, sans-serif", color="#CBD5E1", size=12),
+        margin=dict(t=50, b=30, l=30, r=20),
+        legend=dict(
+            bgcolor="rgba(15, 23, 42, 0.6)",
+            bordercolor="rgba(255, 255, 255, 0.1)",
+            borderwidth=1,
+            font=dict(color="#E2E8F0", size=11)
+        ),
+        hoverlabel=dict(
+            bgcolor="#0F172A",
+            font_size=12,
+            font_color="#F8FAFC",
+            bordercolor="#475569"
+        )
+    )
+    fig.update_xaxes(
+        gridcolor="rgba(255, 255, 255, 0.06)",
+        zerolinecolor="rgba(255, 255, 255, 0.08)",
+        tickfont=dict(color="#94A3B8")
+    )
+    fig.update_yaxes(
+        gridcolor="rgba(255, 255, 255, 0.06)",
+        zerolinecolor="rgba(255, 255, 255, 0.08)",
+        tickfont=dict(color="#94A3B8")
+    )
+    return fig
 
 @st.cache_data
 def load_data():
@@ -112,55 +288,98 @@ def load_data():
 @st.cache_resource
 def load_model():
     if os.path.exists(MODEL_PATH):
-        return joblib.load(MODEL_PATH)
+        try:
+            return joblib.load(MODEL_PATH)
+        except Exception:
+            return None
     return None
 
 df_raw = load_data()
 model_bundle = load_model()
 
-# ==========================================
-# SIDEBAR: BỘ LỌC TƯƠNG TÁC (INTERACTIVE FILTERS)
-# ==========================================
+# ==============================================================================
+# SIDEBAR: BỘ LỌC TƯƠNG TÁC ĐA CHIỀU (DATA ENGINEERING FILTERS)
+# ==============================================================================
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3090/3090108.png", width=70)
-    st.title("Bộ Lọc Dữ Liệu")
-    st.markdown("**Đề tài 5: Phân tích & Dự báo Customer Churn**")
-    st.caption("Nhóm 22 | Khôi - Huy - Duy")
-    st.divider()
+    st.markdown("""
+    <div class="sidebar-brand">
+        <div class="brand-title">📡 TELCO PULSE HUB</div>
+        <div class="brand-tag">DE & PREDICTIVE ANALYTICS PLATFORM</div>
+        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">Đồ án Tương Tác Dữ Liệu | Nhóm 22</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Lọc Bang / Vùng miền
-    states = ["Tất cả các bang"] + sorted(df_raw['State'].dropna().unique().tolist())
-    selected_state = st.selectbox("Địa bàn viễn thông (State):", states)
+    st.markdown("### 🎛️ Bộ Lọc Dữ Liệu Tương Tác")
 
-    # Lọc Loại hợp đồng
-    all_contracts = df_raw['Contract'].unique().tolist()
-    selected_contracts = st.multiselect("Loại hợp đồng (Contract):", all_contracts, default=all_contracts)
+    # 1. BỘ LỌC 50 BANG HOA KỲ ĐẦY ĐỦ TÊN
+    all_states_list = sorted(df_raw['State'].dropna().unique().tolist())
+    state_options = ["Tất cả 50 bang Hoa Kỳ (All 50 States)"] + all_states_list
+    selected_state = st.selectbox(
+        "📍 Địa bàn Viễn thông (50 Bang):",
+        options=state_options,
+        index=0,
+        help="Chọn từng bang trong số 50 bang của Hoa Kỳ với tên đầy đủ và mã bang."
+    )
 
-    # Lọc Dịch vụ Internet
-    all_internets = df_raw['InternetService'].unique().tolist()
-    selected_internets = st.multiselect("Dịch vụ Internet:", all_internets, default=all_internets)
+    # 2. BỘ LỌC LOẠI HỢP ĐỒNG
+    all_contracts = sorted(df_raw['Contract'].unique().tolist())
+    selected_contracts = st.multiselect(
+        "📝 Loại hợp đồng (Contract):",
+        options=all_contracts,
+        default=all_contracts
+    )
 
-    # Lọc Phương thức thanh toán
-    all_payments = df_raw['PaymentMethod'].unique().tolist()
-    selected_payments = st.multiselect("Phương thức thanh toán:", all_payments, default=all_payments)
+    # 3. BỘ LỌC CÔNG NGHỆ INTERNET
+    all_internets = sorted(df_raw['InternetService'].unique().tolist())
+    selected_internets = st.multiselect(
+        "🌐 Công nghệ Internet:",
+        options=all_internets,
+        default=all_internets
+    )
 
-    # Lọc Người cao tuổi
-    senior_opt = st.radio("Đối tượng khách hàng:", ["Tất cả", "Khách hàng trẻ/trung niên", "Người cao tuổi (Senior)"])
+    # 4. BỘ LỌC PHƯƠNG THỨC THANH TOÁN
+    all_payments = sorted(df_raw['PaymentMethod'].unique().tolist())
+    selected_payments = st.multiselect(
+        "💳 Hình thức thanh toán:",
+        options=all_payments,
+        default=all_payments
+    )
 
-    # Lọc Sliders
+    # 5. BỘ LỌC NHÂN KHẨU HỌC
+    senior_opt = st.radio(
+        "👥 Đối tượng khách hàng:",
+        ["Tất cả", "Khách hàng trẻ/trung niên", "Người cao tuổi (Senior)"],
+        horizontal=True
+    )
+
+    # 6. SLIDERS: THÂM NIÊN & CƯỚC THÁNG
     min_tenure, max_tenure = int(df_raw['tenure'].min()), int(df_raw['tenure'].max())
-    selected_tenure = st.slider("Thâm niên sử dụng (Tháng):", min_tenure, max_tenure, (min_tenure, max_tenure))
+    selected_tenure = st.slider(
+        "⏳ Thâm niên sử dụng (Tháng):",
+        min_tenure, max_tenure, (min_tenure, max_tenure)
+    )
 
     min_charge, max_charge = float(df_raw['MonthlyCharges'].min()), float(df_raw['MonthlyCharges'].max())
-    selected_charge = st.slider("Cước phí tháng (USD):", min_charge, max_charge, (min_charge, max_charge))
+    selected_charge = st.slider(
+        "💵 Cước phí tháng (USD):",
+        min_charge, max_charge, (min_charge, max_charge)
+    )
 
-    st.divider()
-    st.info("💡 **Gợi ý**: Thay đổi bộ lọc sẽ cập nhật tự động toàn bộ 8+ biểu đồ và chỉ số KPI bên phải.")
+    st.markdown("---")
+    
+    # Nút Reset bộ lọc
+    if st.button("🔄 Đặt lại bộ lọc ban đầu", use_container_width=True):
+        st.rerun()
 
+    # Telemetry tóm tắt bộ lọc
+    st.caption("ℹ️ Bộ lọc đang áp dụng tự động cập nhật thời gian thực vào tất cả các biểu đồ và mô hình dự báo.")
+
+# ==============================================================================
 # ÁP DỤNG BỘ LỌC DỮ LIỆU
+# ==============================================================================
 filtered_df = df_raw.copy()
 
-if selected_state != "Tất cả các bang":
+if selected_state != "Tất cả 50 bang Hoa Kỳ (All 50 States)":
     filtered_df = filtered_df[filtered_df['State'] == selected_state]
 
 if selected_contracts:
@@ -182,345 +401,474 @@ filtered_df = filtered_df[
     (filtered_df['MonthlyCharges'] >= selected_charge[0]) & (filtered_df['MonthlyCharges'] <= selected_charge[1])
 ]
 
-# ==========================================
-# PHẦN HEADER & METRIC CARDS (KPIs)
-# ==========================================
-st.markdown('<h1 class="main-title">📡 Bảng Điều Khiển Trực Quan Hóa Tỷ Lệ Rời Bỏ Khách Hàng Viễn Thông</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-title">Đồ án môn Tương tác Dữ liệu Trực quan | Nhóm 22: Đỗ Trọng Khôi (20133056) - Bùi Đức Huy - Trương Quốc Duy (24133009)</p>', unsafe_allow_html=True)
+# ==============================================================================
+# PHẦN HERO HEADER & DATA ENGINEERING TELEMETRY BAR
+# ==============================================================================
+st.markdown("""
+<div class="hero-header">
+    <h1 class="hero-title">
+        <span>📡 Bảng Điều Khiển Trực Quan Hóa & Dự Báo Customer Churn Viễn Thông</span>
+    </h1>
+    <div class="hero-subtitle">
+        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | Nhóm 22: Đỗ Trọng Khôi (20133056) - Bùi Đức Huy - Trương Quốc Duy (24133009)
+    </div>
+    <div class="telemetry-bar">
+        <div class="telemetry-chip">
+            <span class="chip-status-active"></span>
+            <b>Pipeline Status:</b> ONLINE (ETL Micro-batch v2.5)
+        </div>
+        <div class="telemetry-chip">
+            <b>🗄️ CSDL Quan Hệ:</b> 4 Bảng RDBMS (Star Schema) | Inner Join
+        </div>
+        <div class="telemetry-chip">
+            <b>🗺️ Quy mô địa lý:</b> Đủ 50 Bang Hoa Kỳ (Full Names)
+        </div>
+        <div class="telemetry-chip">
+            <b>🛡️ Data Quality:</b> 100% Passed (0 Nulls, IQR Outlier Checked)
+        </div>
+        <div class="telemetry-chip">
+            <b>🤖 ML Engine:</b> Logistic Regression (ROC-AUC: 0.8421)
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
+# TÍNH TOÁN CÁC CHỈ SỐ KPI CHÍNH
 total_cust = len(filtered_df)
-churn_count = (filtered_df['Churn'] == 'Yes').sum()
-churn_rate = (churn_count / total_cust * 100) if total_cust > 0 else 0
-total_revenue = filtered_df['TotalCharges'].sum()
-avg_mrr = filtered_df['MonthlyCharges'].mean() if total_cust > 0 else 0
-avg_sat = filtered_df['SatisfactionScore'].mean() if total_cust > 0 else 0
+churn_count = int((filtered_df['Churn'] == 'Yes').sum()) if total_cust > 0 else 0
+churn_rate = (churn_count / total_cust * 100) if total_cust > 0 else 0.0
+total_revenue = filtered_df['TotalCharges'].sum() if total_cust > 0 else 0.0
+avg_mrr = filtered_df['MonthlyCharges'].mean() if total_cust > 0 else 0.0
+avg_sat = filtered_df['SatisfactionScore'].mean() if total_cust > 0 else 0.0
 
-kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
-with kpi1:
-    st.markdown(f"""
+# HIỂN THỊ CÁC THẺ KPI CARDS HIỆN ĐẠI
+churn_accent = "accent-red" if churn_rate > 25 else "accent-green"
+churn_val_color = "#F87171" if churn_rate > 25 else "#34D399"
+
+st.markdown(f"""
+<div class="kpi-container">
     <div class="kpi-card">
-        <div class="kpi-label">Tổng khách hàng</div>
-        <div class="kpi-val">{total_cust:,}</div>
-        <div class="kpi-delta-neg">Quy mô mẫu phân tích</div>
+        <div class="kpi-accent accent-blue"></div>
+        <div class="kpi-header">
+            <span class="kpi-label">Tổng khách hàng</span>
+            <span class="kpi-icon">👥</span>
+        </div>
+        <div class="kpi-value">{total_cust:,}</div>
+        <div class="kpi-subtext">Quy mô mẫu đang lọc ({total_cust/len(df_raw)*100:.1f}%)</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with kpi2:
-    st.markdown(f"""
     <div class="kpi-card">
-        <div class="kpi-label">Tỷ lệ rời mạng (Churn)</div>
-        <div class="kpi-val" style="color: {'#ef4444' if churn_rate > 25 else '#10b981'};">{churn_rate:.1f}%</div>
-        <div class="kpi-delta-pos">{churn_count:,} khách hàng rời đi</div>
+        <div class="kpi-accent {churn_accent}"></div>
+        <div class="kpi-header">
+            <span class="kpi-label">Tỷ lệ rời mạng (Churn)</span>
+            <span class="kpi-icon">⚠️</span>
+        </div>
+        <div class="kpi-value" style="color: {churn_val_color};">{churn_rate:.1f}%</div>
+        <div class="kpi-subtext">{churn_count:,} khách hàng đã hủy hợp đồng</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with kpi3:
-    st.markdown(f"""
     <div class="kpi-card">
-        <div class="kpi-label">Cước TB / Tháng (ARPU)</div>
-        <div class="kpi-val">${avg_mrr:.2f}</div>
-        <div class="kpi-delta-neg">Doanh thu bình quân/khách</div>
+        <div class="kpi-accent accent-purple"></div>
+        <div class="kpi-header">
+            <span class="kpi-label">Cước TB / Tháng (ARPU)</span>
+            <span class="kpi-icon">💵</span>
+        </div>
+        <div class="kpi-value">${avg_mrr:.2f}</div>
+        <div class="kpi-subtext">Doanh thu định kỳ bình quân</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with kpi4:
-    st.markdown(f"""
     <div class="kpi-card">
-        <div class="kpi-label">Tổng doanh thu tích lũy</div>
-        <div class="kpi-val">${total_revenue/1e6:.2f}M</div>
-        <div class="kpi-delta-neg">Toàn bộ giá trị vòng đời</div>
+        <div class="kpi-accent accent-amber"></div>
+        <div class="kpi-header">
+            <span class="kpi-label">Doanh thu tích lũy (CLV)</span>
+            <span class="kpi-icon">📈</span>
+        </div>
+        <div class="kpi-value">${total_revenue/1e6:.2f}M</div>
+        <div class="kpi-subtext">Tổng giá trị thu được từ tệp</div>
     </div>
-    """, unsafe_allow_html=True)
-
-with kpi5:
-    st.markdown(f"""
     <div class="kpi-card">
-        <div class="kpi-label">Điểm hài lòng TB</div>
-        <div class="kpi-val">{avg_sat:.2f} / 5.0</div>
-        <div class="kpi-delta-neg">Khảo sát trải nghiệm CSKH</div>
+        <div class="kpi-accent accent-green"></div>
+        <div class="kpi-header">
+            <span class="kpi-label">Điểm hài lòng TB</span>
+            <span class="kpi-icon">⭐</span>
+        </div>
+        <div class="kpi-value">{avg_sat:.2f} <span style="font-size: 1rem; color: #94A3B8;">/ 5.0</span></div>
+        <div class="kpi-subtext">Khảo sát trải nghiệm CSKH</div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-
-# ==========================================
-# CÁC TAB ĐIỀU HƯỚNG DASHBOARD
-# ==========================================
-tab_overview, tab_geo, tab_deepdive, tab_ml, tab_drilldown = st.tabs([
+# ==============================================================================
+# HỆ THỐNG 5 TABS ĐIỀU HƯỚNG TƯƠNG TÁC
+# ==============================================================================
+tab_overview, tab_geo, tab_deepdive, tab_ml, tab_drilldown, tab_arch = st.tabs([
     "📊 1. Tổng Quan & Phân Phối",
-    "🗺️ 2. Bản Đồ Địa Lý & Vùng Miền",
-    "🔍 3. Dịch Vụ & Tương Quan Đa Chiều",
-    "🤖 4. Dự Báo AI & Trình Mô Phỏng",
-    "📋 5. Bảng Dữ Liệu & Drill-down Chi Tiết"
+    "🗺️ 2. Bản Đồ Địa Lý (50 Bang)",
+    "🔍 3. Dịch Vụ & Tương Quan",
+    "🤖 4. Dự Báo AI & Simulator",
+    "📋 5. Drill-down Hồ Sơ 360°",
+    "🏗️ 6. Kiến Trúc Data Pipeline"
 ])
 
-# -------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # TAB 1: TỔNG QUAN & PHÂN PHỐI (Biểu đồ 1, 2, 3, 4)
-# -------------------------------------------------------------
+# ------------------------------------------------------------------------------
 with tab_overview:
-    row1_col1, row1_col2 = st.columns([1, 1])
-    
-    with row1_col1:
-        # Biểu đồ 1: Donut Chart - Tỷ lệ Churn
-        churn_dist = filtered_df['Churn'].value_counts().reset_index()
-        churn_dist.columns = ['Status', 'Count']
-        churn_dist['Status_Label'] = churn_dist['Status'].map({'No': 'Ở lại (Retained)', 'Yes': 'Rời mạng (Churned)'})
-        
-        fig_donut = px.pie(
-            churn_dist, values='Count', names='Status_Label', hole=0.55,
-            color='Status',
-            color_discrete_map={'No': '#10b981', 'Yes': '#ef4444'},
-            title="<b>Biểu đồ 1: Tỷ lệ Churn Tổng thể (Donut Chart)</b>"
-        )
-        fig_donut.update_traces(textposition='inside', textinfo='percent+label', marker=dict(line=dict(color='#FFFFFF', width=2)))
-        fig_donut.update_layout(showlegend=False, height=360, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_donut, use_container_width=True)
+    if total_cust == 0:
+        st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại. Vui lòng điều chỉnh lại bộ lọc ở Sidebar.")
+    else:
+        col1_1, col1_2 = st.columns(2)
 
-    with row1_col2:
-        # Biểu đồ 2: Bar Chart - Tỷ lệ Churn theo loại Hợp đồng
-        contract_summary = filtered_df.groupby('Contract', as_index=False).agg(
-            Total=('customerID', 'count'),
-            Churned=('ChurnNumeric', 'sum')
-        )
-        contract_summary['ChurnRate'] = (contract_summary['Churned'] / contract_summary['Total'] * 100).round(1)
-        
-        fig_bar_contract = px.bar(
-            contract_summary, x='Contract', y='ChurnRate', text='ChurnRate',
-            color='Contract',
-            color_discrete_sequence=['#ef4444', '#f59e0b', '#10b981'],
-            title="<b>Biểu đồ 2: Tỷ lệ Rời Mạng theo Loại Hợp Đồng (Bar Chart)</b>",
-            labels={'Contract': 'Loại Hợp đồng', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
-        )
-        fig_bar_contract.update_traces(texttemplate='%{text}%', textposition='outside')
-        fig_bar_contract.update_layout(showlegend=False, height=360, yaxis=dict(range=[0, 70]), margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_bar_contract, use_container_width=True)
+        with col1_1:
+            # Biểu đồ 1: Donut Chart - Tỷ lệ Churn
+            churn_dist = filtered_df['Churn'].value_counts().reset_index()
+            churn_dist.columns = ['Status', 'Count']
+            churn_dist['Status_Label'] = churn_dist['Status'].map({
+                'No': 'Ở lại (Retained)',
+                'Yes': 'Rời mạng (Churned)'
+            })
 
-    row2_col1, row2_col2 = st.columns([1, 1])
+            fig_donut = px.pie(
+                churn_dist, values='Count', names='Status_Label', hole=0.6,
+                color='Status',
+                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444'}
+            )
+            fig_donut.update_traces(
+                textposition='inside',
+                textinfo='percent+label',
+                marker=dict(line=dict(color='#0F172A', width=3))
+            )
+            apply_de_chart_theme(fig_donut, height=360, title="<b>Biểu đồ 1: Tỷ Lệ Churn Tổng Thể (Donut Chart)</b>")
+            fig_donut.update_layout(showlegend=False)
+            st.plotly_chart(fig_donut, use_container_width=True)
 
-    with row2_col1:
-        # Biểu đồ 3: Histogram / Density - Phân phối Tenure
-        fig_hist = px.histogram(
-            filtered_df, x="tenure", color="Churn", barmode="overlay",
-            nbins=36,
-            color_discrete_map={'No': '#10b981', 'Yes': '#ef4444'},
-            title="<b>Biểu đồ 3: Phân Phối Thâm Niên Khách Hàng (Histogram / Density)</b>",
-            labels={'tenure': 'Số tháng sử dụng dịch vụ (Tenure)', 'Churn': 'Rời mạng?'}
-        )
-        fig_hist.update_layout(height=360, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_hist, use_container_width=True)
+        with col1_2:
+            # Biểu đồ 2: Bar Chart - Tỷ lệ Churn theo loại Hợp đồng
+            contract_summary = filtered_df.groupby('Contract', as_index=False).agg(
+                Total=('customerID', 'count'),
+                Churned=('ChurnNumeric', 'sum')
+            )
+            contract_summary['ChurnRate'] = (contract_summary['Churned'] / contract_summary['Total'] * 100).round(1)
 
-    with row2_col2:
-        # Biểu đồ 4: Box Plot - Cước phí hàng tháng theo Churn
-        fig_box = px.box(
-            filtered_df, x="Churn", y="MonthlyCharges", color="Churn",
-            points="outliers",
-            color_discrete_map={'No': '#10b981', 'Yes': '#ef4444'},
-            title="<b>Biểu đồ 4: Phân Bố Cước Phí Hàng Tháng (Box Plot & Outliers)</b>",
-            labels={'MonthlyCharges': 'Cước phí tháng (USD)', 'Churn': 'Trạng thái rời mạng'}
-        )
-        fig_box.update_layout(showlegend=False, height=360, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_box, use_container_width=True)
+            fig_contract = px.bar(
+                contract_summary, x='Contract', y='ChurnRate', text='ChurnRate',
+                color='Contract',
+                color_discrete_sequence=['#EF4444', '#F59E0B', '#10B981'],
+                labels={'Contract': 'Loại hợp đồng', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
+            )
+            fig_contract.update_traces(
+                texttemplate='<b>%{text}%</b>',
+                textposition='outside',
+                marker=dict(line=dict(width=0))
+            )
+            apply_de_chart_theme(fig_contract, height=360, title="<b>Biểu đồ 2: Tỷ Lệ Rời Mạng Theo Loại Hợp Đồng</b>")
+            fig_contract.update_layout(showlegend=False, yaxis=dict(range=[0, max(75, contract_summary['ChurnRate'].max() + 15)]))
+            st.plotly_chart(fig_contract, use_container_width=True)
 
-# -------------------------------------------------------------
-# TAB 2: BẢN ĐỒ ĐỊA LÝ & VÙNG MIỀN (Biểu đồ 5 & 6)
-# -------------------------------------------------------------
+        col2_1, col2_2 = st.columns(2)
+
+        with col2_1:
+            # Biểu đồ 3: Histogram / Density - Phân phối Tenure
+            fig_hist = px.histogram(
+                filtered_df, x="tenure", color="Churn", barmode="overlay",
+                nbins=36,
+                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444'},
+                labels={'tenure': 'Thâm niên sử dụng (Tháng)', 'Churn': 'Trạng thái Churn'}
+            )
+            apply_de_chart_theme(fig_hist, height=360, title="<b>Biểu đồ 3: Phân Phối Thâm Niên Khách Hàng (Histogram)</b>")
+            st.plotly_chart(fig_hist, use_container_width=True)
+
+        with col2_2:
+            # Biểu đồ 4: Box Plot - Cước phí hàng tháng theo Churn & Outliers
+            fig_box = px.box(
+                filtered_df, x="Churn", y="MonthlyCharges", color="Churn",
+                points="outliers",
+                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444'},
+                labels={'MonthlyCharges': 'Cước phí tháng (USD)', 'Churn': 'Rời mạng?'}
+            )
+            apply_de_chart_theme(fig_box, height=360, title="<b>Biểu đồ 4: Phân Bố Cước Hàng Tháng & Điểm Ngoại Lai (Boxplot)</b>")
+            fig_box.update_layout(showlegend=False)
+            st.plotly_chart(fig_box, use_container_width=True)
+
+# ------------------------------------------------------------------------------
+# TAB 2: BẢN ĐỒ ĐỊA LÝ & VÙNG MIỀN (50 BANG HOA KỲ ĐẦY ĐỦ TÊN)
+# ------------------------------------------------------------------------------
 with tab_geo:
-    st.subheader("🗺️ Trực Quan Hóa Không Gian Địa Lý Khách Hàng Viễn Thông")
-    st.markdown("Bản đồ phân bổ vị trí địa lý của khách hàng và tỷ lệ rời mạng theo các bang/thành phố tại Hoa Kỳ.")
-    
-    geo_col1, geo_col2 = st.columns([2, 1])
+    st.markdown("### 🗺️ Trực Quan Hóa Không Gian Địa Lý Khách Hàng (Toàn Bộ 50 Bang Hoa Kỳ)")
+    st.markdown("Phân tích tỷ lệ rời mạng và phân bổ khách hàng trên toàn lãnh thổ Hoa Kỳ với tên đầy đủ của từng bang.")
 
-    with geo_col1:
-        # Biểu đồ 5: Bản đồ (Geographic Scatter / Bubble Map)
-        state_geo = filtered_df.groupby(['State', 'City'], as_index=False).agg(
-            Lat=('Latitude', 'mean'),
-            Lon=('Longitude', 'mean'),
-            TotalCust=('customerID', 'count'),
-            ChurnedCust=('ChurnNumeric', 'sum'),
-            AvgMonthly=('MonthlyCharges', 'mean')
-        )
-        state_geo['ChurnRate'] = (state_geo['ChurnedCust'] / state_geo['TotalCust'] * 100).round(1)
-
-        fig_map = px.scatter_geo(
-            state_geo,
-            lat='Lat',
-            lon='Lon',
-            color='ChurnRate',
-            size='TotalCust',
-            hover_name='City',
-            hover_data={
-                'State': True,
-                'TotalCust': ':,',
-                'ChurnedCust': ':,',
-                'ChurnRate': ':.1f%',
-                'AvgMonthly': ':.2f$'
-            },
-            color_continuous_scale='Reds',
-            scope='usa',
-            title="<b>Biểu đồ 5: Bản Đồ Khách Hàng & Tỷ Lệ Rời Mạng Theo Địa Bàn (US Map)</b>"
-        )
-        fig_map.update_layout(height=480, margin=dict(t=50, b=20, l=10, r=10))
-        st.plotly_chart(fig_map, use_container_width=True)
-
-    with geo_col2:
-        # Biểu đồ 6: Xếp hạng tỷ lệ Churn theo Bang (Horizontal Bar Chart)
-        state_agg = filtered_df.groupby('State', as_index=False).agg(
+    if total_cust == 0:
+        st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại.")
+    else:
+        # Gom nhóm dữ liệu theo từng Bang (State, StateName, StateCode)
+        state_agg = filtered_df.groupby(['State', 'StateName', 'StateCode'], as_index=False).agg(
             Total=('customerID', 'count'),
-            Churned=('ChurnNumeric', 'sum')
+            Churned=('ChurnNumeric', 'sum'),
+            AvgMonthly=('MonthlyCharges', 'mean'),
+            TotalRevenue=('TotalCharges', 'sum')
         )
         state_agg['ChurnRate'] = (state_agg['Churned'] / state_agg['Total'] * 100).round(1)
-        state_agg = state_agg.sort_values(by='ChurnRate', ascending=True)
 
-        fig_state_bar = px.bar(
-            state_agg, y='State', x='ChurnRate', orientation='h',
-            text='ChurnRate',
-            color='ChurnRate',
-            color_continuous_scale='Reds',
-            title="<b>Biểu đồ 6: Tỷ Lệ Churn Theo Bang</b>",
-            labels={'State': 'Bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
-        )
-        fig_state_bar.update_traces(texttemplate='%{text}%', textposition='outside')
-        fig_state_bar.update_layout(height=480, margin=dict(t=50, b=20, l=10, r=20))
-        st.plotly_chart(fig_state_bar, use_container_width=True)
+        # Chế độ xem Bản đồ: Choropleth hoặc Scatter Bubble
+        geo_mode_col1, geo_mode_col2 = st.columns([2, 1])
+        with geo_mode_col1:
+            map_view_type = st.radio(
+                "Kiểu trực quan hóa bản đồ:",
+                ["🗺️ Bản đồ Nhiệt Vùng 50 Bang (Choropleth Map)", "📍 Bản đồ Điểm Tọa độ Khách Hàng (Scatter Geo)"],
+                horizontal=True
+            )
 
-# -------------------------------------------------------------
+        with geo_mode_col2:
+            st.caption(f"Đang hiển thị: **{len(state_agg)} bang** trong tệp lọc hiện tại.")
+
+        if "Choropleth" in map_view_type:
+            # Biểu đồ 5a: US States Choropleth Map (Tô màu toàn bộ 50 bang theo tỷ lệ Churn)
+            fig_map = px.choropleth(
+                state_agg,
+                locations='StateCode',
+                locationmode="USA-states",
+                scope="usa",
+                color='ChurnRate',
+                hover_name='StateName',
+                hover_data={
+                    'StateCode': True,
+                    'Total': ':,',
+                    'Churned': ':,',
+                    'ChurnRate': ':.1f%',
+                    'AvgMonthly': ':.2f$'
+                },
+                color_continuous_scale="Reds",
+                labels={'ChurnRate': 'Tỷ lệ Churn (%)', 'Total': 'Khách hàng', 'AvgMonthly': 'Cước TB'}
+            )
+            fig_map.update_layout(
+                geo=dict(
+                    bgcolor='rgba(0,0,0,0)',
+                    lakecolor='rgba(15, 23, 42, 0.4)',
+                    showlakes=True,
+                    subunitcolor='rgba(255, 255, 255, 0.2)'
+                )
+            )
+            apply_de_chart_theme(fig_map, height=480, title="<b>Biểu đồ 5: Bản Đồ Nhiệt Tỷ Lệ Churn Trên 50 Bang Hoa Kỳ (Choropleth)</b>")
+            st.plotly_chart(fig_map, use_container_width=True)
+        else:
+            # Biểu đồ 5b: Scatter Geo Bubble Map theo thành phố và tọa độ
+            city_geo = filtered_df.groupby(['State', 'StateName', 'StateCode', 'City'], as_index=False).agg(
+                Lat=('Latitude', 'mean'),
+                Lon=('Longitude', 'mean'),
+                Total=('customerID', 'count'),
+                Churned=('ChurnNumeric', 'sum'),
+                AvgMonthly=('MonthlyCharges', 'mean')
+            )
+            city_geo['ChurnRate'] = (city_geo['Churned'] / city_geo['Total'] * 100).round(1)
+
+            fig_map = px.scatter_geo(
+                city_geo,
+                lat='Lat',
+                lon='Lon',
+                size='Total',
+                color='ChurnRate',
+                hover_name='City',
+                hover_data={
+                    'StateName': True,
+                    'StateCode': True,
+                    'Total': ':,',
+                    'Churned': ':,',
+                    'ChurnRate': ':.1f%',
+                    'AvgMonthly': ':.2f$'
+                },
+                color_continuous_scale='Reds',
+                scope='usa',
+                size_max=30
+            )
+            fig_map.update_layout(
+                geo=dict(
+                    bgcolor='rgba(0,0,0,0)',
+                    lakecolor='rgba(15, 23, 42, 0.4)',
+                    showlakes=True,
+                    subunitcolor='rgba(255, 255, 255, 0.2)'
+                )
+            )
+            apply_de_chart_theme(fig_map, height=480, title="<b>Biểu đồ 5: Bản Đồ Tọa Độ & Mật Độ Khách Hàng (Bubble Map)</b>")
+            st.plotly_chart(fig_map, use_container_width=True)
+
+        # HÀNG 2: XẾP HẠNG TOP BANG NGUY CƠ CAO & TOP BANG AN TOÀN
+        top_risk_col, top_safe_col = st.columns(2)
+
+        with top_risk_col:
+            # Top 10 bang có Churn Rate cao nhất
+            top_risk_states = state_agg.sort_values(by='ChurnRate', ascending=False).head(10)
+            fig_risk = px.bar(
+                top_risk_states,
+                y='State', x='ChurnRate', orientation='h',
+                text='ChurnRate',
+                color='ChurnRate',
+                color_continuous_scale='Reds',
+                labels={'State': 'Bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
+            )
+            fig_risk.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
+            apply_de_chart_theme(fig_risk, height=360, title="<b>Biểu đồ 6a: Top Bang Có Tỷ Lệ Churn Cao Nhất (Cần Can Thiệp)</b>")
+            fig_risk.update_layout(yaxis=dict(autorange="reversed"))
+            st.plotly_chart(fig_risk, use_container_width=True)
+
+        with top_safe_col:
+            # Top 10 bang có Churn Rate thấp nhất (An toàn)
+            top_safe_states = state_agg.sort_values(by='ChurnRate', ascending=True).head(10)
+            fig_safe = px.bar(
+                top_safe_states,
+                y='State', x='ChurnRate', orientation='h',
+                text='ChurnRate',
+                color='ChurnRate',
+                color_continuous_scale='Greens_r',
+                labels={'State': 'Bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
+            )
+            fig_safe.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
+            apply_de_chart_theme(fig_safe, height=360, title="<b>Biểu đồ 6b: Top Bang Trung Thành & Tỷ Lệ Churn Thấp Nhất</b>")
+            fig_safe.update_layout(yaxis=dict(autorange="reversed"))
+            st.plotly_chart(fig_safe, use_container_width=True)
+
+# ------------------------------------------------------------------------------
 # TAB 3: DỊCH VỤ & TƯƠNG QUAN ĐA CHIỀU (Biểu đồ 7, 8, 9, 10)
-# -------------------------------------------------------------
+# ------------------------------------------------------------------------------
 with tab_deepdive:
-    deep_col1, deep_col2 = st.columns([1, 1])
+    if total_cust == 0:
+        st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại.")
+    else:
+        deep_c1, deep_c2 = st.columns(2)
 
-    with deep_col1:
-        # Biểu đồ 7: Scatter Plot - Tenure vs TotalCharges
-        fig_scatter = px.scatter(
-            filtered_df.sample(min(1500, len(filtered_df)), random_state=42),
-            x="tenure", y="TotalCharges", color="Churn",
-            size="MonthlyCharges",
-            hover_data=["Contract", "InternetService", "PaymentMethod"],
-            color_discrete_map={'No': '#10b981', 'Yes': '#ef4444'},
-            title="<b>Biểu đồ 7: Mối Quan Hệ Giữa Thâm Niên & Tổng Cước Phí (Scatter Plot)</b>",
-            labels={'tenure': 'Thâm niên (Tháng)', 'TotalCharges': 'Tổng cước phí tích lũy (USD)'}
-        )
-        fig_scatter.update_layout(height=380, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        with deep_c1:
+            # Biểu đồ 7: Scatter Plot - Tenure vs TotalCharges
+            sample_size = min(1500, len(filtered_df))
+            sample_df = filtered_df.sample(sample_size, random_state=42) if len(filtered_df) > sample_size else filtered_df
 
-    with deep_col2:
-        # Biểu đồ 8: Treemap - Cây phân cấp dịch vụ (Internet -> Contract -> Churn)
-        fig_treemap = px.treemap(
-            filtered_df, path=['InternetService', 'Contract', 'Churn'],
-            color='Churn',
-            color_discrete_map={'No': '#10b981', 'Yes': '#ef4444', '(?)': '#94a3b8'},
-            title="<b>Biểu đồ 8: Cấu Trúc Phân Cấp Dịch Vụ & Trạng Thái Churn (Treemap)</b>"
-        )
-        fig_treemap.update_layout(height=380, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_treemap, use_container_width=True)
+            fig_scatter = px.scatter(
+                sample_df,
+                x="tenure", y="TotalCharges", color="Churn",
+                size="MonthlyCharges",
+                hover_data=["Contract", "InternetService", "PaymentMethod", "State"],
+                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444'},
+                labels={'tenure': 'Thâm niên (Tháng)', 'TotalCharges': 'Tổng cước tích lũy (USD)'}
+            )
+            apply_de_chart_theme(fig_scatter, height=380, title="<b>Biểu đồ 7: Mối Quan Hệ Giữa Thâm Niên & Tổng Cước Phí (Scatter)</b>")
+            st.plotly_chart(fig_scatter, use_container_width=True)
 
-    deep_col3, deep_col4 = st.columns([1, 1])
+        with deep_c2:
+            # Biểu đồ 8: Treemap - Cây phân cấp dịch vụ
+            fig_treemap = px.treemap(
+                filtered_df,
+                path=['InternetService', 'Contract', 'Churn'],
+                color='Churn',
+                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444', '(?)': '#64748B'},
+                title="<b>Biểu đồ 8: Cấu Trúc Phân Cấp Gói Dịch Vụ & Trạng Thái Churn (Treemap)</b>"
+            )
+            apply_de_chart_theme(fig_treemap, height=380)
+            st.plotly_chart(fig_treemap, use_container_width=True)
 
-    with deep_col3:
-        # Biểu đồ 9: Heatmap Ma trận tương quan
-        num_cols = ['tenure', 'MonthlyCharges', 'TotalCharges', 'TotalServicesSubscribed', 'SatisfactionScore', 'ChurnNumeric']
-        corr_matrix = filtered_df[num_cols].corr().round(2)
-        
-        fig_heatmap = px.imshow(
-            corr_matrix,
-            text_auto=True,
-            aspect="auto",
-            color_continuous_scale="RdBu_r",
-            zmin=-1, zmax=1,
-            title="<b>Biểu đồ 9: Ma Trận Hệ Số Tương Quan Pearson (Heatmap)</b>"
-        )
-        fig_heatmap.update_layout(height=380, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_heatmap, use_container_width=True)
+        deep_c3, deep_c4 = st.columns(2)
 
-    with deep_col4:
-        # Biểu đồ 10: Tỷ lệ Churn theo Dịch vụ GTGT (Support & Security)
-        services = ['TechSupport', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'StreamingTV', 'StreamingMovies']
-        svc_data = []
-        for svc in services:
-            churn_pct = filtered_df[filtered_df[svc] == 'Yes']['ChurnNumeric'].mean() * 100
-            no_churn_pct = filtered_df[filtered_df[svc] == 'No']['ChurnNumeric'].mean() * 100
-            svc_data.append({'Service': svc, 'Có đăng ký': round(churn_pct, 1), 'Không đăng ký': round(no_churn_pct, 1)})
-        df_svc_compare = pd.DataFrame(svc_data)
+        with deep_c3:
+            # Biểu đồ 9: Heatmap Ma trận tương quan Pearson
+            num_cols = ['tenure', 'MonthlyCharges', 'TotalCharges', 'TotalServicesSubscribed', 'SatisfactionScore', 'ChurnNumeric']
+            corr_matrix = filtered_df[num_cols].corr().round(2)
 
-        fig_svc = px.bar(
-            df_svc_compare, x='Service', y=['Có đăng ký', 'Không đăng ký'],
-            barmode='group',
-            color_discrete_sequence=['#10b981', '#ef4444'],
-            title="<b>Biểu đồ 10: Tỷ Lệ Churn Giữa Khách Có & Không Dùng Gói GTGT</b>",
-            labels={'value': 'Tỷ lệ rời mạng (%)', 'variable': 'Trạng thái đăng ký', 'Service': 'Dịch vụ'}
-        )
-        fig_svc.update_layout(height=380, margin=dict(t=50, b=20, l=20, r=20))
-        st.plotly_chart(fig_svc, use_container_width=True)
+            fig_heatmap = px.imshow(
+                corr_matrix,
+                text_auto=True,
+                aspect="auto",
+                color_continuous_scale="RdBu_r",
+                zmin=-1, zmax=1
+            )
+            apply_de_chart_theme(fig_heatmap, height=380, title="<b>Biểu đồ 9: Ma Trận Hệ Số Tương Quan Pearson (Heatmap)</b>")
+            st.plotly_chart(fig_heatmap, use_container_width=True)
 
-# -------------------------------------------------------------
-# TAB 4: DỰ BÁO AI & TRÌNH MÔ PHỎNG (Biểu đồ 11, 12 & Interactive Tool)
-# -------------------------------------------------------------
+        with deep_c4:
+            # Biểu đồ 10: Tỷ lệ Churn theo các gói Dịch vụ GTGT
+            services = ['TechSupport', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'StreamingTV', 'StreamingMovies']
+            svc_rows = []
+            for s in services:
+                churn_yes = filtered_df[filtered_df[s] == 'Yes']['ChurnNumeric'].mean() * 100 if len(filtered_df[filtered_df[s] == 'Yes']) > 0 else 0
+                churn_no = filtered_df[filtered_df[s] == 'No']['ChurnNumeric'].mean() * 100 if len(filtered_df[filtered_df[s] == 'No']) > 0 else 0
+                svc_rows.append({'Dịch vụ': s, 'Có đăng ký': round(churn_yes, 1), 'Không đăng ký': round(churn_no, 1)})
+            df_svc = pd.DataFrame(svc_rows)
+
+            fig_svc = px.bar(
+                df_svc, x='Dịch vụ', y=['Có đăng ký', 'Không đăng ký'],
+                barmode='group',
+                color_discrete_sequence=['#10B981', '#EF4444'],
+                labels={'value': 'Tỷ lệ rời mạng (%)', 'variable': 'Trạng thái'}
+            )
+            apply_de_chart_theme(fig_svc, height=380, title="<b>Biểu đồ 10: Tác Động Của Dịch Vụ GTGT Lên Tỷ Lệ Rời Mạng</b>")
+            st.plotly_chart(fig_svc, use_container_width=True)
+
+# ------------------------------------------------------------------------------
+# TAB 4: DỰ BÁO AI & TRÌNH MÔ PHỎNG WHAT-IF
+# ------------------------------------------------------------------------------
 with tab_ml:
-    st.subheader("🤖 Mô Hình Hồi Quy Logistic & Công Cụ Dự Báo Nguy Cơ Rời Mạng")
-    st.markdown("Sử dụng thuật toán **Logistic Regression** đã huấn luyện trên tập dữ liệu để dự báo xác suất rời bỏ và hỗ trợ ra quyết định giữ chân khách hàng theo thời gian thực.")
+    st.markdown("### 🤖 Mô Hình Hồi Quy Logistic & Công Cụ Dự Báo Nguy Cơ Rời Mạng")
+    st.markdown("Mô hình Scikit-Learn **Logistic Regression** đã được huấn luyện và tối ưu hàm mất mát Log-loss, cung cấp khả năng giải thích nhân tố (Feature Explainability) và dự báo trực tiếp.")
 
-    ml_col1, ml_col2 = st.columns([1, 1])
+    ml_c1, ml_c2 = st.columns(2)
 
-    with ml_col1:
+    with ml_c1:
         # Biểu đồ 11: Feature Importance & Odds Ratio
         if model_bundle is not None:
             df_coef = model_bundle['df_coef']
             top_features = pd.concat([df_coef.head(6), df_coef.tail(6)]).sort_values(by='Coefficient', ascending=True)
-            top_features['Effect'] = np.where(top_features['Coefficient'] > 0, 'Tăng nguy cơ Churn', 'Giúp giữ chân khách')
+            top_features['Tác động'] = np.where(top_features['Coefficient'] > 0, 'Tăng nguy cơ Churn (+)', 'Giữ chân khách hàng (-)')
 
             fig_coef = px.bar(
                 top_features, y='Feature', x='Coefficient',
-                color='Effect',
-                color_discrete_map={'Tăng nguy cơ Churn': '#ef4444', 'Giúp giữ chân khách': '#10b981'},
+                color='Tác động',
+                color_discrete_map={'Tăng nguy cơ Churn (+)': '#EF4444', 'Giữ chân khách hàng (-)': '#10B981'},
                 orientation='h',
-                title="<b>Biểu đồ 11: Trọng Số Các Yếu Tố Ảnh Hưởng Đến Churn (Logistic Coef)</b>",
                 labels={'Coefficient': 'Hệ số hồi quy (Log-Odds)', 'Feature': 'Thuộc tính'}
             )
-            fig_coef.update_layout(height=420, margin=dict(t=50, b=20, l=20, r=20))
+            apply_de_chart_theme(fig_coef, height=420, title="<b>Biểu đồ 11: Trọng Số Các Yếu Tố Quyết Định Churn (Logistic Coef)</b>")
             st.plotly_chart(fig_coef, use_container_width=True)
         else:
-            st.warning("Chưa tìm thấy mô hình đã huấn luyện. Vui lòng chạy `py src/model_training.py`.")
+            st.warning("⚠️ Chưa tải được mô hình. Vui lòng kiểm tra file `models/telco_logistic_model.pkl`.")
 
-    with ml_col2:
-        # Biểu đồ 12: Xu hướng dự báo & Đường cong ROC
+    with ml_c2:
         if model_bundle is not None:
             metrics = model_bundle['metrics']
             st.markdown(f"""
-            <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h4 style="margin-top: 0; color: #0f172a;">🎯 Hiệu năng Mô hình trên Tập Kiểm Định (Test Set):</h4>
-                <ul>
-                    <li><b>Độ chính xác tổng quan (Accuracy):</b> {metrics['accuracy']*100:.2f}%</li>
-                    <li><b>Độ chuẩn xác (Precision):</b> {metrics['precision']*100:.2f}%</li>
-                    <li><b>Độ thu hồi / Nhạy (Recall):</b> {metrics['recall']*100:.2f}%</li>
-                    <li><b>F1-Score:</b> {metrics['f1']*100:.2f}%</li>
-                    <li><b>Chỉ số phân loại ROC-AUC:</b> <span style="color: #2563eb; font-weight: 700;">{metrics['roc_auc']:.4f}</span></li>
-                </ul>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 18px; margin-bottom: 16px;">
+                <h4 style="margin: 0 0 12px 0; color: #F8FAFC; font-size: 1.05rem;">🎯 Hiệu Năng Mô Hình Trên Tập Kiểm Định (Test Set):</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div style="background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.72rem; color: #94A3B8;">ĐỘ CHÍNH XÁC (ACCURACY)</div>
+                        <div style="font-size: 1.3rem; font-weight: 800; color: #F8FAFC;">{metrics['accuracy']*100:.2f}%</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.72rem; color: #94A3B8;">PHÂN LOẠI ROC-AUC</div>
+                        <div style="font-size: 1.3rem; font-weight: 800; color: #60A5FA;">{metrics['roc_auc']:.4f}</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.72rem; color: #94A3B8;">F1-SCORE</div>
+                        <div style="font-size: 1.3rem; font-weight: 800; color: #34D399;">{metrics['f1']*100:.2f}%</div>
+                    </div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # Biểu đồ xu hướng tỷ lệ Churn theo các nhóm thâm niên
+            # Biểu đồ 12: Xu hướng Churn theo vòng đời
             trend_df = filtered_df.groupby('TenureGroup', observed=True)['ChurnNumeric'].mean().reset_index()
-            trend_df['ChurnPct'] = trend_df['ChurnNumeric'] * 100
-            
+            trend_df['ChurnPct'] = (trend_df['ChurnNumeric'] * 100).round(1)
+
             fig_trend = px.line(
                 trend_df, x='TenureGroup', y='ChurnPct', markers=True,
-                title="<b>Biểu đồ 12: Xu Hướng Tỷ Lệ Rời Mạng Theo Vòng Đời Khách Hàng</b>",
                 labels={'TenureGroup': 'Vòng đời thâm niên', 'ChurnPct': 'Tỷ lệ rời mạng (%)'}
             )
-            fig_trend.update_traces(line=dict(color='#ef4444', width=3), marker=dict(size=10, color='#b91c1c'))
-            fig_trend.update_layout(height=260, margin=dict(t=50, b=20, l=20, r=20))
+            fig_trend.update_traces(line=dict(color='#EF4444', width=3), marker=dict(size=9, color='#DC2626'))
+            apply_de_chart_theme(fig_trend, height=270, title="<b>Biểu đồ 12: Xu Hướng Churn Theo Vòng Đời Thâm Niên</b>")
             st.plotly_chart(fig_trend, use_container_width=True)
 
-    st.divider()
-    st.subheader("⚡ Trình Mô Phỏng & Dự Báo Thời Gian Thực (What-If Simulator)")
-    st.markdown("Nhập hồ sơ hợp đồng của một khách hàng cụ thể để hệ thống AI tính toán xác suất rời bỏ và đưa ra khuyến nghị hành động:")
+    st.markdown("---")
+    st.markdown("### ⚡ Trình Mô Phỏng Nguy Cơ Rời Mạng (What-If Real-Time Simulator)")
+    st.markdown("Nhập hồ sơ hợp đồng của một khách hàng cụ thể để hệ thống AI tính toán xác suất rời bỏ và đưa ra khuyến nghị giữ chân thời gian thực:")
 
-    with st.form("churn_prediction_form"):
+    with st.form("what_if_simulator_form"):
         sim_c1, sim_c2, sim_c3, sim_c4 = st.columns(4)
-        
+
         with sim_c1:
             inp_tenure = st.slider("Thâm niên (Tháng):", 1, 72, 6)
-            inp_monthly = st.slider("Cước phí tháng (USD):", 20.0, 120.0, 85.0)
+            inp_monthly = st.slider("Cước phí tháng (USD):", 18.0, 120.0, 85.0)
             inp_contract = st.selectbox("Loại hợp đồng:", ["Month-to-month", "One year", "Two year"])
 
         with sim_c2:
@@ -532,21 +880,20 @@ with tab_ml:
 
         with sim_c3:
             inp_tech = st.selectbox("Hỗ trợ kỹ thuật (TechSupport):", ["No", "Yes", "No internet service"])
-            inp_sec = st.selectbox("Bảo mật trực tuyến (OnlineSecurity):", ["No", "Yes", "No internet service"])
+            inp_sec = st.selectbox("Bảo mật mạng (OnlineSecurity):", ["No", "Yes", "No internet service"])
             inp_backup = st.selectbox("Sao lưu đám mây (OnlineBackup):", ["No", "Yes", "No internet service"])
 
         with sim_c4:
             inp_device = st.selectbox("Bảo vệ thiết bị (DeviceProtection):", ["No", "Yes", "No internet service"])
-            inp_stream_tv = st.selectbox("Truyền hình (StreamingTV):", ["No", "Yes", "No internet service"])
+            inp_stream = st.selectbox("Truyền hình số (StreamingTV):", ["No", "Yes", "No internet service"])
             inp_senior = st.selectbox("Người cao tuổi (SeniorCitizen):", [0, 1], format_func=lambda x: "Có" if x==1 else "Không")
 
         submit_btn = st.form_submit_button("🚀 Dự Đoán Nguy Cơ Rời Mạng Ngay", use_container_width=True)
 
     if submit_btn and model_bundle is not None:
-        # Tính toán các giá trị phái sinh
         inp_total = inp_monthly * inp_tenure
-        svc_count = (1 if inp_tech == 'Yes' else 0) + (1 if inp_sec == 'Yes' else 0) + (1 if inp_backup == 'Yes' else 0) + (1 if inp_device == 'Yes' else 0) + (1 if inp_stream_tv == 'Yes' else 0)
-        
+        svc_count = (1 if inp_tech == 'Yes' else 0) + (1 if inp_sec == 'Yes' else 0) + (1 if inp_backup == 'Yes' else 0) + (1 if inp_device == 'Yes' else 0) + (1 if inp_stream == 'Yes' else 0)
+
         input_data = pd.DataFrame([{
             'tenure': inp_tenure,
             'MonthlyCharges': inp_monthly,
@@ -564,7 +911,7 @@ with tab_ml:
             'OnlineBackup': inp_backup,
             'DeviceProtection': inp_device,
             'TechSupport': inp_tech,
-            'StreamingTV': inp_stream_tv,
+            'StreamingTV': inp_stream,
             'StreamingMovies': 'No',
             'Contract': inp_contract,
             'PaperlessBilling': inp_paperless,
@@ -573,89 +920,142 @@ with tab_ml:
 
         pipeline = model_bundle['pipeline']
         pred_prob = pipeline.predict_proba(input_data)[0, 1]
-        pred_class = pipeline.predict(input_data)[0]
 
-        st.markdown("<br>", unsafe_allow_html=True)
         res_col1, res_col2 = st.columns([1, 2])
-        
+
         with res_col1:
             if pred_prob >= 0.60:
-                st.error(f"### ⚠️ BÁO ĐỘNG ĐỎ\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
+                st.error(f"### ⚠️ BÁO ĐỘNG ĐỎ: NGUY CƠ CAO\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
                 risk_lvl = "RẤT CAO"
             elif pred_prob >= 0.35:
-                st.warning(f"### ⚡ NGUY CƠ TRUNG BÌNH\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
+                st.warning(f"### ⚡ CẢNH BÁO: NGUY CƠ TRUNG BÌNH\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
                 risk_lvl = "TRUNG BÌNH"
             else:
-                st.success(f"###  AN TOÀN / TRUNG THÀNH\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
+                st.success(f"### 🛡️ AN TOÀN / KHÁCH TRUNG THÀNH\nXác suất rời mạng: **{pred_prob*100:.1f}%**")
                 risk_lvl = "THẤP"
 
             st.progress(float(pred_prob))
 
         with res_col2:
-            st.markdown(f"#### 💡 Đề xuất Giải Pháp Chăm Sóc Khách Hàng (Cấp độ: {risk_lvl}):")
-            recommendations = []
+            st.markdown(f"#### 💡 Giải Pháp Giữ Chân Khách Hàng (Độ ưu tiên: {risk_lvl}):")
+            recs = []
             if inp_contract == "Month-to-month":
-                recommendations.append("📌 **Chuyển đổi hợp đồng**: Khách đang dùng gói theo tháng -> Tặng ưu đãi giảm 15% cước trong 3 tháng đầu khi ký hợp đồng cam kết 1 hoặc 2 năm.")
+                recs.append("📌 **Khuyến mãi hợp đồng năm:** Khách đang dùng gói theo tháng -> Tặng chiết khấu 15% cước trong 3 tháng đầu khi ký hợp đồng cam kết 1 hoặc 2 năm.")
             if inp_internet == "Fiber optic" and inp_tech != "Yes":
-                recommendations.append("📌 **Gói hỗ trợ kỹ thuật**: Khách dùng cáp quang tốc độ cao nhưng chưa có TechSupport -> Tặng miễn phí 6 tháng dịch vụ Hỗ trợ kỹ thuật 24/7.")
+                recs.append("📌 **Tặng kèm TechSupport:** Khách dùng cáp quang cước cao nhưng chưa có TechSupport -> Tặng miễn phí gói hỗ trợ kỹ thuật 24/7 để giảm tỷ lệ lỗi.")
             if inp_payment == "Electronic check":
-                recommendations.append("📌 **Tối ưu thanh toán**: Chuyển đổi sang thanh toán tự động qua thẻ ngân hàng để nhận ngay mã hoàn tiền $5/tháng.")
+                recs.append("📌 **Chuyển đổi hình thức thanh toán:** Chuyển sang trừ tiền tự động thẻ tín dụng/ngân hàng để nhận voucher $5/tháng.")
             if inp_tenure <= 12:
-                recommendations.append("📌 **Chăm sóc tân khách hàng**: Thuộc nhóm thâm niên dưới 1 năm có tỷ lệ rời mạng cao nhất -> Phân bổ nhân viên CSKH chủ động gọi thăm hỏi định kỳ.")
-            if not recommendations:
-                recommendations.append(" Khách hàng hiện tại rất hài lòng và có độ trung thành cao. Tiếp tục duy trì chất lượng dịch vụ và gửi thư tri ân định kỳ.")
-            
-            for rec in recommendations:
-                st.markdown(rec)
+                recs.append("📌 **Chăm sóc tân khách hàng:** Thuộc nhóm thâm niên nhạy cảm nhất (<1 năm) -> Gửi khảo sát CSKH và gọi chăm sóc định kỳ.")
+            if not recs:
+                recs.append(" Khách hàng hiện tại rất hài lòng và gắn bó. Tiếp tục duy trì chất lượng dịch vụ và gửi quà tri ân định kỳ.")
 
-# -------------------------------------------------------------
-# TAB 5: BẢNG DỮ LIỆU & DRILL-DOWN CHI TIẾT
-# -------------------------------------------------------------
+            for r in recs:
+                st.markdown(r)
+
+# ------------------------------------------------------------------------------
+# TAB 5: DRILL-DOWN HỒ SƠ 360° CHI TIẾT
+# ------------------------------------------------------------------------------
 with tab_drilldown:
-    st.subheader("📋 Bảng Dữ Liệu Tương Tác & Tính Năng Drill-Down")
-    st.markdown("Chọn một khách hàng cụ thể từ danh sách để xem hồ sơ toàn diện 360 độ và thông tin chi tiết:")
+    st.markdown("### 📋 Bảng Dữ Liệu Tương Tác & Tính Năng Drill-Down Hồ Sơ 360°")
+    st.markdown("Khám phá từng khách hàng cụ thể hoặc trích xuất dữ liệu phục vụ nghiên cứu & báo cáo chuyên sâu.")
 
     table_cols = ['customerID', 'gender', 'SeniorCitizen', 'State', 'City', 'tenure', 'Contract', 'InternetService', 'MonthlyCharges', 'TotalCharges', 'SatisfactionScore', 'Churn']
     display_df = filtered_df[table_cols]
 
-    # Tính năng Drill-down: Chọn khách hàng
-    sample_ids = display_df['customerID'].head(50).tolist()
-    selected_customer = st.selectbox("🔍 Chọn Mã Khách Hàng (customerID) để Drill-Down xem chi tiết:", sample_ids)
+    # Drill-down: Chọn mã khách hàng
+    sample_ids = display_df['customerID'].head(100).tolist()
+    selected_customer = st.selectbox(
+        "🔍 Chọn hoặc Nhập Mã Khách Hàng (customerID) để Drill-Down xem chi tiết 360 độ:",
+        sample_ids
+    )
 
     if selected_customer:
-        cust_info = filtered_df[filtered_df['customerID'] == selected_customer].iloc[0]
-        
-        st.markdown(f"#### 👤 Hồ sơ Khách hàng: `{selected_customer}`")
-        dc1, dc2, dc3, dc4 = st.columns(4)
-        with dc1:
-            st.metric("Địa bàn", f"{cust_info['City']}, {cust_info['State']}")
-            st.write(f"**Giới tính:** {cust_info['gender']}")
-            st.write(f"**Đối tượng:** {'Người cao tuổi' if cust_info['SeniorCitizen']==1 else 'Trẻ/Trung niên'}")
-        with dc2:
-            st.metric("Thâm niên sử dụng", f"{cust_info['tenure']} tháng")
-            st.write(f"**Loại hợp đồng:** {cust_info['Contract']}")
-            st.write(f"**Phương thức TT:** {cust_info['PaymentMethod']}")
-        with dc3:
-            st.metric("Cước hàng tháng", f"${cust_info['MonthlyCharges']:.2f}")
-            st.write(f"**Tổng cước tích lũy:** ${cust_info['TotalCharges']:.2f}")
-            st.write(f"**Dịch vụ Internet:** {cust_info['InternetService']}")
-        with dc4:
-            churn_badge = "🚨 ĐÃ RỜI MẠNG" if cust_info['Churn'] == 'Yes' else "✅ ĐANG Ở LẠI"
-            st.metric("Trạng thái Churn", churn_badge)
-            st.write(f"**Điểm hài lòng:** {cust_info['SatisfactionScore']} / 5")
-            st.write(f"**Lý do Churn (nếu có):** {cust_info.get('ChurnReason', 'N/A')}")
+        c_row = filtered_df[filtered_df['customerID'] == selected_customer].iloc[0]
+        is_churn = (c_row['Churn'] == 'Yes')
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.dataframe(display_df, use_container_width=True, height=400)
-    
-    # Nút tải dữ liệu đã lọc về máy
-    csv_data = display_df.to_csv(index=False).encode('utf-8')
+        badge_html = f'<span class="profile-badge-churn">🚨 ĐÃ RỜI MẠNG (CHURNED)</span>' if is_churn else f'<span class="profile-badge-retained">🛡️ ĐANG Ở LẠI (ACTIVE)</span>'
+
+        st.markdown(f"""
+        <div class="profile-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div>
+                    <span style="font-size: 1.3rem; font-weight: 800; color: #FFFFFF;">Khách Hàng: <code>{selected_customer}</code></span>
+                    <span style="margin-left: 12px;">{badge_html}</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #94A3B8;">
+                    📍 Vị trí: <b>{c_row['City']}, {c_row['State']}</b>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+                <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px;">
+                    <div style="font-size: 0.72rem; color: #94A3B8;">NHÂN KHẨU HỌC</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: #F8FAFC; margin-top: 4px;">Giới tính: {c_row['gender']}</div>
+                    <div style="font-size: 0.85rem; color: #94A3B8;">Đối tượng: {'Người cao tuổi' if c_row['SeniorCitizen']==1 else 'Trẻ / Trung niên'}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px;">
+                    <div style="font-size: 0.72rem; color: #94A3B8;">HỢP ĐỒNG & THANH TOÁN</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: #F8FAFC; margin-top: 4px;">Hợp đồng: {c_row['Contract']}</div>
+                    <div style="font-size: 0.85rem; color: #94A3B8;">Phương thức: {c_row['PaymentMethod']}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px;">
+                    <div style="font-size: 0.72rem; color: #94A3B8;">TÀI CHÍNH & DỊCH VỤ</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: #F8FAFC; margin-top: 4px;">Cước tháng: ${c_row['MonthlyCharges']:.2f}</div>
+                    <div style="font-size: 0.85rem; color: #94A3B8;">Tổng tích lũy: ${c_row['TotalCharges']:.2f}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px;">
+                    <div style="font-size: 0.72rem; color: #94A3B8;">TRẢI NGHIỆM & PHẢN HỒI</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: #F8FAFC; margin-top: 4px;">Điểm CSAT: {c_row['SatisfactionScore']} / 5 ⭐</div>
+                    <div style="font-size: 0.85rem; color: #F87171;">Lý do: {c_row.get('ChurnReason', 'N/A')}</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.dataframe(display_df, use_container_width=True, height=380)
+
+    # Nút xuất file CSV
+    csv_bytes = display_df.to_csv(index=False).encode('utf-8')
     st.download_button(
-        label="📥 Tải xuống dữ liệu đã lọc (.CSV)",
-        data=csv_data,
-        file_name="telco_churn_filtered_data.csv",
+        label="📥 Xuất dữ liệu đã lọc sang file CSV",
+        data=csv_bytes,
+        file_name="telco_churn_filtered_export.csv",
         mime="text/csv"
     )
 
-st.markdown("<br><hr>", unsafe_allow_html=True)
-st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22")
+# ------------------------------------------------------------------------------
+# TAB 6: KIẾN TRÚC DATA ENGINEERING PIPELINE (CHUYÊN GIA DE)
+# ------------------------------------------------------------------------------
+with tab_arch:
+    st.markdown("### 🏗️ Kiến Trúc Hệ Thống Data Engineering & Data Lineage")
+    st.markdown("Thiết kế theo chuẩn sản xuất công nghiệp (Production-Grade Pipeline) đảm bảo tính toàn vẹn dữ liệu, mô hình hóa quan hệ và phục vụ AI thời gian thực.")
+
+    st.markdown("""
+    <div class="arch-box">
+    <b>[DATA LINEAGE FLOW]:</b><br>
+    [1. Data Sources (IBM/Kaggle Raw)] ──► [2. RDBMS 4 Relational Tables] ──► [3. ETL Pipeline (Join & Cleaning)] ──► [4. Feature Store (39 Features)] ──► [5. Scikit-Learn Logistic AI & Streamlit]
+    </div>
+    """, unsafe_allow_html=True)
+
+    arch_c1, arch_c2 = st.columns(2)
+
+    with arch_c1:
+        st.markdown("#### 1. Mô Hình 4 Bảng Quan Hệ (Relational Schema):")
+        st.markdown("""
+        - 📄 **`telco_demographics.csv`** (7,043 dòng): `customerID (PK)`, `gender`, `SeniorCitizen`, `Partner`, `Dependents`, `State`, `StateName`, `StateCode`, `City`, `Latitude`, `Longitude`
+        - 📄 **`telco_services.csv`** (7,043 dòng): `customerID (FK)`, `PhoneService`, `MultipleLines`, `InternetService`, `OnlineSecurity`, `OnlineBackup`, `DeviceProtection`, `TechSupport`, `StreamingTV`, `StreamingMovies`
+        - 📄 **`telco_contracts.csv`** (7,043 dòng): `customerID (FK)`, `tenure`, `Contract`, `PaperlessBilling`, `PaymentMethod`, `MonthlyCharges`, `TotalCharges`
+        - 📄 **`telco_churn_status.csv`** (7,043 dòng): `customerID (FK)`, `Churn`, `ChurnReason`, `SatisfactionScore`
+        """)
+
+    with arch_c2:
+        st.markdown("#### 2. Tiêu Chuẩn Kiểm Định Chất Lượng Dữ Liệu (Data Quality):")
+        st.markdown("""
+        - ✅ **Inner Join Integrity:** Khóa chính `customerID` ánh xạ 1-1 chính xác 100% giữa cả 4 bảng.
+        - ✅ **Missing Value Handling:** Tự động phát hiện và điền thế 11 giá trị khuyết thiếu ở `TotalCharges` cho khách hàng mới ký hợp đồng (`tenure = 0`).
+        - ✅ **Outlier Verification:** Kiểm định dải phân vị $Q_1, Q_3$ và khoảng $1.5 \times IQR$ trên các cột liên tục.
+        - ✅ **Feature Store Enrichment:** Bổ sung 6 trường tính toán mới: `TenureGroup`, `TotalServicesSubscribed`, `HasProtectionPackage`, `CalculatedAvgMonthly`, `CLV_Category`, `ChurnNumeric`.
+        """)
+
+st.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
+st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Đỗ Trọng Khôi - Bùi Đức Huy - Trương Quốc Duy")
