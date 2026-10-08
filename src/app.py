@@ -32,6 +32,32 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Logo SVG HCMUTE chính thức (Vector sắc nét)
+HCMUTE_LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4)); flex-shrink: 0;">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0054A6"/>
+      <stop offset="100%" stop-color="#002D62"/>
+    </linearGradient>
+    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5722"/>
+      <stop offset="100%" stop-color="#D32F2F"/>
+    </linearGradient>
+    <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#FFA000"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#blueGrad)" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#FFD54F" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <path d="M50,22 L52,28 L57,26 L57,32 L62,31 L61,37 L66,38 L63,43 L68,46 L64,50 L68,54 L63,57 L66,62 L61,63 L62,69 L57,68 L57,74 L52,72 L50,78 L48,72 L43,74 L43,68 L38,69 L39,63 L34,62 L37,57 L32,54 L36,50 L32,46 L37,43 L34,38 L39,37 L38,31 L43,32 L43,26 L48,28 Z" fill="url(#gearGrad)" opacity="0.4"/>
+  <path d="M30,58 Q50,66 70,58 L70,62 Q50,70 30,62 Z" fill="#FFFFFF"/>
+  <path d="M30,53 Q50,61 70,53 L70,57 Q50,65 30,57 Z" fill="#E2E8F0"/>
+  <path d="M50,26 Q56,38 50,48 Q44,38 50,26 Z" fill="url(#flameGrad)"/>
+  <path d="M50,32 Q53,39 50,46 Q47,39 50,32 Z" fill="#FFE082"/>
+  <text x="50" y="86" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="8.5" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HCMUTE</text>
+</svg>"""
+
 # Custom CSS giao diện Dashboard
 st.markdown("""
 <style>
@@ -42,18 +68,105 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    /* Top Institutional Navbar (HCMUTE Brand Blue - Chuẩn nhận diện trường) */
+    .uni-navbar {
+        background: linear-gradient(135deg, #07386d 0%, #0d47a1 50%, #1565c0 100%);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 14px;
+        padding: 16px 22px;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 25px -5px rgba(13, 71, 161, 0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .uni-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .uni-logo-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .uni-title-box {
+        display: flex;
+        flex-direction: column;
+    }
+    .uni-name {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        line-height: 1.25;
+    }
+    .uni-faculty {
+        font-size: 0.78rem;
+        color: #BFDBFE;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-top: 3px;
+    }
+    .uni-divider {
+        width: 1px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.22);
+    }
+    .uni-lab-box {
+        display: flex;
+        flex-direction: column;
+    }
+    .uni-lab-name {
+        font-size: 1.02rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        letter-spacing: 0.04em;
+        line-height: 1.25;
+    }
+    .uni-lab-desc {
+        font-size: 0.78rem;
+        color: #93C5FD;
+        font-weight: 600;
+        margin-top: 3px;
+    }
+    .uni-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .uni-badge {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(8px);
+    }
+
     /* Container Header */
     .hero-header {
         background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 16px;
-        padding: 24px 28px;
-        margin-bottom: 24px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         backdrop-filter: blur(12px);
     }
     .hero-title {
-        font-size: 2.1rem;
+        font-size: 1.9rem;
         font-weight: 800;
         letter-spacing: -0.02em;
         color: #FFFFFF;
@@ -63,10 +176,48 @@ st.markdown("""
         gap: 12px;
     }
     .hero-subtitle {
-        font-size: 0.98rem;
+        font-size: 0.92rem;
         color: #94A3B8;
         margin-top: 6px;
-        margin-bottom: 14px;
+        margin-bottom: 0px;
+    }
+
+    /* Geomap Split Panel Container Styling */
+    .geomap-panel-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 16px 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        margin-bottom: 16px;
+    }
+    .geomap-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .geomap-panel-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #F8FAFC;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .geo-legend-bar {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 6px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: #94A3B8;
+        margin-top: 8px;
     }
 
     /* DE Telemetry Status Bar */
@@ -442,15 +593,22 @@ model_bundle = load_model()
 # SIDEBAR: BỘ LỌC TƯƠNG TÁC DỮ LIỆU
 # ==============================================================================
 with st.sidebar:
-    st.markdown("""
+    st.markdown(f"""
     <div class="sidebar-brand">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+            {HCMUTE_LOGO_SVG}
+            <div style="text-align: left;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.05em;">HCMUTE</div>
+                <div style="font-size: 0.7rem; color: #93C5FD; font-weight: 600;">KHOA CNTT • IDV LAB</div>
+            </div>
+        </div>
         <div class="brand-title">📡 DỰ BÁO CUSTOMER CHURN</div>
         <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 8px; line-height: 1.6; text-align: left; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
-            <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056</div>
+            <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056 (Trưởng nhóm)</div>
             <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
             <div>👤 <b>Trương Quốc Duy</b> - 24133009</div>
         </div>
-        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">Đồ án Tương Tác Dữ Liệu | Nhóm 22 - HCMUTE</div>
+        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">ĐH Sư phạm Kỹ thuật TP.HCM</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -546,15 +704,40 @@ filtered_df = filtered_df[
 ]
 
 # ==============================================================================
-# PHẦN HERO HEADER
+# PHẦN HEADER ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE) & HERO BANNER
 # ==============================================================================
-st.markdown("""
+st.markdown(f"""
+<div class="uni-navbar">
+    <div class="uni-left">
+        <div class="uni-logo-box">
+            {HCMUTE_LOGO_SVG}
+        </div>
+        <div class="uni-title-box">
+            <span class="uni-name">TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP. HỒ CHÍ MINH</span>
+            <span class="uni-faculty">KHOA CÔNG NGHỆ THÔNG TIN • BỘ MÔN KỸ THUẬT DỮ LIỆU & TRÍ TUỆ NHÂN TẠO</span>
+        </div>
+        <div class="uni-divider"></div>
+        <div class="uni-lab-box">
+            <span class="uni-lab-name">TELCO ANALYTICS LAB</span>
+            <span class="uni-lab-desc">HỆ THỐNG TRỰC QUAN HÓA & DỰ BÁO CUSTOMER CHURN (IDV)</span>
+        </div>
+    </div>
+    <div class="uni-right">
+        <div class="uni-badge">
+            <span>📅 PHẠM VI DỮ LIỆU: 50 TIỂU BANG ({len(df_raw):,} KH)</span>
+        </div>
+        <div class="uni-badge" style="background: rgba(99, 102, 241, 0.25); border-color: rgba(99, 102, 241, 0.45);">
+            <span>👥 NHÓM 22 - HCMUTE</span>
+        </div>
+    </div>
+</div>
+
 <div class="hero-header">
     <h1 class="hero-title">
         <span>📡 Bảng Điều Khiển Trực Quan Hóa & Dự Báo Customer Churn Viễn Thông</span>
     </h1>
     <div class="hero-subtitle">
-        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | <b>Nhóm 22:</b> Đỗ Trọng Khôi (20133056) • Bùi Đức Huy (24133021) • Trương Quốc Duy (24133009)
+        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | <b>Trường ĐH Sư Phạm Kỹ Thuật TP.HCM</b> | <b>Nhóm 22:</b> Đỗ Trọng Khôi (20133056) • Bùi Đức Huy (24133021) • Trương Quốc Duy (24133009)
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -734,7 +917,7 @@ with tab_overview:
 # ------------------------------------------------------------------------------
 with tab_geo:
     st.markdown("### 🗺️ Trực Quan Hóa Không Gian Địa Lý Khách Hàng (Toàn Bộ 50 Tiểu Bang Hoa Kỳ)")
-    st.markdown("Phân tích tỷ lệ rời mạng và phân bổ khách hàng trên toàn lãnh thổ Hoa Kỳ với tên đầy đủ của từng tiểu bang.")
+    st.caption("Phân tích tỷ lệ rời mạng và phân bổ khách hàng trên toàn lãnh thổ Hoa Kỳ với định dạng Địa Cầu 3D và Bản Đồ Phẳng tương tác.")
 
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại.")
@@ -755,19 +938,43 @@ with tab_geo:
         )
         state_agg['ChurnRate'] = (state_agg['Churned'] / state_agg['Total'] * 100).round(1)
 
-        # Chế độ xem Bản đồ: Choropleth hoặc Scatter Bubble
-        geo_mode_col1, geo_mode_col2 = st.columns([2, 1])
-        with geo_mode_col1:
-            map_view_type = st.radio(
-                "Kiểu trực quan hóa bản đồ:",
-                ["🗺️ Bản đồ Nhiệt 50 Tiểu Bang (Choropleth Heatmap)", "📍 Bản đồ Điểm Tọa độ Khách Hàng (Scatter Geo)"],
-                horizontal=True
-            )
+        # ----------------------------------------------------------------------
+        # HÀNG 1: THẺ CHỈ SỐ KPI TÓM TẮT ĐỊA LÝ (CHUẨN GIAO DIỆN EXECUTIVE)
+        # ----------------------------------------------------------------------
+        kpi_geo_c1, kpi_geo_c2, kpi_geo_c3 = st.columns(3)
+        with kpi_geo_c1:
+            st.markdown(f"""
+            <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px;">
+                <div style="font-size: 0.75rem; color: #94A3B8; font-weight: 700; text-transform: uppercase;">2024 / Hiện Tại • Chênh Lệch Tỷ Lệ Churn</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: {'#F87171' if churn_rate > baseline_churn else '#34D399'}; margin-top: 4px;">
+                    {churn_rate:.1f}% <span style="font-size: 0.85rem; font-weight: 600;">({'▲ +' if diff_churn > 0 else '▼ '}{diff_churn:.1f}% vs chuẩn)</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #64748B; margin-top: 4px;">Tỷ lệ rời mạng bình quân trên {len(state_agg)} tiểu bang</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-        with geo_mode_col2:
-            st.caption(f"Đang hiển thị: **{len(state_agg)} tiểu bang** trong tệp lọc hiện tại.")
+        with kpi_geo_c2:
+            st.markdown(f"""
+            <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px;">
+                <div style="font-size: 0.75rem; color: #94A3B8; font-weight: 700; text-transform: uppercase;">Tổng Doanh Thu Lũy Kế (CLV)</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: #F8FAFC; margin-top: 4px;">
+                    ${total_revenue/1e6:.2f}M <span style="font-size: 0.85rem; font-weight: 600; color: #38BDF8;">USD</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #64748B; margin-top: 4px;">Giá trị vòng đời thu được từ {total_cust:,} khách hàng</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-        # Thẻ tóm tắt thông tin địa lý điều hành (Executive Geo Insights)
+        with kpi_geo_c3:
+            st.markdown(f"""
+            <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px;">
+                <div style="font-size: 0.75rem; color: #94A3B8; font-weight: 700; text-transform: uppercase;">Cước Trung Bình / Khách (ARPU)</div>
+                <div style="font-size: 1.85rem; font-weight: 800; color: #F8FAFC; margin-top: 4px;">
+                    ${avg_mrr:.2f} <span style="font-size: 0.85rem; font-weight: 600; color: #A78BFA;">/ tháng</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #64748B; margin-top: 4px;">Doanh thu định kỳ bình quân mỗi thuê bao</div>
+            </div>
+            """, unsafe_allow_html=True)
+
         if len(state_agg) >= 2:
             highest_churn_state = state_agg.sort_values(by='ChurnRate', ascending=False).iloc[0]
             lowest_churn_state = state_agg.sort_values(by='ChurnRate', ascending=True).iloc[0]
@@ -776,135 +983,314 @@ with tab_geo:
             g_c1, g_c2, g_c3 = st.columns(3)
             with g_c1:
                 st.markdown(f"""
-                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 10px 14px;">
-                    <div style="font-size: 0.72rem; color: #FCA5A5; font-weight: 700;">🔴 TỶ LỆ RỜI MẠNG CAO NHẤT</div>
-                    <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">{highest_churn_state['State']}</div>
-                    <div style="font-size: 0.8rem; color: #F87171; font-weight: 700;">{highest_churn_state['ChurnRate']}% <span style="font-weight: 400; color: #94A3B8;">({highest_churn_state['Churned']}/{highest_churn_state['Total']} KH)</span></div>
+                <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 8px 14px; margin-top: 10px;">
+                    <div style="font-size: 0.7rem; color: #FCA5A5; font-weight: 700;">🔴 TỶ LỆ RỜI MẠNG CAO NHẤT</div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: #FFFFFF;">{highest_churn_state['State']} • <span style="color:#F87171;">{highest_churn_state['ChurnRate']}%</span></div>
                 </div>
                 """, unsafe_allow_html=True)
             with g_c2:
                 st.markdown(f"""
-                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px 14px;">
-                    <div style="font-size: 0.72rem; color: #6EE7B7; font-weight: 700;">🟢 TỶ LỆ RỜI MẠNG THẤP NHẤT</div>
-                    <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">{lowest_churn_state['State']}</div>
-                    <div style="font-size: 0.8rem; color: #34D399; font-weight: 700;">{lowest_churn_state['ChurnRate']}% <span style="font-weight: 400; color: #94A3B8;">({lowest_churn_state['Churned']}/{lowest_churn_state['Total']} KH)</span></div>
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 8px 14px; margin-top: 10px;">
+                    <div style="font-size: 0.7rem; color: #6EE7B7; font-weight: 700;">🟢 TỶ LỆ RỜI MẠNG THẤP NHẤT</div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: #FFFFFF;">{lowest_churn_state['State']} • <span style="color:#34D399;">{lowest_churn_state['ChurnRate']}%</span></div>
                 </div>
                 """, unsafe_allow_html=True)
             with g_c3:
                 st.markdown(f"""
-                <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; padding: 10px 14px;">
-                    <div style="font-size: 0.72rem; color: #A5B4FC; font-weight: 700;">🗺️ ĐỘ LỆCH VÙNG MIỀN (SPREAD)</div>
-                    <div style="font-size: 1.05rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">Δ {spread_val:.1f}%</div>
-                    <div style="font-size: 0.8rem; color: #94A3B8;">Chênh lệch giữa bang rủi ro và an toàn</div>
+                <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 10px; padding: 8px 14px; margin-top: 10px;">
+                    <div style="font-size: 0.7rem; color: #A5B4FC; font-weight: 700;">🗺️ ĐỘ LỆCH VÙNG MIỀN (SPREAD)</div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: #FFFFFF;">Δ {spread_val:.1f}% <span style="font-size:0.75rem; color:#94A3B8; font-weight:400;">(Chênh lệch rủi ro)</span></div>
                 </div>
                 """, unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
 
-        if "Choropleth" in map_view_type:
-            # Biểu đồ 5a: US States Choropleth Map (Tô màu toàn bộ 50 bang theo tỷ lệ Churn)
-            fig_map = px.choropleth(
-                state_agg,
-                locations='StateCode',
-                locationmode="USA-states",
-                scope="usa",
-                color='ChurnRate',
-                hover_name='State',
-                hover_data={
-                    'StateCode': True,
-                    'Total': ':,',
-                    'Churned': ':,',
-                    'ChurnRate': ':.1f%',
-                    'AvgMonthly': ':.2f$'
-                },
-                color_continuous_scale="Reds",
-                labels={'ChurnRate': 'Tỷ lệ Churn (%)', 'Total': 'Khách hàng', 'AvgMonthly': 'Cước TB'}
-            )
-            fig_map.update_layout(
-                geo=dict(
-                    bgcolor='rgba(0,0,0,0)',
-                    lakecolor='rgba(15, 23, 42, 0.4)',
-                    showlakes=True,
-                    subunitcolor='rgba(255, 255, 255, 0.2)'
+        st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+
+        # ----------------------------------------------------------------------
+        # HÀNG 2: BỐ CỤC SPLIT-SCREEN CHÍNH (MAP BÊN TRÁI 58%, 2 BIỂU ĐỒ BÊN PHẢI 42%)
+        # ----------------------------------------------------------------------
+        col_main_map, col_side_charts = st.columns([1.35, 1])
+
+        with col_main_map:
+            # Bảng điều khiển góc nhìn Bản đồ: Địa cầu vs Bản đồ phẳng
+            ctrl_col1, ctrl_col2 = st.columns([1.3, 1])
+            with ctrl_col1:
+                map_proj_mode = st.segmented_control(
+                    "Góc nhìn trực quan:",
+                    options=["🌐 Địa cầu 3D", "🗺️ Bản đồ phẳng", "📍 Tọa độ điểm"],
+                    default="🌐 Địa cầu 3D",
+                    help="Chọn chế độ hiển thị: Quả địa cầu 3D (Orthographic) xoay tương tác hoặc Bản đồ phẳng 50 bang."
                 )
-            )
-            apply_de_chart_theme(fig_map, height=480, title="<b>Biểu đồ 5: Bản Đồ Nhiệt Tỷ Lệ Churn Trên 50 Tiểu Bang Hoa Kỳ (Choropleth)</b>")
-            st.plotly_chart(fig_map, use_container_width=True)
-        else:
-            # Biểu đồ 5b: Scatter Geo Bubble Map theo thành phố và tọa độ
-            city_cols = [c for c in ['State', 'StateName', 'StateCode', 'City'] if c in filtered_df.columns]
-            city_geo = filtered_df.groupby(city_cols, as_index=False).agg(
-                Lat=('Latitude', 'mean'),
-                Lon=('Longitude', 'mean'),
+                if not map_proj_mode:
+                    map_proj_mode = "🌐 Địa cầu 3D"
+            with ctrl_col2:
+                metric_geo_choice = st.selectbox(
+                    "Chỉ số thể hiện:",
+                    ["Tỷ lệ Churn (%)", "Quy mô Khách hàng", "Cước phí TB ($)", "Tổng Doanh thu CLV ($)"],
+                    index=0
+                )
+
+            # Map settings mapping
+            metric_configs = {
+                "Tỷ lệ Churn (%)": {"col": "ChurnRate", "fmt": ":.1f%", "title": "Tỷ lệ Churn (%)", "scale": "Reds"},
+                "Quy mô Khách hàng": {"col": "Total", "fmt": ":,", "title": "Khách hàng", "scale": "Blues"},
+                "Cước phí TB ($)": {"col": "AvgMonthly", "fmt": ":.2f$", "title": "Cước TB ($)", "scale": "Purples"},
+                "Tổng Doanh thu CLV ($)": {"col": "TotalRevenue", "fmt": ":.0f$", "title": "Doanh thu ($)", "scale": "YlOrRd"}
+            }
+            m_cfg = metric_configs[metric_geo_choice]
+
+            if map_proj_mode == "🌐 Địa cầu 3D":
+                # Render Quả địa cầu 3D (Orthographic Projection - Giống hệ thống đối chiếu)
+                fig_map = go.Figure(
+                    go.Choropleth(
+                        locations=state_agg['StateCode'],
+                        z=state_agg[m_cfg['col']],
+                        locationmode='USA-states',
+                        colorscale=m_cfg['scale'],
+                        text=state_agg['StateName'],
+                        marker_line_color='rgba(255, 255, 255, 0.45)',
+                        marker_line_width=1,
+                        colorbar=dict(
+                            title=dict(text=m_cfg['title'], font=dict(color="#F8FAFC", size=11)),
+                            orientation="h",
+                            x=0.5,
+                            xanchor="center",
+                            y=-0.08,
+                            len=0.75,
+                            thickness=12,
+                            tickfont=dict(color="#CBD5E1", size=10)
+                        ),
+                        hovertemplate="<b>🏛️ %{text} (%{location})</b><br>" +
+                                      f"📊 {m_cfg['title']}: %{{z{m_cfg['fmt']}}}<br>" +
+                                      "👥 Tổng khách: %{customdata[0]:,}<br>" +
+                                      "⚠️ Khách Churn: %{customdata[1]:,}<br>" +
+                                      "💵 Cước TB: $%{customdata[2]:.2f}<br>" +
+                                      "💰 Doanh thu CLV: $%{customdata[3]:,.0f}<br>" +
+                                      "<extra></extra>",
+                        customdata=state_agg[['Total', 'Churned', 'AvgMonthly', 'TotalRevenue']].values
+                    )
+                )
+                fig_map.update_geos(
+                    projection_type="orthographic",
+                    showocean=True,
+                    oceancolor="#0A192F",
+                    showland=True,
+                    landcolor="#172A45",
+                    showcountries=True,
+                    countrycolor="#475569",
+                    showlakes=True,
+                    lakecolor="#0A192F",
+                    showsubunits=True,
+                    subunitcolor="rgba(255, 255, 255, 0.3)",
+                    center=dict(lat=38, lon=-97)
+                )
+                fig_map.update_layout(
+                    height=510,
+                    margin=dict(l=0, r=0, t=10, b=40),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    dragmode="orbit"
+                )
+                st.plotly_chart(fig_map, use_container_width=True)
+
+            elif map_proj_mode == "🗺️ Bản đồ phẳng":
+                # Render Bản đồ phẳng 2D 50 tiểu bang Hoa Kỳ
+                fig_map = px.choropleth(
+                    state_agg,
+                    locations='StateCode',
+                    locationmode="USA-states",
+                    scope="usa",
+                    color=m_cfg['col'],
+                    hover_name='State',
+                    hover_data={
+                        'StateCode': True,
+                        'Total': ':,',
+                        'Churned': ':,',
+                        'ChurnRate': ':.1f%',
+                        'AvgMonthly': ':.2f$',
+                        'TotalRevenue': ':.0f$'
+                    },
+                    color_continuous_scale=m_cfg['scale'],
+                    labels={m_cfg['col']: m_cfg['title'], 'Total': 'Khách hàng', 'AvgMonthly': 'Cước TB'}
+                )
+                fig_map.update_layout(
+                    geo=dict(
+                        bgcolor='rgba(0,0,0,0)',
+                        lakecolor='rgba(15, 23, 42, 0.4)',
+                        showlakes=True,
+                        subunitcolor='rgba(255, 255, 255, 0.3)'
+                    ),
+                    height=510,
+                    margin=dict(l=0, r=0, t=10, b=10),
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                st.plotly_chart(fig_map, use_container_width=True)
+
+            else:
+                # Render Bản đồ Điểm Tọa độ Khách Hàng (Scatter Geo)
+                city_cols = [c for c in ['State', 'StateName', 'StateCode', 'City'] if c in filtered_df.columns]
+                city_geo = filtered_df.groupby(city_cols, as_index=False).agg(
+                    Lat=('Latitude', 'mean'),
+                    Lon=('Longitude', 'mean'),
+                    Total=('customerID', 'count'),
+                    Churned=('ChurnNumeric', 'sum'),
+                    AvgMonthly=('MonthlyCharges', 'mean')
+                )
+                city_geo['ChurnRate'] = (city_geo['Churned'] / city_geo['Total'] * 100).round(1)
+
+                fig_map = px.scatter_geo(
+                    city_geo,
+                    lat='Lat',
+                    lon='Lon',
+                    size='Total',
+                    color='ChurnRate',
+                    hover_name='City',
+                    hover_data={
+                        'State': True,
+                        'StateCode': True,
+                        'Total': ':,',
+                        'Churned': ':,',
+                        'ChurnRate': ':.1f%',
+                        'AvgMonthly': ':.2f$'
+                    },
+                    color_continuous_scale='Reds',
+                    scope='usa',
+                    size_max=28
+                )
+                fig_map.update_layout(
+                    geo=dict(
+                        bgcolor='rgba(0,0,0,0)',
+                        lakecolor='rgba(15, 23, 42, 0.4)',
+                        showlakes=True,
+                        subunitcolor='rgba(255, 255, 255, 0.2)'
+                    ),
+                    height=510,
+                    margin=dict(l=0, r=0, t=10, b=10),
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                st.plotly_chart(fig_map, use_container_width=True)
+
+            # Thanh chú thích độ chênh lệch bên dưới bản đồ
+            st.markdown("""
+            <div class="geo-legend-bar">
+                <span>🟢 Mức độ an toàn / thấp</span>
+                <span>◀────── Thang đo Gradient nhiệt ──────▶</span>
+                <span>🔴 Nguy cơ cao / cảnh báo</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col_side_charts:
+            # ------------------------------------------------------------------
+            # BIỂU ĐỒ 1 BÊN PHẢI: XU HƯỚNG TỶ LỆ CHURN THEO THÂM NIÊN (ĐƯỜNG ĐỎ + MARKER)
+            # ------------------------------------------------------------------
+            tenure_trend = filtered_df.groupby('tenure', as_index=False).agg(
                 Total=('customerID', 'count'),
                 Churned=('ChurnNumeric', 'sum'),
-                AvgMonthly=('MonthlyCharges', 'mean')
+                AvgMonthly=('MonthlyCharges', 'mean'),
+                TotalRev=('TotalCharges', 'sum')
             )
-            city_geo['ChurnRate'] = (city_geo['Churned'] / city_geo['Total'] * 100).round(1)
+            tenure_trend['ChurnRate'] = (tenure_trend['Churned'] / tenure_trend['Total'] * 100).round(1)
 
-            fig_map = px.scatter_geo(
-                city_geo,
-                lat='Lat',
-                lon='Lon',
-                size='Total',
-                color='ChurnRate',
-                hover_name='City',
-                hover_data={
-                    'State': True,
-                    'StateCode': True,
-                    'Total': ':,',
-                    'Churned': ':,',
-                    'ChurnRate': ':.1f%',
-                    'AvgMonthly': ':.2f$'
-                },
-                color_continuous_scale='Reds',
-                scope='usa',
-                size_max=30
+            fig_side_trend1 = go.Figure()
+            fig_side_trend1.add_trace(go.Scatter(
+                x=tenure_trend['tenure'],
+                y=tenure_trend['ChurnRate'],
+                mode='lines+markers',
+                line=dict(color='#EF4444', width=2.2),
+                marker=dict(size=4.5, color='#EF4444', symbol='circle'),
+                hovertemplate="Thâm niên: <b>%{x}</b> tháng<br>Tỷ lệ Churn: <b>%{y:.1f}%</b><extra></extra>"
+            ))
+            fig_side_trend1.update_layout(
+                title=dict(
+                    text="<b>📈 Xu hướng Tỷ lệ Churn theo Thâm niên</b><br><span style='font-size:11px;color:#94A3B8;'>Toàn bộ khách hàng • 1 đến 72 tháng</span>",
+                    font=dict(size=13, color='#F8FAFC', family="Plus Jakarta Sans")
+                ),
+                xaxis=dict(title=dict(text="Thâm niên (Tháng)", font=dict(size=11, color='#94A3B8')), gridcolor="rgba(255, 255, 255, 0.06)", tickfont=dict(color="#94A3B8")),
+                yaxis=dict(title=dict(text="Tỷ lệ Churn (%)", font=dict(size=11, color='#94A3B8')), gridcolor="rgba(255, 255, 255, 0.06)", tickfont=dict(color="#94A3B8")),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=40, r=20, t=55, b=30),
+                height=250
             )
-            fig_map.update_layout(
-                geo=dict(
-                    bgcolor='rgba(0,0,0,0)',
-                    lakecolor='rgba(15, 23, 42, 0.4)',
-                    showlakes=True,
-                    subunitcolor='rgba(255, 255, 255, 0.2)'
+            st.plotly_chart(fig_side_trend1, use_container_width=True)
+
+            # ------------------------------------------------------------------
+            # BIỂU ĐỒ 2 BÊN PHẢI: DOANH THU TÍCH LŨY THEO THỜI GIAN (ĐƯỜNG XANH + DIỆN TÍCH)
+            # ------------------------------------------------------------------
+            tenure_trend['CumRevenue'] = tenure_trend['TotalRev'].cumsum() / 1e6
+            fig_side_trend2 = go.Figure()
+            fig_side_trend2.add_trace(go.Scatter(
+                x=tenure_trend['tenure'],
+                y=tenure_trend['CumRevenue'],
+                mode='lines',
+                line=dict(color='#3B82F6', width=2.5),
+                fill='tozeroy',
+                fillcolor='rgba(59, 130, 246, 0.16)',
+                hovertemplate="Thâm niên: <b>%{x}</b> tháng<br>Doanh thu lũy kế: <b>$%{y:.2f}M</b><extra></extra>"
+            ))
+            fig_side_trend2.update_layout(
+                title=dict(
+                    text="<b>💧 Doanh thu Tích lũy theo Thời gian (CLV)</b><br><span style='font-size:11px;color:#94A3B8;'>Tích lũy CLV (Triệu USD) • 1 đến 72 tháng</span>",
+                    font=dict(size=13, color='#F8FAFC', family="Plus Jakarta Sans")
+                ),
+                xaxis=dict(title=dict(text="Thâm niên (Tháng)", font=dict(size=11, color='#94A3B8')), gridcolor="rgba(255, 255, 255, 0.06)", tickfont=dict(color="#94A3B8")),
+                yaxis=dict(title=dict(text="Doanh thu ($ Triệu)", font=dict(size=11, color='#94A3B8')), gridcolor="rgba(255, 255, 255, 0.06)", tickfont=dict(color="#94A3B8")),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=40, r=20, t=55, b=30),
+                height=250
+            )
+            st.plotly_chart(fig_side_trend2, use_container_width=True)
+
+        # ----------------------------------------------------------------------
+        # HÀNG 3: CHI TIẾT XẾP HẠNG TOP BANG RỦI RO & BẢNG DỮ LIỆU TỔNG HỢP
+        # ----------------------------------------------------------------------
+        with st.expander("📊 Chi Tiết Xếp Hạng Top 10 Tiểu Bang Nguy Cơ Cao Nhất & An Toàn Nhất", expanded=True):
+            top_risk_col, top_safe_col = st.columns(2)
+
+            with top_risk_col:
+                top_risk_states = state_agg.sort_values(by='ChurnRate', ascending=False).head(10)
+                fig_risk = px.bar(
+                    top_risk_states,
+                    y='State', x='ChurnRate', orientation='h',
+                    text='ChurnRate',
+                    color='ChurnRate',
+                    color_continuous_scale='Reds',
+                    labels={'State': 'Tiểu bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
                 )
-            )
-            apply_de_chart_theme(fig_map, height=480, title="<b>Biểu đồ 5: Bản Đồ Tọa Độ & Mật Độ Khách Hàng (Bubble Map)</b>")
-            st.plotly_chart(fig_map, use_container_width=True)
+                fig_risk.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
+                apply_de_chart_theme(fig_risk, height=360, title="<b>Biểu đồ 6a: Top 10 Tiểu Bang Nguy Cơ Churn Cao Nhất (Cần Can Thiệp)</b>")
+                fig_risk.update_layout(yaxis=dict(autorange="reversed"))
+                st.plotly_chart(fig_risk, use_container_width=True)
 
-        # HÀNG 2: XẾP HẠNG TOP BANG NGUY CƠ CAO & TOP BANG AN TOÀN
-        top_risk_col, top_safe_col = st.columns(2)
+            with top_safe_col:
+                top_safe_states = state_agg.sort_values(by='ChurnRate', ascending=True).head(10)
+                fig_safe = px.bar(
+                    top_safe_states,
+                    y='State', x='ChurnRate', orientation='h',
+                    text='ChurnRate',
+                    color='ChurnRate',
+                    color_continuous_scale='Greens_r',
+                    labels={'State': 'Tiểu bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
+                )
+                fig_safe.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
+                apply_de_chart_theme(fig_safe, height=360, title="<b>Biểu đồ 6b: Top 10 Tiểu Bang Trung Thành Nhất (Tỷ Lệ Churn Thấp)</b>")
+                fig_safe.update_layout(yaxis=dict(autorange="reversed"))
+                st.plotly_chart(fig_safe, use_container_width=True)
 
-        with top_risk_col:
-            # Top 10 bang có Churn Rate cao nhất
-            top_risk_states = state_agg.sort_values(by='ChurnRate', ascending=False).head(10)
-            fig_risk = px.bar(
-                top_risk_states,
-                y='State', x='ChurnRate', orientation='h',
-                text='ChurnRate',
-                color='ChurnRate',
-                color_continuous_scale='Reds',
-                labels={'State': 'Tiểu bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
+        with st.expander("📑 Bảng Dữ Liệu Tổng Hợp 50 Tiểu Bang & Xuất Dữ Liệu", expanded=False):
+            display_geo_table = state_agg[['StateCode', 'StateName', 'Total', 'Churned', 'ChurnRate', 'AvgMonthly', 'TotalRevenue']].copy()
+            display_geo_table.columns = ['Mã Bang', 'Tên Bang', 'Tổng Khách Hàng', 'Khách Churn', 'Tỷ Lệ Churn (%)', 'Cước TB ($)', 'Doanh Thu ($)']
+            display_geo_table['Tỷ Lệ Churn (%)'] = display_geo_table['Tỷ Lệ Churn (%)'].map(lambda x: f"{x:.1f}%")
+            display_geo_table['Cước TB ($)'] = display_geo_table['Cước TB ($)'].map(lambda x: f"${x:.2f}")
+            display_geo_table['Doanh Thu ($)'] = display_geo_table['Doanh Thu ($)'].map(lambda x: f"${x:,.0f}")
+            
+            st.dataframe(display_geo_table, use_container_width=True)
+            csv_geo_data = state_agg.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                "📥 Tải xuống dữ liệu địa lý 50 bang (.csv)",
+                data=csv_geo_data,
+                file_name="telco_geo_state_summary.csv",
+                mime="text/csv"
             )
-            fig_risk.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
-            apply_de_chart_theme(fig_risk, height=360, title="<b>Biểu đồ 6a: Top 10 Tiểu Bang Nguy Cơ Churn Cao Nhất (Cần Can Thiệp)</b>")
-            fig_risk.update_layout(yaxis=dict(autorange="reversed"))
-            st.plotly_chart(fig_risk, use_container_width=True)
-
-        with top_safe_col:
-            # Top 10 bang có Churn Rate thấp nhất (An toàn)
-            top_safe_states = state_agg.sort_values(by='ChurnRate', ascending=True).head(10)
-            fig_safe = px.bar(
-                top_safe_states,
-                y='State', x='ChurnRate', orientation='h',
-                text='ChurnRate',
-                color='ChurnRate',
-                color_continuous_scale='Greens_r',
-                labels={'State': 'Tiểu bang', 'ChurnRate': 'Tỷ lệ rời mạng (%)'}
-            )
-            fig_safe.update_traces(texttemplate='<b>%{text}%</b>', textposition='outside')
-            apply_de_chart_theme(fig_safe, height=360, title="<b>Biểu đồ 6b: Top 10 Tiểu Bang Trung Thành Nhất (Tỷ Lệ Churn Thấp)</b>")
-            fig_safe.update_layout(yaxis=dict(autorange="reversed"))
-            st.plotly_chart(fig_safe, use_container_width=True)
 
 # ------------------------------------------------------------------------------
 # TAB 3: DỊCH VỤ & TƯƠNG QUAN ĐA CHIỀU (Biểu đồ 7, 8, 9, 10)
