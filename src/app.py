@@ -1479,32 +1479,66 @@ elif nav_choice == "📡 Dịch vụ & Hành vi":
         deep_c1, deep_c2 = st.columns(2)
 
         with deep_c1:
-            # Biểu đồ 7: Scatter Plot - Tenure vs TotalCharges
-            sample_size = min(1500, len(filtered_df))
+            # Biểu đồ 7: Scatter Plot tinh gọn - Thâm niên vs Tổng cước
+            # Sắp xếp để điểm Churn Yes (đỏ) được vẽ lên trên, không bị điểm No (xanh) đè lấp
+            sample_size = min(1200, len(filtered_df))
             sample_df = filtered_df.sample(sample_size, random_state=42) if len(filtered_df) > sample_size else filtered_df
+            sample_df = sample_df.sort_values(by='Churn', ascending=True)
 
             fig_scatter = px.scatter(
                 sample_df,
-                x="tenure", y="TotalCharges", color="Churn",
-                size="MonthlyCharges",
-                hover_data=["Contract", "InternetService", "PaymentMethod", "State"],
+                x="tenure",
+                y="TotalCharges",
+                color="Churn",
+                opacity=0.65,
+                hover_data={
+                    "tenure": True,
+                    "TotalCharges": ":.1f",
+                    "MonthlyCharges": ":.1f",
+                    "Contract": True,
+                    "InternetService": True
+                },
                 color_discrete_map={'No': '#10B981', 'Yes': '#EF4444'},
-                labels={'tenure': 'Thâm niên (Tháng)', 'TotalCharges': 'Tổng cước tích lũy (USD)'}
+                labels={'tenure': 'Thâm niên sử dụng (Tháng)', 'TotalCharges': 'Tổng cước tích lũy (USD)', 'Churn': 'Trạng thái'}
             )
-            apply_de_chart_theme(fig_scatter, height=380, title="<b>Biểu đồ 7: Mối Quan Hệ Giữa Thâm Niên & Tổng Cước Phí (Scatter)</b>")
+            fig_scatter.update_traces(marker=dict(size=6, line=dict(width=0.5, color='rgba(255,255,255,0.4)')))
+            apply_de_chart_theme(fig_scatter, height=380, title="<b>Biểu đồ 7: Phân Bố Khách Hàng Theo Thâm Niên & Cước Tích Lũy</b>")
             st.plotly_chart(fig_scatter, use_container_width=True)
+            st.caption("💡 **Dễ hiểu**: Khách hàng rời mạng (chấm đỏ) tập trung chủ yếu ở giai đoạn mới (< 20 tháng). Khách dùng lâu (> 40 tháng) phần lớn đều ở lại.")
 
         with deep_c2:
-            # Biểu đồ 8: Treemap - Cây phân cấp dịch vụ
-            fig_treemap = px.treemap(
-                filtered_df,
-                path=['InternetService', 'Contract', 'Churn'],
-                color='Churn',
-                color_discrete_map={'No': '#10B981', 'Yes': '#EF4444', '(?)': '#64748B'},
-                title="<b>Biểu đồ 8: Cấu Trúc Phân Cấp Gói Dịch Vụ & Trạng Thái Churn (Treemap)</b>"
+            # Biểu đồ 8: Phân tích Tỷ lệ Rủi ro Rời mạng theo Gói dịch vụ & Hợp đồng (Grouped Bar Chart trực quan, rõ ràng)
+            risk_seg = filtered_df.groupby(['Contract', 'InternetService'], as_index=False).agg(
+                Total=('customerID', 'count'),
+                Churned=('ChurnNumeric', 'sum')
             )
-            apply_de_chart_theme(fig_treemap, height=380)
-            st.plotly_chart(fig_treemap, use_container_width=True)
+            risk_seg['ChurnRate'] = (risk_seg['Churned'] / risk_seg['Total'] * 100).round(1)
+
+            # Mapping tên tiếng Việt dễ hiểu
+            contract_map = {'Month-to-month': 'Theo tháng', 'One year': 'Hợp đồng 1 năm', 'Two year': 'Hợp đồng 2 năm'}
+            internet_map = {'Fiber optic': 'Cáp quang (Fiber)', 'DSL': 'Cáp đồng (DSL)', 'No': 'Không Internet'}
+            risk_seg['Contract_VN'] = risk_seg['Contract'].map(contract_map).fillna(risk_seg['Contract'])
+            risk_seg['Internet_VN'] = risk_seg['InternetService'].map(internet_map).fillna(risk_seg['InternetService'])
+
+            fig_risk = px.bar(
+                risk_seg,
+                x='Contract_VN',
+                y='ChurnRate',
+                color='Internet_VN',
+                barmode='group',
+                text='ChurnRate',
+                category_orders={'Contract_VN': ['Theo tháng', 'Hợp đồng 1 năm', 'Hợp đồng 2 năm']},
+                color_discrete_map={
+                    'Cáp quang (Fiber)': '#EF4444',
+                    'Cáp đồng (DSL)': '#3B82F6',
+                    'Không Internet': '#10B981'
+                },
+                labels={'ChurnRate': 'Tỷ lệ rời mạng (%)', 'Contract_VN': 'Loại hợp đồng', 'Internet_VN': 'Gói Internet'}
+            )
+            fig_risk.update_traces(texttemplate='%{text:.1f}%', textposition='outside', textfont=dict(color='#F8FAFC', size=11))
+            apply_de_chart_theme(fig_risk, height=380, title="<b>Biểu đồ 8: Tỷ Lệ Rời Mạng Theo Loại Hợp Đồng & Gói Internet (%)</b>")
+            st.plotly_chart(fig_risk, use_container_width=True)
+            st.caption("💡 **Rõ ràng**: Khách dùng **Gói tháng + Cáp quang** có tỷ lệ rời mạng cao nhất (~54.6%). Khách ký **2 năm** gần như tuyệt đối ở lại (< 8%).")
 
         deep_c3, deep_c4 = st.columns(2)
 
