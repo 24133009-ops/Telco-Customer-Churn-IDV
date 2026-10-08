@@ -419,9 +419,13 @@ model_bundle = load_model()
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-brand">
-        <div class="brand-title">📡 TELCO PULSE HUB</div>
-        <div class="brand-tag">DE & PREDICTIVE ANALYTICS PLATFORM</div>
-        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">Đồ án Tương Tác Dữ Liệu | Nhóm 22</div>
+        <div class="brand-title">📡 TELCO INTELLIGENCE HUB</div>
+        <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 8px; line-height: 1.6; text-align: left; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+            <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056</div>
+            <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
+            <div>👤 <b>Trương Quốc Duy</b> - 24133009</div>
+        </div>
+        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">Đồ án Tương Tác Dữ Liệu | Nhóm 22 - HCMUTE</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -517,7 +521,7 @@ filtered_df = filtered_df[
 ]
 
 # ==============================================================================
-# PHẦN HERO HEADER & DATA ENGINEERING TELEMETRY BAR
+# PHẦN HERO HEADER
 # ==============================================================================
 st.markdown("""
 <div class="hero-header">
@@ -525,25 +529,7 @@ st.markdown("""
         <span>📡 Bảng Điều Khiển Trực Quan Hóa & Dự Báo Customer Churn Viễn Thông</span>
     </h1>
     <div class="hero-subtitle">
-        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | Nhóm 22: Đỗ Trọng Khôi (20133056) - Bùi Đức Huy - Trương Quốc Duy (24133009)
-    </div>
-    <div class="telemetry-bar">
-        <div class="telemetry-chip">
-            <span class="chip-status-active"></span>
-            <b>Pipeline Status:</b> ONLINE (ETL Micro-batch v2.5)
-        </div>
-        <div class="telemetry-chip">
-            <b>🗄️ CSDL Quan Hệ:</b> 4 Bảng RDBMS (Star Schema) | Inner Join
-        </div>
-        <div class="telemetry-chip">
-            <b>🗺️ Quy mô địa lý:</b> Đủ 50 Tiểu Bang Hoa Kỳ (Tên Đầy Đủ)
-        </div>
-        <div class="telemetry-chip">
-            <b>🛡️ Data Quality:</b> 100% Passed (0 Nulls, IQR Outlier Checked)
-        </div>
-        <div class="telemetry-chip">
-            <b>🤖 ML Engine:</b> Logistic Regression (ROC-AUC: 0.8421)
-        </div>
+        Đồ án môn <b>Tương tác Dữ liệu Trực quan (IDV)</b> | <b>Nhóm 22:</b> Đỗ Trọng Khôi (20133056) • Bùi Đức Huy (24133021) • Trương Quốc Duy (24133009)
     </div>
 </div>
 """, unsafe_allow_html=True)
