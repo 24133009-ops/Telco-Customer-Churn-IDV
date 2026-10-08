@@ -34,13 +34,18 @@ st.set_page_config(
 )
 
 # Đọc Logo chính thức Trường ĐH Sư Phạm Kỹ Thuật TP.HCM (HCMUTE)
-LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute.png")
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute_badge.png")
+if not os.path.exists(LOGO_PATH):
+    LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute.png")
+
 if os.path.exists(LOGO_PATH):
     with open(LOGO_PATH, "rb") as _f:
         _b64 = base64.b64encode(_f.read()).decode("utf-8")
-        HCMUTE_LOGO_HTML = f'<img src="data:image/png;base64,{_b64}" style="height: 50px; width: 50px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); flex-shrink: 0;" alt="HCMUTE Logo" />'
+        HCMUTE_LOGO_HTML = f'''<div class="hcmute-logo-badge">
+            <img src="data:image/png;base64,{_b64}" class="hcmute-logo-img" alt="HCMUTE Logo" />
+        </div>'''
 else:
-    HCMUTE_LOGO_HTML = '<div style="width:48px;height:48px;border-radius:50%;background:#004B91;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;">HCMUTE</div>'
+    HCMUTE_LOGO_HTML = '<div class="hcmute-logo-badge" style="background:#004B91;color:#fff;font-weight:800;font-size:0.75rem;">HCMUTE</div>'
 
 # Custom CSS giao diện Dashboard
 st.markdown("""
@@ -52,36 +57,65 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Tối ưu layout tràn viền không bị khoảng trắng trên cùng */
+    /* Tối ưu layout: hạ bảng xuống thấp hơn một chút, thoáng đãng, không bị đè bởi thanh công cụ Streamlit */
     .block-container {
-        padding-top: 0rem !important;
-        padding-bottom: 2rem !important;
-        padding-left: 1.5rem !important;
-        padding-right: 1.5rem !important;
+        padding-top: 2.8rem !important;
+        padding-bottom: 2.5rem !important;
+        padding-left: 1.8rem !important;
+        padding-right: 1.8rem !important;
         max-width: 100% !important;
     }
     header[data-testid="stHeader"] {
         background: transparent !important;
-        height: 0px !important;
+        z-index: 10 !important;
     }
 
-    /* Top Institutional Navbar Full-Width (Chuẩn nhận diện trường HCMUTE như mẫu) */
+    /* Logo Badge HCMUTE: khung tròn trắng tuyết, nổi bật tuyệt đối 100% trên cả Dark Mode và Light Mode */
+    .hcmute-logo-badge {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        border-radius: 50%;
+        background: #FFFFFF !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28), 0 0 0 2.5px rgba(255, 255, 255, 0.95);
+        flex-shrink: 0;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hcmute-logo-badge:hover {
+        transform: scale(1.06);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38), 0 0 0 3px #60A5FA;
+    }
+    .hcmute-logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+        display: block;
+    }
+
+    /* Top Institutional Navbar Card (Chuẩn nhận diện trường ĐH SPKT TP.HCM - HCMUTE) */
     .uni-navbar-full {
-        background: linear-gradient(90deg, #07386d 0%, #0c56b3 50%, #1565c0 100%);
-        padding: 12px 28px;
-        margin: -1rem -1.5rem 18px -1.5rem;
-        box-shadow: 0 4px 18px rgba(7, 56, 109, 0.45);
+        background: linear-gradient(135deg, #07386d 0%, #0d52a4 50%, #1565c0 100%);
+        padding: 16px 28px;
+        margin: 0.4rem 0 24px 0;
+        border-radius: 16px;
+        box-shadow: 0 8px 26px rgba(7, 56, 109, 0.32);
+        border: 1px solid rgba(255, 255, 255, 0.22);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
         flex-wrap: wrap;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        position: relative;
     }
     .uni-brand-group {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 16px;
         flex-wrap: wrap;
     }
     .uni-text-col {
@@ -89,60 +123,75 @@ st.markdown("""
         flex-direction: column;
     }
     .uni-sub-label {
-        font-size: 0.72rem;
-        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.74rem;
+        color: #BFDBFE;
         font-weight: 700;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        line-height: 1.2;
+        line-height: 1.25;
     }
     .uni-main-title {
-        font-size: 1.15rem;
+        font-size: 1.22rem;
         font-weight: 800;
         color: #FFFFFF;
         letter-spacing: 0.02em;
         text-transform: uppercase;
-        line-height: 1.25;
+        line-height: 1.3;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     }
     .uni-v-divider {
-        width: 1.5px;
-        height: 38px;
-        background: rgba(255, 255, 255, 0.3);
-        margin: 0 6px;
+        width: 2px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.28);
+        margin: 0 8px;
+        border-radius: 1px;
     }
     .lab-main-title {
-        font-size: 1.15rem;
+        font-size: 1.22rem;
         font-weight: 800;
         color: #FFFFFF;
-        letter-spacing: 0.04em;
-        line-height: 1.25;
+        letter-spacing: 0.03em;
+        line-height: 1.3;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     }
     .lab-sub-title {
-        font-size: 0.72rem;
+        font-size: 0.74rem;
         color: #93C5FD;
         font-weight: 600;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
-        line-height: 1.2;
+        line-height: 1.25;
     }
     .uni-badge-group {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         flex-wrap: wrap;
     }
     .uni-pill {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.12);
         border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 0.78rem;
+        padding: 7px 16px;
+        font-size: 0.8rem;
         font-weight: 600;
         color: #FFFFFF;
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .uni-pill-accent {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.12) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    @media (min-width: 1024px) {
+        .uni-badge-group {
+            margin-right: 90px;
+        }
     }
 
     /* Container Header */
@@ -252,14 +301,14 @@ st.markdown("""
         }
     }
     .kpi-card {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 14px;
         padding: 16px 18px;
         position: relative;
         overflow: hidden;
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }
     .kpi-card:hover {
         transform: translateY(-3px);
@@ -306,35 +355,48 @@ st.markdown("""
     }
     .kpi-subtext {
         font-size: 0.76rem;
-        color: #64748B;
+        color: #94A3B8;
         font-weight: 500;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Styling - Giữ độ tương phản cao, chuyên nghiệp trên cả Light và Dark Mode */
     .sidebar-brand {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        border-radius: 12px;
-        padding: 14px 16px;
-        margin-bottom: 16px;
+        background: linear-gradient(135deg, #0b1a30 0%, #11294d 50%, #1e3a66 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-radius: 14px;
+        padding: 16px 14px;
+        margin-bottom: 18px;
         text-align: center;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
     .brand-title {
-        font-size: 1.05rem;
+        font-size: 1.02rem;
         font-weight: 800;
-        color: #F8FAFC;
-        margin: 0;
+        color: #F8FAFC !important;
+        margin: 6px 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
+        letter-spacing: 0.02em;
     }
     .brand-tag {
         font-size: 0.72rem;
-        color: #A5B4FC;
+        color: #93C5FD !important;
         font-weight: 600;
         letter-spacing: 0.05em;
         margin-top: 4px;
+    }
+    .brand-members {
+        font-size: 0.8rem;
+        color: #E2E8F0 !important;
+        margin-top: 10px;
+        line-height: 1.65;
+        text-align: left;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* Drill-down Profile Card */
@@ -585,20 +647,20 @@ model_bundle = load_model()
 with st.sidebar:
     st.markdown(f"""
     <div class="sidebar-brand">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;">
             {HCMUTE_LOGO_HTML}
             <div style="text-align: left;">
-                <div style="font-size: 0.9rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.03em;">HCMUTE</div>
-                <div style="font-size: 0.68rem; color: #93C5FD; font-weight: 600;">KHOA CNTT • IDV LAB</div>
+                <div style="font-size: 0.96rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.04em;">HCMUTE</div>
+                <div style="font-size: 0.7rem; color: #93C5FD; font-weight: 700; letter-spacing: 0.03em;">KHOA CNTT • IDV LAB</div>
             </div>
         </div>
         <div class="brand-title">📡 DỰ BÁO CUSTOMER CHURN</div>
-        <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 8px; line-height: 1.6; text-align: left; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+        <div class="brand-members">
             <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056 (Trưởng nhóm)</div>
             <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
             <div>👤 <b>Trương Quốc Duy</b> - 24133009</div>
         </div>
-        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 6px;">ĐH Sư phạm Kỹ thuật TP.HCM</div>
+        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 8px; font-weight: 500;">Trường ĐH Sư phạm Kỹ thuật TP.HCM</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -714,7 +776,7 @@ st.markdown(f"""
         <div class="uni-pill">
             <span>📅 PHẠM VI DỮ LIỆU: 50 TIỂU BANG ({len(df_raw):,} KH)</span>
         </div>
-        <div class="uni-pill" style="background: rgba(255, 255, 255, 0.22); font-weight: 700;">
+        <div class="uni-pill uni-pill-accent">
             <span>👥 NHÓM 22 - HCMUTE</span>
         </div>
     </div>
