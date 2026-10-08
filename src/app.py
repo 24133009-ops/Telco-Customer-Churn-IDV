@@ -1,10 +1,9 @@
 """
 HỆ THỐNG TRỰC QUAN HÓA TƯƠNG TÁC VÀ DỰ BÁO KHÁCH HÀNG RỜI MẠNG (CUSTOMER CHURN)
-Chuẩn Data Engineering & Business Intelligence Cao Cấp
-Môn học: Tương tác Dữ liệu Trực quan | Nhóm 22:
+Đồ án môn học: Tương tác Dữ liệu Trực quan | Nhóm 22:
 - Đỗ Trọng Khôi  - 20133056 (Trưởng nhóm)
-- Bùi Đức Huy    - Thành viên
-- Trương Quốc Duy - 24133009 (Thành viên)
+- Bùi Đức Huy    - 24133021
+- Trương Quốc Duy - 24133009
 """
 
 import os
@@ -25,15 +24,15 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Cấu hình giao diện Streamlit chuyên nghiệp
+# Cấu hình giao diện Streamlit
 st.set_page_config(
-    page_title="Telco Churn Intelligence Hub | Nhóm 22",
+    page_title="Dự Báo & Trực Quan Hóa Customer Churn | Nhóm 22",
     page_icon="📡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS chuẩn Enterprise BI Dashboard - Tương thích hoàn hảo cả Dark Mode & Light Mode
+# Custom CSS giao diện Dashboard
 st.markdown("""
 <style>
     /* Google Fonts */
@@ -440,12 +439,12 @@ df_raw = load_telco_data_production()
 model_bundle = load_model()
 
 # ==============================================================================
-# SIDEBAR: BỘ LỌC TƯƠNG TÁC ĐA CHIỀU (DATA ENGINEERING FILTERS)
+# SIDEBAR: BỘ LỌC TƯƠNG TÁC DỮ LIỆU
 # ==============================================================================
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-brand">
-        <div class="brand-title">📡 TELCO INTELLIGENCE HUB</div>
+        <div class="brand-title">📡 DỰ BÁO CUSTOMER CHURN</div>
         <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 8px; line-height: 1.6; text-align: left; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
             <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056</div>
             <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
@@ -647,7 +646,7 @@ tab_overview, tab_geo, tab_deepdive, tab_ml, tab_drilldown, tab_arch = st.tabs([
     "🔍 3. Dịch Vụ & Tương Quan",
     "🤖 4. Dự Báo AI & Simulator",
     "📋 5. Drill-down Hồ Sơ 360°",
-    "🏗️ 6. Kiến Trúc Data Pipeline"
+    "🏗️ 6. Quy Trình Dữ Liệu & ETL"
 ])
 
 # ------------------------------------------------------------------------------
@@ -1062,12 +1061,12 @@ with tab_ml:
         st.session_state['sim_stream'] = "Yes"
         st.session_state['sim_senior'] = 1
 
-    st.markdown("#### 🎯 Nạp Kịch Bản Kiểm Thử Nhanh (Scenario Presets dành cho Thầy Cô / Hội Đồng):")
-    st.caption("Nhấp vào 1 trong 3 kịch bản thực tế dưới đây để hệ thống tự động điền nhanh các thông số mẫu:")
+    st.markdown("#### 🎯 Chọn Nhanh Kịch Bản Khách Hàng Mẫu:")
+    st.caption("Nhấp vào 1 trong 3 kịch bản dưới đây để tự động điền nhanh các thông số mẫu:")
 
     ps_col1, ps_col2, ps_col3 = st.columns(3)
     with ps_col1:
-        if st.button("🚨 Kịch Bản 1: Khách Nguy Cơ Cao (High Churn)", use_container_width=True):
+        if st.button("🚨 Kịch Bản 1: Nguy Cơ Rời Mạng Cao", use_container_width=True):
             st.session_state['sim_tenure'] = 2
             st.session_state['sim_monthly'] = 98.0
             st.session_state['sim_contract'] = "Month-to-month"
@@ -1083,7 +1082,7 @@ with tab_ml:
             st.rerun()
 
     with ps_col2:
-        if st.button("🛡️ Kịch Bản 2: Khách Hàng VIP (Low Churn)", use_container_width=True):
+        if st.button("🛡️ Kịch Bản 2: Khách Gắn Bó Lâu Năm", use_container_width=True):
             st.session_state['sim_tenure'] = 62
             st.session_state['sim_monthly'] = 64.0
             st.session_state['sim_contract'] = "Two year"
@@ -1099,7 +1098,7 @@ with tab_ml:
             st.rerun()
 
     with ps_col3:
-        if st.button("⚖️ Kịch Bản 3: Khách Phân Vân (Medium Churn)", use_container_width=True):
+        if st.button("⚖️ Kịch Bản 3: Khách Hàng Cần Chăm Sóc", use_container_width=True):
             st.session_state['sim_tenure'] = 16
             st.session_state['sim_monthly'] = 74.5
             st.session_state['sim_contract'] = "Month-to-month"
@@ -1230,13 +1229,13 @@ with tab_ml:
             # Khối tài chính rủi ro
             st.markdown(f"""
             <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; text-align: center;">
-                <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Doanh Thu Đang Bị Đe Dọa (ARR At Risk)</div>
+                <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; font-weight: 700;">Ước Tính Cước Năm Bị Ảnh Hưởng</div>
                 <div style="font-size: 1.35rem; font-weight: 800; color: {'#F87171' if pred_prob >= 0.35 else '#34D399'}; margin-top: 2px;">${at_risk_annual:,.2f} <span style="font-size: 0.8rem; font-weight: 500; color: #94A3B8;">USD/năm</span></div>
             </div>
             """, unsafe_allow_html=True)
 
         with res_col2:
-            st.markdown(f"#### 💡 Chiến Lược Giữ Chân Khách Hàng (Retention Playbook):")
+            st.markdown(f"#### 💡 Đề Xuất Giải Pháp Giữ Chân Khách Hàng:")
             recs = []
             if inp_contract == "Month-to-month":
                 recs.append("📌 **Khuyến mãi chuyển đổi hợp đồng:** Khách đang dùng gói theo tháng $\\rightarrow$ Đề xuất tặng voucher giảm **15% cước trong 3 tháng đầu** khi cam kết ký hợp đồng 1 hoặc 2 năm. *(Hiệu quả: Giảm ~50% nguy cơ rời bỏ)*.")
@@ -1252,10 +1251,10 @@ with tab_ml:
             for r in recs:
                 st.markdown(r)
 
-        # MÔ PHỎNG PHẢN THỰC NGHIỆM ĐỀ XUẤT HÀNH ĐỘNG (COUNTERFACTUAL PRESCRIPTIVE IMPACT)
+        # MÔ PHỎNG TÁC ĐỘNG KHI DOANH NGHIỆP CAN THIỆP (TRƯỚC & SAU)
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("#### 🎯 Mô Phỏng Tác Động Khi Doanh Nghiệp Can Thiệp (Counterfactual Prescriptive Impact):")
-        st.caption("Mô hình AI tự động tính toán lại xác suất rời mạng tương lai khi nhân viên áp dụng các chính sách giữ chân:")
+        st.markdown("#### 🎯 Dự Đoán Tác Động Sau Khi Can Thiệp (Trước & Sau Giữ Chân):")
+        st.caption("Mô hình AI tự động tính lại xác suất rời mạng nếu áp dụng các giải pháp chăm sóc khách hàng:")
 
         # Phương án 1: Đổi sang Hợp đồng 1 năm
         cf1_data = input_data.copy()
@@ -1411,153 +1410,42 @@ with tab_drilldown:
     )
 
 # ------------------------------------------------------------------------------
-# TAB 6: KIẾN TRÚC DATA ENGINEERING PIPELINE (CHUYÊN GIA DE)
+# TAB 6: QUY TRÌNH DỮ LIỆU & TIỀN XỬ LÝ (DATA PIPELINE)
 # ------------------------------------------------------------------------------
 with tab_arch:
-    st.markdown("### 🏗️ Trung Tâm Quản Trị Dữ Liệu & Kiểm Định Pipeline (Data Governance & SLA Hub)")
-    st.markdown("Kiến trúc xử lý dữ liệu chuẩn **Medallion Architecture (Bronze ➔ Silver ➔ Gold)** kết hợp bộ kiểm thử tự động **Automated Data Quality Audit** chuẩn Senior Data Engineer.")
+    st.markdown("### 🏗️ Quy Trình Thu Thập, Tiền Xử Lý & Chuẩn Hóa Dữ Liệu")
+    st.markdown("Mô tả quy trình xử lý dữ liệu viễn thông từ 4 bảng gốc, các bước làm sạch, ghép nối bảng và chuẩn bị cho mô hình hóa.")
 
-    # 1. BẢNG ĐIỀU KHIỂN TELEMETRY & SLA PIPELINE
     st.markdown("""
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px 16px;">
-            <div style="font-size: 0.72rem; color: #6EE7B7; font-weight: 700;">TRẠNG THÁI PIPELINE</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">🟢 100% HEALTHY</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Sẵn sàng phục vụ Production</div>
-        </div>
-        <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; padding: 12px 16px;">
-            <div style="font-size: 0.72rem; color: #A5B4FC; font-weight: 700;">QUY MÔ DỮ LIỆU ĐÃ NẠP</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">7,043 Records</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">100% định danh khách hàng duy nhất</div>
-        </div>
-        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 12px 16px;">
-            <div style="font-size: 0.72rem; color: #93C5FD; font-weight: 700;">FEATURE STORE (GOLD)</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">39 Thuộc Tính</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Bao gồm 6 trường tính toán mới</div>
-        </div>
-        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 12px 16px;">
-            <div style="font-size: 0.72rem; color: #FCD34D; font-weight: 700;">ĐỘ TRỄ NẠP BỘ NHỚ (SLA)</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">&lt; 0.05s In-Memory</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Được tối ưu qua @st.cache_data</div>
-        </div>
+    <div class="arch-box">
+    <b>[LUỒNG XỬ LÝ DỮ LIỆU - DATA PIPELINE]:</b><br>
+    [1. Nguồn dữ liệu thô (Kaggle/IBM)] ──► [2. 4 Bảng quan hệ RDBMS] ──► [3. Tiền xử lý & Làm sạch (Join & Impute)] ──► [4. Tập dữ liệu hoàn chỉnh (39 cột)] ──► [5. Trực quan hóa & AI]
     </div>
     """, unsafe_allow_html=True)
 
-    # 2. KIẾN TRÚC MEDALLION DATA LAKEHOUSE
-    st.markdown("#### 📐 1. Kiến Trúc Medallion Architecture (Bronze ➔ Silver ➔ Gold ➔ Serving):")
-    st.markdown("""
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-            <div style="color: #F59E0B; font-weight: 800; font-size: 0.88rem; margin-bottom: 6px;">🥉 BRONZE LAYER (RAW)</div>
-            <div style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.5;">
-                • Dữ liệu gốc 7,043 dòng từ RDBMS Viễn thông.<br>
-                • Tách thành 4 bảng quan hệ chuẩn hóa 3NF.<br>
-                • Lưu trữ tại <code>data/raw/</code>.
-            </div>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-            <div style="color: #94A3B8; font-weight: 800; font-size: 0.88rem; margin-bottom: 6px;">🥈 SILVER LAYER (CLEAN)</div>
-            <div style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.5;">
-                • Xử lý khuyết thiếu <code>TotalCharges</code>.<br>
-                • Chuẩn hóa kiểu dữ liệu số & phân loại.<br>
-                • Join 4 bảng qua khóa chính <code>customerID</code>.
-            </div>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
-            <div style="color: #FCD34D; font-weight: 800; font-size: 0.88rem; margin-bottom: 6px;">🥇 GOLD LAYER (FEATURES)</div>
-            <div style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.5;">
-                • Feature Engineering: <code>TenureGroup</code>, <code>CLV_Category</code>, <code>TotalServices</code>.<br>
-                • Chuẩn hóa 50 Tiểu bang Hoa Kỳ.<br>
-                • Lưu trữ tại <code>telco_churn_clean.csv</code>.
-            </div>
-        </div>
-        <div style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 10px; padding: 14px;">
-            <div style="color: #A5B4FC; font-weight: 800; font-size: 0.88rem; margin-bottom: 6px;">🚀 SERVING LAYER (AI/BI)</div>
-            <div style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.5;">
-                • Scikit-Learn Logistic Inference Engine.<br>
-                • Streamlit Interactive Dashboard.<br>
-                • Phản thực nghiệm What-If thời gian thực.
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 3. BỘ KIỂM THỬ CHẤT LƯỢNG DỮ LIỆU THỜI GIAN THỰC (AUTOMATED DATA QUALITY SUITE)
-    st.markdown("#### 🧪 2. Báo Cáo Kiểm Định Chất Lượng Dữ Liệu Thời Gian Thực (Automated Data Quality Audit):")
-    st.caption("Các bài test được thực thi trực tiếp trên toàn bộ DataFrame để bảo đảm dữ liệu luôn thỏa mãn các ràng buộc nghiệp vụ viễn thông:")
-
-    # Chạy các phép kiểm thử thực tế trên df_raw
-    pk_nulls = int(df_raw['customerID'].isnull().sum())
-    pk_dups = int(df_raw['customerID'].duplicated().sum())
-    tc_nulls = int(df_raw['TotalCharges'].isnull().sum())
-    state_cnt = int(df_raw['StateCode'].nunique()) if 'StateCode' in df_raw.columns else int(df_raw['State'].nunique())
-    charges_valid = bool(df_raw['MonthlyCharges'].between(0, 500).all())
-    tenure_valid = bool(df_raw['tenure'].between(0, 100).all())
-
-    audit_data = [
-        {
-            "Mã Quy Tắc": "DQ-01-PK-INTEGRITY",
-            "Mô Tả Kiểm Thử": "Kiểm tra Khóa chính (customerID) Không Null & Không Trùng Lặp",
-            "Tập Cột": "customerID",
-            "Kết Quả Thực Tế": f"0 Null, 0 Duplicates ({len(df_raw):,}/{len(df_raw):,})",
-            "Trạng Thái": "✅ PASS (100.0%)"
-        },
-        {
-            "Mã Quy Tắc": "DQ-02-RELATION-JOIN",
-            "Mô Tả Kiểm Thử": "Tính toàn vẹn tham chiếu 1-1 giữa 4 bảng quan hệ RDBMS",
-            "Tập Cột": "4 Normalized Tables",
-            "Kết Quả Thực Tế": "100.0% bản ghi khớp hoàn hảo",
-            "Trạng Thái": "✅ PASS (100.0%)"
-        },
-        {
-            "Mã Quy Tắc": "DQ-03-MISSING-IMPUTE",
-            "Mô Tả Kiểm Thử": "Xử lý triệt để 11 giá trị trống ở TotalCharges (tenure=0)",
-            "Tập Cột": "TotalCharges",
-            "Kết Quả Thực Tế": f"{tc_nulls} giá trị khuyết thiếu còn lại",
-            "Trạng Thái": "✅ PASS (Hoàn tất)"
-        },
-        {
-            "Mã Quy Tắc": "DQ-04-GEO-COVERAGE",
-            "Mô Tả Kiểm Thử": "Độ bao phủ toàn bộ 50 Tiểu bang Hoa Kỳ với tọa độ hợp lệ",
-            "Tập Cột": "StateCode, StateName, Lat, Lon",
-            "Kết Quả Thực Tế": f"{state_cnt}/50 Tiểu bang đầy đủ",
-            "Trạng Thái": "✅ PASS (50 Bang)"
-        },
-        {
-            "Mã Quy Tắc": "DQ-05-DOMAIN-BOUNDS",
-            "Mô Tả Kiểm Thử": "Kiểm tra miền giá trị hợp lệ: MonthlyCharges >= 0 & tenure in [0, 72]",
-            "Tập Cột": "MonthlyCharges, tenure",
-            "Kết Quả Thực Tế": "Toàn bộ bản ghi nằm trong ngưỡng logic",
-            "Trạng Thái": "✅ PASS (Hợp lệ)"
-        },
-        {
-            "Mã Quy Tắc": "DQ-06-SCHEMA-VALIDATION",
-            "Mô Tả Kiểm Thử": "Biến mục tiêu Churn tuân thủ nhãn nhị phân chuẩn {'Yes', 'No'}",
-            "Tập Cột": "Churn, ChurnNumeric",
-            "Kết Quả Thực Tế": "Phân phối sạch: 1,869 Churned / 5,174 Retained",
-            "Trạng Thái": "✅ PASS (Chuẩn hóa)"
-        }
-    ]
-
-    st.dataframe(pd.DataFrame(audit_data), use_container_width=True, hide_index=True)
-
-    # 4. SƠ ĐỒ 4 BẢNG QUAN HỆ
-    st.markdown("#### 📁 3. Danh Mục 4 Bảng Quan Hệ Chuẩn Hóa (Relational Database Schema):")
     arch_c1, arch_c2 = st.columns(2)
+
     with arch_c1:
+        st.markdown("#### 1. Cấu Trúc 4 Bảng Dữ Liệu Quan Hệ Gốc:")
         st.markdown("""
         - 📄 **`telco_demographics.csv`** (7,043 dòng):<br>
           `customerID (PK)`, `gender`, `SeniorCitizen`, `Partner`, `Dependents`, `State`, `StateName`, `StateCode`, `City`, `Latitude`, `Longitude`
         - 📄 **`telco_services.csv`** (7,043 dòng):<br>
           `customerID (FK)`, `PhoneService`, `MultipleLines`, `InternetService`, `OnlineSecurity`, `OnlineBackup`, `DeviceProtection`, `TechSupport`, `StreamingTV`, `StreamingMovies`
-        """, unsafe_allow_html=True)
-    with arch_c2:
-        st.markdown("""
         - 📄 **`telco_contracts.csv`** (7,043 dòng):<br>
           `customerID (FK)`, `tenure`, `Contract`, `PaperlessBilling`, `PaymentMethod`, `MonthlyCharges`, `TotalCharges`
         - 📄 **`telco_churn_status.csv`** (7,043 dòng):<br>
           `customerID (FK)`, `Churn`, `ChurnReason`, `SatisfactionScore`
         """, unsafe_allow_html=True)
+
+    with arch_c2:
+        st.markdown("#### 2. Các Bước Tiền Xử Lý Đã Thực Hiện:")
+        st.markdown("""
+        - 🔗 **Ghép nối bảng (Inner Join):** Sử dụng khóa chính `customerID` để hợp nhất 4 bảng dữ liệu, tỷ lệ khớp đạt 100% (7,043 bản ghi).
+        - 🧹 **Xử lý giá trị trống (Missing Values):** Phát hiện 11 dòng có `TotalCharges` rỗng do khách hàng mới ký hợp đồng (`tenure = 0`), tiến hành điền giá trị 0.
+        - 🏷️ **Tạo đặc trưng mới (Feature Engineering):** Bổ sung nhóm thâm niên `TenureGroup`, tổng số dịch vụ `TotalServicesSubscribed`, biến cờ gói bảo mật `HasProtectionPackage`, cước tính toán `CalculatedAvgMonthly` và biến nhị phân `ChurnNumeric`.
+        - 🗺️ **Chuẩn hóa địa lý 50 tiểu bang:** Bổ sung thông tin vĩ độ/kinh độ và mã tiểu bang Hoa Kỳ phục vụ vẽ bản đồ trực quan.
+        """)
 
 st.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
 st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Đỗ Trọng Khôi - Bùi Đức Huy - Trương Quốc Duy")
