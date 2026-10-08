@@ -3,7 +3,7 @@ Khám phá dữ liệu (Exploratory Data Analysis - EDA)
 Sử dụng Matplotlib và Seaborn để trực quan hóa các biểu đồ phân tích tĩnh phục vụ báo cáo IEEE.
 Đề tài 5 - Nhóm 22:
 - Đỗ Trọng Khôi - 20133056
-- Bùi Đức Huy
+- Bùi Đức Huy - 24133021
 - Trương Quốc Duy - 24133009
 """
 

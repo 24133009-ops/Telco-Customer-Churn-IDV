@@ -1,0 +1,14 @@
+================================================================================
+BÁO CÁO ĐỒ ÁN MÔN HỌC: TƯƠNG TÁC DỮ LIỆU TRỰC QUAN (IDV)
+NHÓM 22: ĐỖ TRỌNG KHÔI - BÙI ĐỨC HUY - TRƯƠNG QUỐC DUY
+================================================================================
+
+1. LINK VIDEO DEMO:
+- Link Video (YouTube): [Dán link YouTube tại đây nếu có]
+- Link Video (Google Drive): [Dán link Google Drive video ở Bước 1 vào đây]
+
+2. LINK SOURCE DASHBOARD:
+- GitHub Repository (Toàn bộ Source Code):
+  https://github.com/24133009-ops/Telco-Customer-Churn-IDV
+- Link Dashboard Online (Streamlit Cloud):
+  https://nhom22-telco-churn.streamlit.app

@@ -189,8 +189,8 @@ def fetch_or_generate_raw_data():
     loc_indices = np.random.choice(len(US_50_STATES), n, p=loc_weights)
     locations = [US_50_STATES[i] for i in loc_indices]
     
-    # Định dạng State hiển thị đầy đủ tên bang và mã: e.g. "California (CA)"
-    df_raw["State"] = [f"{loc['StateName']} ({loc['StateCode']})" for loc in locations]
+    # Định dạng State hiển thị đầy đủ: e.g. "Tiểu bang California (CA)"
+    df_raw["State"] = [f"Tiểu bang {loc['StateName']} ({loc['StateCode']})" for loc in locations]
     df_raw["StateName"] = [loc["StateName"] for loc in locations]
     df_raw["StateCode"] = [loc["StateCode"] for loc in locations]
     df_raw["City"] = [loc["City"] for loc in locations]
