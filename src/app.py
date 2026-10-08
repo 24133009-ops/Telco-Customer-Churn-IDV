@@ -983,6 +983,19 @@ total_revenue = filtered_df['TotalCharges'].sum() if total_cust > 0 else 0.0
 avg_mrr = filtered_df['MonthlyCharges'].mean() if total_cust > 0 else 0.0
 avg_sat = filtered_df['SatisfactionScore'].mean() if total_cust > 0 else 0.0
 
+# TÍNH TOÁN CÁC CHỈ SỐ TÀI CHÍNH C-LEVEL TOÀN CỤC (FINANCIAL IMPACT & REVENUE AT RISK)
+churned_sub = filtered_df[filtered_df['Churn'] == 'Yes']
+mrr_lost = churned_sub['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+arr_lost = mrr_lost * 12
+avg_lost_mrr = churned_sub['MonthlyCharges'].mean() if len(churned_sub) > 0 else 0.0
+retained_pot_15 = arr_lost * 0.15
+
+m2m_lost = churned_sub[churned_sub['Contract'] == 'Month-to-month']['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+m2m_pct = (m2m_lost / mrr_lost * 100) if mrr_lost > 0 else 0.0
+
+fiber_lost = churned_sub[churned_sub['InternetService'] == 'Fiber optic']['MonthlyCharges'].sum() if len(churned_sub) > 0 else 0.0
+fiber_pct = (fiber_lost / mrr_lost * 100) if mrr_lost > 0 else 0.0
+
 # BENCHMARK SO SÁNH VỚI TOÀN BỘ HỆ THỐNG (7,043 KHÁCH HÀNG)
 baseline_churn = (df_raw['Churn'] == 'Yes').mean() * 100
 baseline_mrr = df_raw['MonthlyCharges'].mean()
@@ -2223,6 +2236,8 @@ elif nav_choice == "💡 Khuyến nghị & Chiến lược (ROI)":
     churn_sub = filtered_df[filtered_df['Churn'] == 'Yes']
     total_churn_pool = len(churn_sub)
     avg_churn_mrr = churn_sub['MonthlyCharges'].mean() if total_churn_pool > 0 else 74.44
+    mrr_lost = churn_sub['MonthlyCharges'].sum() if total_churn_pool > 0 else 0.0
+    arr_lost = mrr_lost * 12
 
     with sim_col1:
         st.markdown("##### ⚙️ Thiết Lập Tham Số Chiến Dịch:")
