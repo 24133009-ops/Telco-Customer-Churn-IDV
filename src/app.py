@@ -660,7 +660,7 @@ with st.sidebar:
             <div>👤 <b>Đỗ Trọng Khôi</b> - 20133056</div>
             <div>👤 <b>Bùi Đức Huy</b> - 24133021</div>
         </div>
-        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 8px; font-weight: 500;">Trường ĐH Sư phạm Kỹ thuật TP.HCM</div>
+        <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 8px; font-weight: 500;">Trường ĐH Công nghệ Kỹ thuật TP.HCM</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -770,7 +770,7 @@ filtered_df = filtered_df[
 ]
 
 # ==============================================================================
-# PHẦN HEADER ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE) & TELCO CHURN LAB
+# PHẦN HEADER ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM (HCM-UTE) & TELCO CHURN LAB
 # ==============================================================================
 st.markdown(f"""
 <div class="uni-navbar-full">
@@ -778,7 +778,7 @@ st.markdown(f"""
         {HCMUTE_LOGO_HTML}
         <div class="uni-text-col">
             <span class="uni-sub-label">TRƯỜNG ĐẠI HỌC</span>
-            <span class="uni-main-title">SƯ PHẠM KỸ THUẬT TP. HỒ CHÍ MINH</span>
+            <span class="uni-main-title">CÔNG NGHỆ KỸ THUẬT TP. HỒ CHÍ MINH</span>
         </div>
         <div class="uni-v-divider"></div>
         <div class="uni-text-col">
@@ -788,10 +788,10 @@ st.markdown(f"""
     </div>
     <div class="uni-badge-group">
         <div class="uni-pill">
-            <span>📅 PHẠM VI DỮ LIỆU: 50 TIỂU BANG ({len(df_raw):,} KH)</span>
+            <span>📚 ĐỒ ÁN: TƯƠNG TÁC DỮ LIỆU TRỰC QUAN</span>
         </div>
         <div class="uni-pill uni-pill-accent">
-            <span>👥 NHÓM 22 - HCMUTE</span>
+            <span>👥 NHÓM 22 - HCM-UTE</span>
         </div>
     </div>
 </div>

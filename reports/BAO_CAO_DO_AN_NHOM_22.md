@@ -2,7 +2,7 @@
 ## ĐỀ TÀI SỐ 5: DỰ ĐOÁN VÀ TRỰC QUAN HÓA TỶ LỆ RỜI BỎ CỦA KHÁCH HÀNG (CUSTOMER CHURN) TRONG NGÀNH VIỄN THÔNG
 
 > **Bộ môn:** Kỹ thuật Dữ liệu & Trí tuệ Nhân tạo - Khoa Công nghệ Thông tin  
-> **Trường:** Đại học Sư phạm Kỹ thuật Thành phố Hồ Chí Minh (HCMUTE)  
+> **Trường:** Đại học Công nghệ Kỹ thuật Thành phố Hồ Chí Minh (HCM-UTE)  
 > **Nhóm thực hiện:** Nhóm 22  
 > **Thành viên nhóm:**  
 > 1. **Trương Quốc Duy** - MSSV: 24133009 (Trưởng nhóm)  
