@@ -369,11 +369,14 @@ st.markdown("""
     div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
         display: none !important;
     }
-    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:last-child {
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:last-child,
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] label p,
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] label span {
         font-size: 0.88rem !important;
         font-weight: 600 !important;
         color: #CBD5E1 !important;
         width: 100% !important;
+        white-space: pre !important;
     }
     div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
         background: rgba(255, 255, 255, 0.06) !important;
@@ -621,7 +624,7 @@ with st.sidebar:
         [
             "📊 1. Tổng quan & Bản đồ Địa lý",
             "📡 2. Chẩn đoán Dữ liệu & Hành vi",
-            "🤖 3. Dự báo AI & Simulator",
+            "🤖\u20023. Dự báo AI & Simulator",
             "💡 4. Khuyến nghị Chiến lược & ROI",
             "⚡ 5. Kiến trúc Dữ liệu & Tra cứu 360°"
         ],
@@ -858,7 +861,7 @@ st.markdown(f"""
 # ------------------------------------------------------------------------------
 # MỤC 1: TỔNG QUAN & BẢN ĐỒ ĐỊA LÝ (HERO CHARTS 1 & 2)
 # ------------------------------------------------------------------------------
-if nav_choice == "📊 1. Tổng quan & Bản đồ Địa lý":
+if "1." in nav_choice or "Tổng quan" in nav_choice:
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại. Vui lòng điều chỉnh lại bộ lọc ở Sidebar.")
     else:
@@ -1195,7 +1198,7 @@ if nav_choice == "📊 1. Tổng quan & Bản đồ Địa lý":
 # ------------------------------------------------------------------------------
 # MỤC 2: CHẨN ĐOÁN DỮ LIỆU & HÀNH VI (HERO CHARTS 3, 4 & 5)
 # ------------------------------------------------------------------------------
-elif nav_choice == "📡 2. Chẩn đoán Dữ liệu & Hành vi":
+elif "2." in nav_choice or "Chẩn đoán" in nav_choice:
     if total_cust == 0:
         st.warning("⚠️ Không có khách hàng nào thỏa mãn bộ lọc hiện tại.")
     else:
@@ -1315,7 +1318,7 @@ elif nav_choice == "📡 2. Chẩn đoán Dữ liệu & Hành vi":
 # ------------------------------------------------------------------------------
 # MỤC 3: DỰ BÁO AI & SIMULATOR (HERO CHARTS 6 & 7)
 # ------------------------------------------------------------------------------
-elif nav_choice == "🤖 3. Dự báo AI & Simulator":
+elif "3." in nav_choice or "Dự báo AI" in nav_choice:
     st.markdown("### 🤖 Mô Hình Hồi Quy Logistic & Công Cụ Dự Báo Nguy Cơ Rời Mạng (Predictive Analytics)")
     st.markdown("Mô hình Scikit-Learn **Logistic Regression** đã được huấn luyện và tối ưu Log-loss, cung cấp khả năng giải thích nhân tố (Feature Explainability) và dự báo trực tiếp.")
 
@@ -1502,7 +1505,7 @@ elif nav_choice == "🤖 3. Dự báo AI & Simulator":
 # ------------------------------------------------------------------------------
 # MỤC 4: KHUYẾN NGHỊ CHIẾN LƯỢC & ROI (HERO CHART 8)
 # ------------------------------------------------------------------------------
-elif nav_choice == "💡 4. Khuyến nghị Chiến lược & ROI":
+elif "4." in nav_choice or "Khuyến nghị" in nav_choice:
     st.markdown("### 💡 Khuyến Nghị Chiến Lược Prescriptive & Mô Phỏng Tỷ Suất Hoàn Vốn (ROI)")
     st.markdown("Chuyển dịch từ Phân tích dự báo (Predictive) sang Phân tích đề xuất hành động (Prescriptive Analytics) — Đỉnh cao của tháp năng lực phân tích dữ liệu Gartner.")
 
@@ -1699,7 +1702,7 @@ Nhóm 22: Trương Quốc Duy (Trưởng nhóm) - Đỗ Trọng Khôi - Bùi Đ�
 # ------------------------------------------------------------------------------
 # MỤC 5: KIẾN TRÚC DỮ LIỆU & TRA CỨU 360° (DATA ENGINEERING & GOVERNANCE)
 # ------------------------------------------------------------------------------
-elif nav_choice == "⚡ 5. Kiến trúc Dữ liệu & Tra cứu 360°":
+elif "5." in nav_choice or "Kiến trúc" in nav_choice:
     st.markdown("### ⚡ Kiến Trúc Dữ Liệu & Tra Cứu Khách Hàng 360° (Data Engineering & Customer 360)")
     st.markdown("Minh chứng quy trình ETL toàn vẹn, cam kết chất lượng dữ liệu (Data Quality SLA) và tính năng Drill-Down phục vụ truy vấn nghiệp vụ.")
 
