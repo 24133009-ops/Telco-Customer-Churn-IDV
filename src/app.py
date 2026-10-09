@@ -1316,14 +1316,9 @@ elif "2." in nav_choice or "Chẩn đoán" in nav_choice:
         st.plotly_chart(fig_matrix, use_container_width=True)
         st.caption("💡 **Quyết định nguồn lực**: Ưu tiên 100% đội CSKH tiếp cận nhóm **VIP Rủi Ro Cao (đỏ)** để bảo vệ dòng tiền định kỳ lớn nhất cho doanh nghiệp.")
 
-        # MINH CHỨNG BAREM 1.4: KHO 10 BIỂU ĐỒ TĨNH EDA (MATPLOTLIB & SEABORN)
+        # KHO 10 BIỂU ĐỒ TĨNH EDA (MATPLOTLIB & SEABORN)
         st.markdown("<br>", unsafe_allow_html=True)
-        with st.expander("🖼️ Kho Lưu Trữ 10 Biểu Đồ Tĩnh EDA (Matplotlib & Seaborn) — Minh Chứng Chuẩn Barem 1.4", expanded=False):
-            st.info("""
-            📌 **Minh chứng chuẩn Barem Mục 1.4 (Khám phá dữ liệu EDA - 0.75 điểm):**
-            Theo đề cương yêu cầu của Giảng viên, nhóm đã xây dựng **10 biểu đồ tĩnh** bằng thư viện **Matplotlib** và **Seaborn** (mã nguồn tại `src/eda_analysis.py`, trích xuất tự động vào thư mục `reports/figures/`) để khảo sát phân phối, kiểm định phân tán và quan sát tương quan **TRƯỚC KHI** chuyển hóa thành Dashboard tương tác. 
-            Toàn bộ 10 biểu đồ này được trình bày kèm bảng biểu và diễn giải học thuật chuyên sâu tại **Chương 3 của Báo Cáo Khoa Học (Word & PDF 57 trang)**.
-            """)
+        with st.expander("🖼️ Kho Lưu Trữ 10 Biểu Đồ Tĩnh EDA (Matplotlib & Seaborn)", expanded=False):
 
             eda_options = {
                 "Hình 1: Phân phối tổng thể tỷ lệ Churn (Donut & Bar)": ("eda_1_churn_distribution.png", "Phân tích mất cân bằng mẫu: 26.54% khách hàng rời mạng (1,869 khách) so với 73.46% ở lại."),
@@ -1526,13 +1521,9 @@ elif "3." in nav_choice or "Dự báo AI" in nav_choice:
                 </div>
                 """, unsafe_allow_html=True)
 
-        # MINH CHỨNG BỘ TỨ BIỂU ĐỒ ĐÁNH GIÁ MÔ HÌNH MACHINE LEARNING
+        # BỘ TỨ BIỂU ĐỒ ĐÁNH GIÁ MÔ HÌNH MACHINE LEARNING
         st.markdown("<br>", unsafe_allow_html=True)
         with st.expander("📈 Bộ Tứ Biểu Đồ Thẩm Định Mô Hình Machine Learning (Model Evaluation Artifacts)", expanded=False):
-            st.info("""
-            📌 **Minh chứng Mục 3 (Phân tích nâng cao và Dự đoán - 2.0 điểm):**
-            Mô hình phân loại Logistic Regression được thẩm định toàn diện bằng 4 đồ thị kỹ thuật (xuất từ `src/model_training.py`):
-            """)
             m_c1, m_c2 = st.columns(2)
             with m_c1:
                 cm_p = os.path.join(FIGURES_DIR, "model_1_confusion_matrix.png")
