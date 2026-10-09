@@ -1,7 +1,7 @@
 # 📡 Telco Customer Churn - Interactive Data Visualization (IDV)
 
 > **Môn học:** Tương Tác Dữ Liệu Trực Quan (IDV)  
-> **Trường:** Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)  
+> **Trường:** Đại học Công Nghệ Kỹ thuật TP.HCM (HCMUTE)  
 > **Nhóm:** Nhóm 22  
 
 ---
