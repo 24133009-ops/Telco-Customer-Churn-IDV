@@ -3,7 +3,7 @@
 > **Môn học:** Tương Tác Dữ Liệu Trực Quan (IDV)  
 > **Trường:** Đại học Công Nghệ Kỹ thuật TP.HCM (HCMUTE)  
 > **Nhóm:** Nhóm 22  
-
+> **Đề Tài** 5
 ---
 
 ## 👥 Thành Viên Nhóm
@@ -28,9 +28,9 @@
 
 ## 🔗 Liên Kết Sản Phẩm
 
-- **Dashboard Trực Tuyến:** [https://nhom22-telco-churn.streamlit.app](https://nhom22-telco-churn.streamlit.app)
-- **Video Demo Đồ Án:** [https://youtu.be/1MD8Ldf3zAo](https://youtu.be/1MD8Ldf3zAo)
-- **GitHub Repository:** [https://github.com/24133009-ops/Telco-Customer-Churn-IDV](https://github.com/24133009-ops/Telco-Customer-Churn-IDV)
+- **Dashboard Trực Tuyến:** (https://nhom22-telco-churn.streamlit.app)
+- **Video Demo Đồ Án:**    https://youtu.be/TpKI7MAMJtM
+- **GitHub Repository:** (https://github.com/24133009-ops/Telco-Customer-Churn-IDV)
 
 ---
 
@@ -55,30 +55,6 @@
 ```
 
 ---
-
-## 🚀 Hướng Dẫn Cài Đặt & Chạy Ứng Dụng
-
-### 1. Cài đặt môi trường
-Yêu cầu Python 3.10 trở lên. Cài đặt các thư viện cần thiết:
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Khởi chạy Dashboard tương tác
-```bash
-streamlit run src/app.py
-```
-Truy cập tại địa chỉ: `http://localhost:8501`
-
-*(Tùy chọn) Chạy lại pipeline dữ liệu và huấn luyện mô hình:*
-```bash
-py src/data_pipeline.py    # Xử lý dữ liệu
-py src/eda_analysis.py     # Sinh biểu đồ tĩnh EDA
-py src/model_training.py   # Huấn luyện mô hình
-```
-
----
-
 ## 📊 CÁC TÍNH NĂNG CHÍNH CỦA DASHBOARD (STREAMLIT + PLOTLY)
 
 1. **Bộ Lọc Đa Chiều (Sidebar Filters):**
