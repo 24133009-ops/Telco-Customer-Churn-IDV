@@ -33,7 +33,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Đọc Logo chính thức Trường ĐH Sư Phạm Kỹ Thuật TP.HCM (HCMUTE)
+# Đọc Logo chính thức Trường ĐH Công Nghệ Kỹ Thuật TP.HCM (HCMUTE)
 LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute_badge.png")
 if not os.path.exists(LOGO_PATH):
     LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets", "logo_hcmute.png")
@@ -1872,4 +1872,4 @@ elif "5." in nav_choice or "Kiến trúc" in nav_choice:
     )
 
 st.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
-st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Trương Quốc Duy (Trưởng nhóm) - Đỗ Trọng Khôi - Bùi Đức Huy")
+st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Công Nghệ Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Trương Quốc Duy (Trưởng nhóm) - Đỗ Trọng Khôi - Bùi Đức Huy")
