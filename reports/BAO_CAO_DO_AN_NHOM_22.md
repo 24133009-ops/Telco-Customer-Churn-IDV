@@ -9,6 +9,13 @@
 > 2. **Đỗ Trọng Khôi** - MSSV: 20133056 (Thành viên)  
 > 3. **Bùi Đức Huy** - MSSV: 24133021 (Thành viên)  
 
+### BẢNG PHÂN CÔNG VAI TRÒ & NHIỆM VỤ THÀNH VIÊN
+| Họ và Tên | MSSV | Vai trò | Nhiệm vụ phụ trách cụ thể |
+| :--- | :---: | :---: | :--- |
+| **Trương Quốc Duy** | 24133009 | Trưởng nhóm | **Toàn bộ Kỹ thuật & Hiện thực hệ thống:**<br>- Kiến trúc hệ thống tổng thể (End-to-End Analytics Pipeline).<br>- Xây dựng Pipeline ETL dữ liệu, kết nối 4 bảng quan hệ, làm sạch missing values, kiểm định ngoại lai IQR.<br>- Khám phá dữ liệu tĩnh EDA (10 biểu đồ trực quan chuẩn xuất bản).<br>- Huấn luyện mô hình Hồi quy Logistic, Feature Engineering, tối ưu ngưỡng quyết định & phân tích Odds Ratio.<br>- Thiết kế & Lập trình toàn bộ Bảng điều khiển tương tác Streamlit (5 phân hệ, 8 Hero Charts, Bản đồ 3D Globe & US Flat Map, Drill-down 360°, What-If & ROI Simulator).<br>- Tối ưu hóa hiệu năng, Triển khai đám mây (Streamlit Cloud).<br>- Thuyết trình chính phần Kỹ thuật & Trực tiếp Demo Dashboard. |
+| **Đỗ Trọng Khôi** | 20133056 | Thành viên | **Soạn thảo & Tổng hợp Báo cáo Tài liệu:**<br>- Soạn thảo, định dạng và tổng hợp toàn bộ Báo cáo tài liệu kỹ thuật Word (chuẩn IEEE / cấu trúc đồ án).<br>- Biên tập nội dung thuyết minh chi tiết, đối chiếu tiêu chí Barem đánh giá học phần.<br>- Tổng hợp tài liệu tham khảo và tài liệu hướng dẫn sử dụng đồ án.<br>- Thuyết trình phần Cấu trúc báo cáo & Barem điểm. |
+| **Bùi Đức Huy** | 24133021 | Thành viên | **Khảo sát Bối cảnh & Thuyết trình Tổng quan:**<br>- Khảo sát bối cảnh bài toán viễn thông, thu thập bộ dữ liệu Telco và mô tả Từ điển dữ liệu ban đầu (Data Dictionary).<br>- Chuẩn bị tài liệu & slide thuyết trình đồ án.<br>- Thuyết trình phần Mở đầu (Giới thiệu tên đề tài, mục tiêu nghiên cứu và tổng quan tập dữ liệu 4 bảng). |
+
 ---
 
 ## TÓM TẮT ĐỒ ÁN (ABSTRACT)

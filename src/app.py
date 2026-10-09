@@ -1872,4 +1872,4 @@ elif "5." in nav_choice or "Kiến trúc" in nav_choice:
     )
 
 st.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
-st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Đỗ Trọng Khôi - Bùi Đức Huy - Trương Quốc Duy")
+st.caption("© 2026 Đồ Án Tương Tác Dữ Liệu Trực Quan | Trường Đại Học Sư Phạm Kỹ Thuật TP.HCM (HCMUTE) | Nhóm 22: Trương Quốc Duy (Trưởng nhóm) - Đỗ Trọng Khôi - Bùi Đức Huy")

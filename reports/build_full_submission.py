@@ -274,9 +274,9 @@ def generate_report():
     r_grp.font.size = Pt(13)
 
     sv_info = [
-        ("Đỗ Trọng Khôi", "20133056", "Trưởng nhóm: Pipeline ETL, Nối 4 bảng, Làm sạch, IQR, EDA"),
-        ("Bùi Đức Huy", "Thành viên", "Thiết kế Dashboard Streamlit, Bản đồ tương tác, UI/UX, Drill-down"),
-        ("Trương Quốc Duy", "24133009", "Mô hình Hồi quy Logistic, Feature Engineering, Soạn thảo báo cáo IEEE"),
+        ("Trương Quốc Duy", "24133009", "Trưởng nhóm: Toàn bộ Kỹ thuật ETL, EDA, ML Logistic Regression, Dashboard Streamlit, Triển khai & Demo"),
+        ("Đỗ Trọng Khôi", "20133056", "Thành viên: Soạn thảo & Hoàn thiện Báo cáo Word IEEE, Biên tập tài liệu & Đối chiếu Barem"),
+        ("Bùi Đức Huy", "24133021", "Thành viên: Khảo sát bối cảnh, Thu thập dữ liệu & Từ điển dữ liệu, Thuyết trình phần Giới thiệu đề tài"),
         ("Giảng viên hướng dẫn", "Học phần Đồ án", "Bộ môn Khoa học Máy tính / Kỹ thuật Dữ liệu")
     ]
     add_formatted_table(doc, ["Họ và Tên Sinh Viên", "Mã Số Sinh Viên (MSSV)", "Vai Trò & Nhiệm Vụ Phụ Trách"], sv_info,
@@ -928,12 +928,11 @@ model_pipeline.fit(X_train, y_train)
 
     add_heading_2(doc, "6.3 Kịch Bản Video Demo (5 Phút Chuẩn Data Analyst)")
     add_body_p(doc, "Kịch bản demo được thiết kế theo phong cách thuyết trình thực tế của một Chuyên viên Phân tích Dữ liệu (Data Analyst) trước Ban Điều hành:")
-    add_bullet_p(doc, "00:00 - 00:45 (Đỗ Trọng Khôi): ", "Mở đầu báo cáo với bối cảnh tài chính: Doanh nghiệp đang thất thoát hơn 1.8M USD do tỷ lệ rời mạng 26.54%. Giới thiệu mục tiêu đồ án giải quyết bài toán.")
-    add_bullet_p(doc, "00:45 - 01:30 (Đỗ Trọng Khôi): ", "Trình bày kiến trúc Pipeline dữ liệu: kết nối 4 bảng quan hệ, xử lý missing values ở TotalCharges và kiểm định ngoại lai bằng IQR.")
-    add_bullet_p(doc, "01:30 - 02:45 (Bùi Đức Huy): ", "Trình diễn trực quan hóa Dashboard: thao tác các bộ lọc bang, loại hợp đồng, cước phí; phân tích bản đồ không gian US Map và phát hiện nghịch lý cáp quang Fiber Optic.")
-    add_bullet_p(doc, "02:45 - 03:30 (Bùi Đức Huy): ", "Demo tính năng Drill-Down: chọn khách hàng cụ thể để xem thẻ định danh 360 độ và tải tập dữ liệu phân khúc đã lọc về máy.")
-    add_bullet_p(doc, "03:30 - 04:30 (Trương Quốc Duy): ", "Trình diễn mô hình Hồi quy Logistic: giải thích đường cong ROC-AUC 0.8421, phân tích Odds Ratio và thử nghiệm nhập form What-If Simulator dự báo trực tiếp xác suất Churn.")
-    add_bullet_p(doc, "04:30 - 05:00 (Cả nhóm): ", "Tổng kết 4 giải pháp can thiệp kinh doanh giữ chân khách hàng và lời cảm ơn Giảng viên hướng dẫn.")
+    add_bullet_p(doc, "00:00 - 01:00 (Bùi Đức Huy): ", "Giới thiệu thông tin thành viên Nhóm 22, tên đề tài, bối cảnh bài toán Churn trong ngành viễn thông, mục tiêu đồ án và mô tả tập dữ liệu 4 bảng quan hệ.")
+    add_bullet_p(doc, "01:00 - 01:45 (Đỗ Trọng Khôi): ", "Trình bày tổng quan cấu trúc báo cáo đồ án, quy chuẩn học thuật IEEE và đối chiếu tiêu chí barem đánh giá.")
+    add_bullet_p(doc, "01:45 - 03:00 (Trương Quốc Duy): ", "Trình diễn Pipeline ETL nối 4 bảng, làm sạch missing/IQR và demo Dashboard Streamlit tương tác (Bộ lọc sidebar, Bản đồ 3D Globe & US Flat Map, Drill-down hồ sơ 360 độ).")
+    add_bullet_p(doc, "03:00 - 04:15 (Trương Quốc Duy): ", "Trình diễn mô hình Hồi quy Logistic: giải thích đường cong ROC-AUC 0.8421, phân tích Odds Ratio, thử nghiệm nhập form What-If Simulator dự báo xác suất Churn thời gian thực và mô phỏng ROI Simulator.")
+    add_bullet_p(doc, "04:15 - 05:00 (Cả nhóm): ", "Tổng kết các insight chính, 3 trụ cột giải pháp can thiệp kinh doanh giữ chân khách hàng và lời cảm ơn Giảng viên hướng dẫn.")
 
     add_heading_2(doc, "6.4 Danh Sách Đường Link Nộp Bài Chính Thức")
     add_bullet_p(doc, "Link Video Demo chính thức: ", "https://youtu.be/demo-telco-churn-nhom22")

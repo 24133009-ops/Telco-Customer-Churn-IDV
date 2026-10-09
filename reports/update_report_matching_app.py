@@ -6,6 +6,11 @@ Tác giả: Nhóm 22 - HCMUTE
 
 import os
 import sys
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import docx
 from docx.shared import Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -84,9 +89,9 @@ def main():
     print("[2] Cập nhật Bảng phân công nhiệm vụ (Table 2)...")
     tbl_roles = doc.tables[1]
     role_rows = [
-        ("Trương Quốc Duy", "24133009", "Trưởng nhóm: Kiến trúc hệ thống tổng thể, Mô hình Hồi quy Logistic, Feature Engineering, Soạn thảo báo cáo IEEE, Tối ưu hóa UI/UX Dashboard Streamlit."),
-        ("Đỗ Trọng Khôi", "20133056", "Thành viên: Pipeline ETL xử lý dữ liệu, Nối 4 bảng quan hệ, Làm sạch dữ liệu missing values, Kiểm định ngoại lai IQR, Khám phá dữ liệu tĩnh EDA (10 biểu đồ)."),
-        ("Bùi Đức Huy", "24133021", "Thành viên: Thiết kế Dashboard Streamlit, Bản đồ tương tác không gian (Quả địa cầu 3D & US Flat Map), Drill-down hồ sơ khách hàng 360 độ, Tối ưu hóa hiệu năng & Triển khai.")
+        ("Trương Quốc Duy", "24133009", "Trưởng nhóm: Kiến trúc hệ thống tổng thể; Xây dựng Pipeline ETL dữ liệu & Làm sạch (nối 4 bảng, xử lý missing values, kiểm định ngoại lai IQR); Khám phá dữ liệu tĩnh EDA (10 biểu đồ); Huấn luyện mô hình Hồi quy Logistic, Feature Engineering & Đánh giá hiệu năng (ROC-AUC, Odds Ratio); Thiết kế & Lập trình toàn bộ Dashboard Streamlit (5 phân hệ, 8 Hero Charts, Bản đồ 3D Globe & US Flat Map, Drill-down 360°, What-If & ROI Simulator); Tối ưu hóa hiệu năng & Triển khai Cloud; Thuyết trình chính Kỹ thuật & Demo."),
+        ("Đỗ Trọng Khôi", "20133056", "Thành viên: Soạn thảo, định dạng và tổng hợp toàn bộ Báo cáo tài liệu kỹ thuật Word (chuẩn IEEE / cấu trúc đồ án); Biên tập nội dung thuyết minh và đối chiếu Barem điểm; Tổng hợp tài liệu tham khảo và tài liệu hướng dẫn đồ án; Thuyết trình phần Cấu trúc báo cáo & Barem điểm."),
+        ("Bùi Đức Huy", "24133021", "Thành viên: Khảo sát bối cảnh bài toán viễn thông, thu thập bộ dữ liệu Telco và mô tả Từ điển dữ liệu ban đầu (Data Dictionary); Chuẩn bị tài liệu & slide thuyết trình; Thuyết trình phần Mở đầu (Giới thiệu đề tài, mục tiêu nghiên cứu và tổng quan tập dữ liệu).")
     ]
     for idx, (name, mssv, role_desc) in enumerate(role_rows):
         r_idx = idx + 1
@@ -317,6 +322,22 @@ retained_pot_15 = arr_lost * 0.15"""
     doc.save(DOCX_OUT_ROOT)
     doc.save(DOCX_OUT_REPORTS)
     print("[+] ĐÃ LƯU THÀNH CÔNG CẢ 2 ĐƯỜNG DẪN DOCX!")
+
+    # XUẤT FILE PDF TỰ ĐỘNG QUA WORD COM
+    print("[*] Đang xuất file PDF qua Microsoft Word...")
+    try:
+        import win32com.client
+        import shutil
+        word = win32com.client.Dispatch("Word.Application")
+        word.Visible = False
+        doc_com = word.Documents.Open(os.path.abspath(DOCX_OUT_ROOT))
+        doc_com.SaveAs(os.path.abspath(PDF_OUT_ROOT), FileFormat=17) # 17 = wdFormatPDF
+        doc_com.Close()
+        word.Quit()
+        shutil.copyfile(PDF_OUT_ROOT, PDF_OUT_REPORTS)
+        print("[+] ĐÃ XUẤT THÀNH CÔNG CẢ 2 ĐƯỜNG DẪN PDF!")
+    except Exception as e:
+        print(f"[!] Cảnh báo xuất PDF: {e}")
 
 if __name__ == "__main__":
     main()

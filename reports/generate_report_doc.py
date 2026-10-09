@@ -263,9 +263,9 @@ def build_report():
         r.font.color.rgb = RGBColor(255, 255, 255)
 
     sv_info = [
-        ("Đỗ Trọng Khôi", "20133056", "Trưởng nhóm: Pipeline ETL, Làm sạch & Join nhiều bảng, EDA"),
-        ("Bùi Đức Huy", "Thành viên", "Thiết kế Dashboard Streamlit, Bản đồ tương tác, UI/UX"),
-        ("Trương Quốc Duy", "24133009", "Mô hình Hồi quy Logistic, Feature Engineering, Soạn thảo báo cáo IEEE"),
+        ("Trương Quốc Duy", "24133009", "Trưởng nhóm: Toàn bộ Kỹ thuật ETL, EDA, ML Logistic Regression, Dashboard Streamlit, Triển khai & Demo"),
+        ("Đỗ Trọng Khôi", "20133056", "Thành viên: Soạn thảo & Hoàn thiện Báo cáo Word IEEE, Biên tập tài liệu & Đối chiếu Barem"),
+        ("Bùi Đức Huy", "24133021", "Thành viên: Khảo sát bối cảnh, Thu thập dữ liệu & Từ điển dữ liệu, Thuyết trình phần Giới thiệu đề tài"),
         ("Giảng viên hướng dẫn", "Học phần Đồ án", "Bộ môn Khoa học Máy tính / Kỹ thuật Dữ liệu")
     ]
 
@@ -781,12 +781,11 @@ def build_report():
         r.font.color.rgb = RGBColor(255, 255, 255)
 
     video_scenes = [
-        ("Cảnh 1: Giới thiệu", "00:00 - 00:45", "Giới thiệu thông tin thành viên Nhóm 22, tên đề tài, bối cảnh bài toán Churn trong ngành viễn thông và mục tiêu đồ án.", "Đỗ Trọng Khôi"),
-        ("Cảnh 2: Pipeline Dữ liệu", "00:45 - 01:30", "Demo chạy lệnh 'data_pipeline.py': minh chứng kết nối 4 bảng thô, xử lý 11 giá trị khuyết thiếu và tạo 6 calculated fields.", "Đỗ Trọng Khôi"),
-        ("Cảnh 3: Dashboard Tổng quan & Bản đồ", "01:30 - 02:45", "Trình diễn tương tác với Bộ lọc Sidebar, thay đổi thẻ KPI, zoom bản đồ US Map và khám phá các biểu đồ Donut, Boxplot, Treemap.", "Bùi Đức Huy"),
-        ("Cảnh 4: Drill-Down & Bảng dữ liệu", "02:45 - 03:30", "Thao tác chọn khách hàng cụ thể để hiển thị thẻ hồ sơ 360 độ và thực hiện tải file dữ liệu CSV lọc về máy.", "Bùi Đức Huy"),
-        ("Cảnh 5: Dự báo AI & Simulator", "03:30 - 04:30", "Thực hiện nhập hồ sơ trên form What-If Simulator, kiểm thử trường hợp nguy cơ cao và xem khuyến nghị giữ chân khách hàng.", "Trương Quốc Duy"),
-        ("Cảnh 6: Tổng kết & Cảm ơn", "04:30 - 05:00", "Tóm tắt các đóng góp chính của đồ án, cảm ơn giảng viên bộ môn và kết thúc video.", "Cả nhóm")
+        ("Cảnh 1: Giới thiệu đề tài", "00:00 - 01:00", "Giới thiệu thông tin thành viên Nhóm 22, tên đề tài, bối cảnh bài toán Churn trong ngành viễn thông, mục tiêu đồ án và mô tả tập dữ liệu 4 bảng quan hệ.", "Bùi Đức Huy"),
+        ("Cảnh 2: Báo cáo & Tài liệu", "01:00 - 01:45", "Trình bày tổng quan cấu trúc báo cáo đồ án, quy chuẩn học thuật IEEE và đối chiếu tiêu chí barem đánh giá.", "Đỗ Trọng Khôi"),
+        ("Cảnh 3: Pipeline ETL & Dashboard", "01:45 - 03:00", "Trình diễn Pipeline ETL nối 4 bảng, làm sạch missing/IQR và demo Dashboard Streamlit tương tác (Bộ lọc sidebar, Bản đồ 3D Globe & US Flat Map, Drill-down hồ sơ 360 độ).", "Trương Quốc Duy"),
+        ("Cảnh 4: Mô hình AI & What-If", "03:00 - 04:15", "Trình diễn mô hình Hồi quy Logistic, phân tích Odds Ratio, thử nghiệm What-If Simulator dự báo xác suất Churn thời gian thực và mô phỏng chiến dịch ROI Simulator.", "Trương Quốc Duy"),
+        ("Cảnh 5: Tổng kết & Cảm ơn", "04:15 - 05:00", "Tóm tắt các phát hiện quan trọng, khuyến nghị chiến lược kinh doanh giữ chân khách hàng và lời cảm ơn Quý Thầy Cô.", "Cả nhóm")
     ]
 
     for r_i, r_data in enumerate(video_scenes):
