@@ -241,31 +241,49 @@ def fetch_or_generate_raw_data():
     return df_demographics, df_services, df_contracts, df_churn
 
 def run_data_pipeline():
-    """Quy trình ETL hoàn chỉnh: Kết nối 4 bảng -> Làm sạch dữ liệu -> Feature Engineering -> Xuất dữ liệu sạch."""
+    """
+    Quy trình ETL hoàn chỉnh: Kết nối 4 bảng -> Làm sạch dữ liệu -> Feature Engineering -> Xuất dữ liệu sạch.
+    -------------------------------------------------------------------------------------------------
+    Được thiết kế để giải trình trực tiếp cho Giảng viên hướng dẫn & Hội đồng đánh giá đồ án IDV.
+    """
     print("=" * 60)
     print(" BẮT ĐẦU QUY TRÌNH ETL & DATA PREPROCESSING (PIPELINE) ")
     print("=" * 60)
 
-    # 1. Thu thập và đọc các bảng thô
+    # ==========================================================================================
+    # [BƯỚC 1] KẾT NỐI (JOIN) 4 BẢNG CSDL QUAN HỆ QUA KHÓA CHÍNH 'customerID'
+    # ------------------------------------------------------------------------------------------
+    # - CÔNG VIỆC:
+    #   Hợp nhất 4 bảng thô (demographics, services, contracts, churn_status) thành 1 bảng duy nhất.
+    # - TẠI SAO XỬ LÝ NHƯ VẬY:
+    #   1. Chuẩn hóa RDBMS (3NF): Dữ liệu viễn thông thực tế luôn lưu phân tán ở các phân hệ nghiệp vụ.
+    #   2. Tính toàn vẹn 100%: Dùng Inner Join qua khóa chính customerID đảm bảo không mất mát bản ghi
+    #      (khớp đúng 7,043 / 7,043 dòng), đồng thời bổ sung tọa độ 50 bang phục vụ trực quan hóa bản đồ.
+    # ==========================================================================================
     df_demographics, df_services, df_contracts, df_churn = fetch_or_generate_raw_data()
 
-    # 2. Thao tác Relational Join / Merge qua khóa chính customerID
     print("\n[Bước 1] Thực hiện kết nối (JOIN) 4 bảng dữ liệu thô qua 'customerID'...")
     df_merged = df_demographics.merge(df_services, on="customerID", how="inner")
     df_merged = df_merged.merge(df_contracts, on="customerID", how="inner")
     df_merged = df_merged.merge(df_churn, on="customerID", how="inner")
     print(f"[+] Kết quả sau khi kết nối: {df_merged.shape[0]} dòng, {df_merged.shape[1]} cột thuộc tính.")
 
-    # 3. Làm sạch dữ liệu (Data Cleaning)
+    # ==========================================================================================
+    # [BƯỚC 2] LÀM SẠCH DỮ LIỆU (DATA CLEANING & IMPUTATION)
+    # ==========================================================================================
     print("\n[Bước 2] Làm sạch dữ liệu...")
-    # 3.1 Chuẩn hóa định dạng chuỗi (String Normalization & Sanitization)
+
+    # 2.1 Chuẩn hóa định dạng chuỗi (String Normalization & Sanitization)
+    # - CÔNG VIỆC: Duyệt toàn bộ cột kiểu chuỗi và áp dụng `.str.strip()`
+    # - TẠI SAO: Loại bỏ triệt để khoảng trắng thừa đầu/cuối chuỗi để tránh phân mảnh nhãn khi Filter/Group-by.
     print("    - Chuẩn hóa toàn bộ các thuộc tính chuỗi (loại bỏ khoảng trắng, chuẩn hóa viết hoa/thường)...")
     str_cols = df_merged.select_dtypes(include=['object']).columns
     for c in str_cols:
         df_merged[c] = df_merged[c].astype(str).str.strip()
 
-    # 3.2 Chuẩn hóa và bổ sung định dạng ngày tháng (Date Formatting & Parsing)
-    # Quy đổi thâm niên (tenure) thành ngày ký hợp đồng chính thức (ContractStartDate)
+    # 2.2 Chuẩn hóa và bổ sung định dạng ngày tháng (Date Formatting & Parsing)
+    # - CÔNG VIỆC: Quy đổi thâm niên tenure thành ngày ký hợp đồng ContractStartDate (YYYY-MM-DD)
+    # - TẠI SAO: Giúp Dashboard hỗ trợ phân tích chuỗi thời gian (Time-Series) và đường cong duy trì thâm niên.
     print("    - Chuẩn hóa định dạng ngày tháng (Date/Time parsing: YYYY-MM-DD)...")
     ref_date = pd.to_datetime("2026-10-01")
     df_merged["ContractStartDate"] = ref_date - pd.to_timedelta(df_merged["tenure"] * 30.4375, unit="D")
@@ -274,18 +292,24 @@ def run_data_pipeline():
     df_merged["CurrentBillingDate"] = pd.to_datetime("2026-10-01")
     df_merged["DaysActive"] = (df_merged["CurrentBillingDate"] - df_merged["ContractStartDate"]).dt.days
 
-    # 3.3 Xử lý missing values ở cột TotalCharges
-    # Trong dataset gốc IBM Telco, có 11 dòng TotalCharges chứa khoảng trắng chuỗi ' '
+    # 2.3 Xử lý missing values ở cột TotalCharges
+    # - CÔNG VIỆC: Chuyển chuỗi rỗng thành NaN, điền TotalCharges = 0.0 cho các trường hợp tenure == 0
+    # - TẠI SAO XỬ LÝ NHƯ VẬY (ĐIỂM NHẤN BẢO VỆ ĐỒ ÁN):
+    #   + 11 khách hàng này là THUÊ BAO MỚI KÝ TRONG THÁNG ĐẦU TIÊN (tenure = 0), chưa qua kỳ chốt cước
+    #     nào nên tổng chi phí phát sinh thực tế là 0.0 USD.
+    #   + KHÔNG XÓA DÒNG (dropna): Tránh mất mát 11 khách hàng mới - phân khúc rủi ro cao nhất cần theo dõi
+    #     (First-Year Churn Trap). Điền 0.0 bảo toàn toàn vẹn 100% cỡ mẫu 7,043 bản ghi.
     df_merged["TotalCharges"] = pd.to_numeric(df_merged["TotalCharges"].astype(str).str.strip(), errors="coerce")
     missing_tc = df_merged["TotalCharges"].isna().sum()
     print(f"    - Phát hiện {missing_tc} giá trị khuyết thiếu (NaN/trống) ở cột TotalCharges.")
     
-    # Điền giá trị khuyết thiếu: nếu tenure == 0 thì TotalCharges = 0 hoặc bằng MonthlyCharges
     df_merged["TotalCharges"] = df_merged["TotalCharges"].fillna(df_merged["MonthlyCharges"] * df_merged["tenure"])
     df_merged["TotalCharges"] = df_merged["TotalCharges"].fillna(0.0)
     print(f"    - Đã xử lý triệt để missing values. Số missing còn lại: {df_merged['TotalCharges'].isna().sum()}")
 
-    # 3.4 Phát hiện và xử lý Outliers bằng phương pháp IQR (Interquartile Range)
+    # 2.4 Phát hiện và kiểm định Outliers bằng phương pháp IQR (Interquartile Range)
+    # - CÔNG VIỆC: Tính Q1, Q3, IQR = Q3 - Q1, xác định ngưỡng [Q1 - 1.5*IQR, Q3 + 1.5*IQR]
+    # - TẠI SAO: Kiểm tra tính chuẩn xác của các biến cước phí và thâm niên; xác nhận không có giá trị dị biệt phi lý.
     for col in ["MonthlyCharges", "TotalCharges", "tenure"]:
         q25 = df_merged[col].quantile(0.25)
         q75 = df_merged[col].quantile(0.75)
@@ -295,7 +319,11 @@ def run_data_pipeline():
         outliers_count = ((df_merged[col] < lower_bound) | (df_merged[col] > upper_bound)).sum()
         print(f"    - Kiểm định IQR cột {col:15s}: Q1={q25:.2f}, Q3={q75:.2f}, IQR={iqr:.2f} -> {outliers_count} điểm dị biệt.")
 
-    # 4. Tạo các trường dữ liệu tính toán mới (Calculated Fields / Feature Engineering)
+    # ==========================================================================================
+    # [BƯỚC 3] TẠO CÁC TRƯỜNG DỮ LIỆU TÍNH TOÁN MỚI (FEATURE ENGINEERING)
+    # ------------------------------------------------------------------------------------------
+    # - TẠI SAO: Trích xuất các chiều phân tích hành vi chuyên sâu (Behavioral Analytics) cho ngành viễn thông
+    # ==========================================================================================
     print("\n[Bước 3] Tạo trường dữ liệu tính toán mới (Calculated Fields)...")
     
     # 4.1 Phân nhóm thời gian sử dụng (TenureGroup)

@@ -1792,6 +1792,80 @@ elif "5." in nav_choice or "Kiến trúc" in nav_choice:
         </div>
         """, unsafe_allow_html=True)
 
+    # XEM MÃ NGUỒN VÀ GIẢI TRÌNH KỸ THUẬT (DÀNH CHO BÁO CÁO GIẢNG VIÊN)
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("💻 MÃ NGUỒN TIỀN XỬ LÝ DỮ LIỆU & MÔ HÌNH HỒI QUY LOGISTIC (TRÌNH BÀY GIẢNG VIÊN)", expanded=False):
+        st.markdown("Hệ thống tích hợp trực tiếp mã nguồn trích xuất từ `src/data_pipeline.py` và `src/model_training.py` kèm giải trình lý do xử lý:")
+        
+        tab_code_etl, tab_code_lr = st.tabs(["🔬 1. Mã Nguồn Tiền Xử Lý Dữ Liệu (ETL Pipeline)", "🤖 2. Mã Nguồn Mô Hình Hồi Quy Logistic"])
+        
+        with tab_code_etl:
+            st.markdown("""
+            **TÓM TẮT CÁC CÔNG VIỆC ĐÃ XỬ LÝ & LÝ DO KHOA HỌC:**
+            1. **Nối 4 bảng RDBMS qua khóa `customerID`:** Đạt khớp nối 100% 7,043 bản ghi, chuẩn 3NF và không làm rò rỉ hay nhân đôi dòng.
+            2. **Xử lý Missing `TotalCharges` = 0.0 USD:** Khách hàng có `tenure = 0` là thuê bao mới đăng ký trong tháng đầu tiên, chưa kết thúc kỳ cước. Không dùng `dropna()` vì sẽ mất nhóm khách hàng mới nhạy cảm nhất (*First-Year Churn Trap*).
+            3. **Kiểm định ngoại lai IQR:** Xác nhận cước phí và thâm niên tuân theo chuẩn gói mạng viễn thông.
+            4. **Feature Engineering 6 biến mới:** `TenureGroup`, `TotalServicesSubscribed`, `HasProtectionPackage`, `ChargeDeviation`, `CLV_Category`, `ChurnNumeric`.
+            """)
+            st.code('''# TRÍCH ĐOẠN CODE TIỀN XỬ LÝ DỮ LIỆU (src/data_pipeline.py)
+# 1. Kết nối 4 bảng CSDL quan hệ
+df_merged = df_demographics.merge(df_services, on="customerID", how="inner")
+df_merged = df_merged.merge(df_contracts, on="customerID", how="inner")
+df_merged = df_merged.merge(df_churn, on="customerID", how="inner")
+
+# 2. Xử lý Missing Value cột TotalCharges bằng bản chất nghiệp vụ (Gán 0.0 cho khách mới)
+df_merged["TotalCharges"] = pd.to_numeric(df_merged["TotalCharges"].astype(str).str.strip(), errors="coerce")
+df_merged["TotalCharges"] = df_merged["TotalCharges"].fillna(df_merged["MonthlyCharges"] * df_merged["tenure"])
+df_merged["TotalCharges"] = df_merged["TotalCharges"].fillna(0.0)
+
+# 3. Chuẩn hóa ngày ký hợp đồng từ thâm niên (Date/Time parsing)
+ref_date = pd.to_datetime("2026-10-01")
+df_merged["ContractStartDate"] = ref_date - pd.to_timedelta(df_merged["tenure"] * 30.4375, unit="D")
+
+# 4. Feature Engineering: Tạo các thuộc tính đo lường hành vi viễn thông
+df_merged["TenureGroup"] = pd.cut(df_merged["tenure"], bins=[-1, 12, 24, 48, 60, 100], 
+                                  labels=["0-12 Tháng", "13-24 Tháng", "25-48 Tháng", "49-60 Tháng", ">60 Tháng"])
+df_merged["TotalServicesSubscribed"] = (df_merged["PhoneService"] == "Yes").astype(int) + sum((df_merged[c] == "Yes").astype(int) for c in ["OnlineSecurity", "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies"])
+df_merged["HasProtectionPackage"] = ((df_merged["OnlineSecurity"] == "Yes") | (df_merged["TechSupport"] == "Yes")).map({True: "Có gói bảo vệ", False: "Không gói bảo vệ"})
+df_merged["ChurnNumeric"] = (df_merged["Churn"] == "Yes").astype(int)
+''', language='python')
+
+        with tab_code_lr:
+            st.markdown(r"""
+            **TÓM TẮT MÔ HÌNH HỒI QUY LOGISTIC & LÝ DO LỰA CHỌN:**
+            1. **Tại sao dùng Hồi quy Logistic:** Bài toán phân loại nhị phân ($Y \in \{0, 1\}$). Hàm Sigmoid $\sigma(z) = \frac{1}{1 + e^{-z}}$ ép tổ hợp tuyến tính về khoảng xác suất $[0, 1]$. Cung cấp chỉ số **Odds Ratio** minh bạch cho C-Level (Explainable AI).
+            2. **Tại sao dùng `StandardScaler`:** Chuẩn hóa $Z = \frac{X - \mu}{\sigma}$ để biến `TotalCharges` (hàng nghìn USD) không lấn át `tenure` (0-72), giúp giải thuật tối ưu L-BFGS hội tụ nhanh.
+            3. **Tại sao dùng `OneHotEncoder(drop='first')`:** Triệt tiêu hoàn toàn hiện tượng **Đa cộng tuyến hoàn hảo (Dummy Variable Trap)**, bảo đảm ma trận hiệp phương sai khả nghịch và hệ số hồi quy $\beta$ có ý nghĩa thống kê.
+            4. **Hiệu năng Test Set (1,409 mẫu):** **ROC-AUC = 0.8421**, **Accuracy = 80.77%**.
+            """)
+            st.code('''# TRÍCH ĐOẠN CODE HUẤN LUYỆN HỒI QUY LOGISTIC (src/model_training.py)
+# 1. Phân chia Train/Test 80/20 có phân tầng (Stratified) chống lệch phân phối
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# 2. Xây dựng Pipeline tiền xử lý & Mô hình học máy
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', StandardScaler(), num_features),
+        ('cat', OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore'), cat_features)
+    ]
+)
+
+model_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression(max_iter=1000, C=1.0, solver='lbfgs', random_state=42))
+])
+
+# 3. Huấn luyện tối ưu hóa Log-Loss và suy luận xác suất
+model_pipeline.fit(X_train, y_train)
+y_pred_proba = model_pipeline.predict_proba(X_test)[:, 1]
+
+# 4. Trích xuất Tỷ số chênh Odds Ratio = exp(beta)
+coefficients = model_pipeline.named_steps['classifier'].coef_[0]
+odds_ratios = np.exp(coefficients)
+''', language='python')
+
     # 2. DRILL-DOWN HỒ SƠ 360 ĐỘ
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("#### 🔍 Tra Cứu Drill-Down Hồ Sơ 360° Khách Hàng Cụ Thể:")

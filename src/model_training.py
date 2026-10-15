@@ -44,6 +44,11 @@ os.makedirs(MODELS_DIR, exist_ok=True)
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 def train_and_evaluate_model():
+    """
+    Quy trình huấn luyện và đánh giá mô hình Hồi quy Logistic (Logistic Regression).
+    -------------------------------------------------------------------------------------------------
+    Được thiết kế để giải trình trực tiếp cho Giảng viên hướng dẫn & Hội đồng đánh giá đồ án IDV.
+    """
     print("=" * 60)
     print(" HUẤN LUYỆN VÀ ĐÁNH GIÁ MÔ HÌNH HỒI QUY LOGISTIC ")
     print("=" * 60)
@@ -51,7 +56,16 @@ def train_and_evaluate_model():
     df = pd.read_csv(PROCESSED_DATA_PATH)
     print(f"[*] Đã tải dữ liệu sạch với {df.shape[0]} mẫu và {df.shape[1]} thuộc tính.")
 
-    # 1. Định nghĩa danh sách các đặc trưng (Features)
+    # ==========================================================================================
+    # [BƯỚC 1] ĐỊNH NGHĨA BIẾN & TÁCH TẬP HUẤN LUYỆN / KIỂM ĐỊNH (TRAIN/TEST SPLIT)
+    # ------------------------------------------------------------------------------------------
+    # - CÔNG VIỆC: 
+    #   Chia 80% Train (5,634 mẫu) và 20% Test (1,409 mẫu) với tham số `stratify=y`.
+    # - TẠI SAO PHẢI DÙNG `stratify=y`:
+    #   Tỷ lệ Churn trong tập dữ liệu bị mất cân bằng nhẹ (~26.5% Churn vs 73.5% Non-Churn).
+    #   Kỹ thuật phân tầng (stratify) bảo đảm tỷ lệ nhãn Churn ở cả 2 tập Train và Test là giống hệt
+    #   nhau, chống hiện tượng lệch phân phối (Data Drift / Distribution Shift).
+    # ==========================================================================================
     num_features = ["tenure", "MonthlyCharges", "TotalCharges", "TotalServicesSubscribed", "CalculatedAvgMonthly"]
     cat_features = [
         "gender", "SeniorCitizen", "Partner", "Dependents",
@@ -64,13 +78,28 @@ def train_and_evaluate_model():
     X = df[num_features + cat_features]
     y = df[target]
 
-    # 2. Phân chia tập dữ liệu huấn luyện / kiểm định (80% Train - 20% Test)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.20, random_state=42, stratify=y
     )
     print(f"[+] Phân chia tập dữ liệu: Train = {len(X_train)} mẫu (80%), Test = {len(X_test)} mẫu (20%).")
 
-    # 3. Xây dựng Pipeline tiền xử lý & Mô hình học máy
+    # ==========================================================================================
+    # [BƯỚC 2] XÂY DỰNG PIPELINE TIỀN XỬ LÝ (SCIKIT-LEARN PIPELINE CHỐNG DATA LEAKAGE)
+    # ------------------------------------------------------------------------------------------
+    # 1. StandardScaler cho biến số:
+    #    - CÔNG VIỆC: Chuẩn hóa Z = (X - mu) / sigma cho 5 biến định lượng.
+    #    - TẠI SAO: Hồi quy Logistic tối ưu hóa bằng giải thuật gradient (solver L-BFGS) và điều chuẩn L2.
+    #      Nếu không chuẩn hóa, biến TotalCharges (hàng nghìn USD) sẽ lấn át hoàn toàn biến tenure (0-72),
+    #      làm méo mó hệ số beta và làm chậm tốc độ hội tụ.
+    # 2. OneHotEncoder cho biến phân loại với `drop='first'`:
+    #    - CÔNG VIỆC: Mã hóa nhị phân các giá trị danh mục.
+    #    - TẠI SAO BẮT BUỘC DÙNG `drop='first'`: Triệt tiêu hoàn toàn Đa cộng tuyến hoàn hảo
+    #      (Multicollinearity / Dummy Variable Trap). Đây là điều kiện tiên quyết trong kinh tế lượng
+    #      để ma trận nghịch đảo khả thi và hệ số hồi quy beta cũng như Odds Ratio = exp(beta) có ý nghĩa.
+    # 3. Đóng gói vào ColumnTransformer & Pipeline:
+    #    - TẠI SAO: Ngăn chặn rò rỉ dữ liệu (Data Leakage) từ tập Test sang Train, đồng thời tích hợp
+    #      trực tiếp vào What-If Simulator trên Web Dashboard.
+    # ==========================================================================================
     num_transformer = StandardScaler()
     cat_transformer = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
 
@@ -86,11 +115,20 @@ def train_and_evaluate_model():
         ('classifier', LogisticRegression(max_iter=1000, C=1.0, solver='lbfgs', random_state=42))
     ])
 
-    # 4. Huấn luyện mô hình
+    # ==========================================================================================
+    # [BƯỚC 3] HUẤN LUYỆN VÀ TỐI ƯU HÓA HÀM MẤT MÁT LOG-LOSS
+    # ------------------------------------------------------------------------------------------
+    # - TẠI SAO DÙNG HỒI QUY LOGISTIC (MÔ HÌNH TUYẾN TÍNH CHO PHÂN LOẠI):
+    #   Hàm Sigmoid P(Y=1|X) = 1 / (1 + exp(-z)) ánh xạ tổ hợp tuyến tính z = beta_0 + sum(beta_j*X_j)
+    #   về khoảng xác suất [0, 1]. Mô hình đạt tính giải thích định lượng minh bạch (Explainable AI)
+    #   thông qua Odds Ratio giúp nhà quản lý ra quyết định kinh doanh chính xác.
+    # ==========================================================================================
     print("[*] Đang tối ưu hóa hàm mất mát Log-Loss trên tập Train...")
     model_pipeline.fit(X_train, y_train)
 
-    # 5. Dự đoán và đánh giá trên tập Test
+    # ==========================================================================================
+    # [BƯỚC 4] DỰ ĐOÁN VÀ ĐÁNH GIÁ TRÊN TẬP TEST ĐỘC LẬP (1,409 MẪU)
+    # ==========================================================================================
     y_pred = model_pipeline.predict(X_test)
     y_pred_proba = model_pipeline.predict_proba(X_test)[:, 1]
 
