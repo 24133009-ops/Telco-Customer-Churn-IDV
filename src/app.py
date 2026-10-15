@@ -1794,10 +1794,14 @@ elif "5." in nav_choice or "Kiến trúc" in nav_choice:
 
     # XEM MÃ NGUỒN VÀ GIẢI TRÌNH KỸ THUẬT (DÀNH CHO BÁO CÁO GIẢNG VIÊN)
     st.markdown("<br>", unsafe_allow_html=True)
-    with st.expander("💻 MÃ NGUỒN TIỀN XỬ LÝ DỮ LIỆU & MÔ HÌNH HỒI QUY LOGISTIC (TRÌNH BÀY GIẢNG VIÊN)", expanded=False):
-        st.markdown("Hệ thống tích hợp trực tiếp mã nguồn trích xuất từ `src/data_pipeline.py` và `src/model_training.py` kèm giải trình lý do xử lý:")
+    with st.expander("💻 TIỀN XỬ LÝ DỮ LIỆU, STORYTELLING & HỒI QUY LOGISTIC (TRÌNH BÀY GIẢNG VIÊN)", expanded=False):
+        st.markdown("Hệ thống tích hợp trực tiếp mã nguồn trích xuất từ `src/data_pipeline.py`, `src/model_training.py` và kết hợp Khai phá Kể chuyện Dữ liệu (Storytelling):")
         
-        tab_code_etl, tab_code_lr = st.tabs(["🔬 1. Mã Nguồn Tiền Xử Lý Dữ Liệu (ETL Pipeline)", "🤖 2. Mã Nguồn Mô Hình Hồi Quy Logistic"])
+        tab_code_etl, tab_code_story, tab_code_lr = st.tabs([
+            "🔬 1. Mã Nguồn Tiền Xử Lý (ETL Pipeline)", 
+            "📖 2. Khai Phá Storytelling (3 Điểm Nghẽn & 4 Personas)", 
+            "🤖 3. Mã Nguồn Mô Hình Hồi Quy Logistic"
+        ])
         
         with tab_code_etl:
             st.markdown("""
@@ -1829,6 +1833,32 @@ df_merged["TotalServicesSubscribed"] = (df_merged["PhoneService"] == "Yes").asty
 df_merged["HasProtectionPackage"] = ((df_merged["OnlineSecurity"] == "Yes") | (df_merged["TechSupport"] == "Yes")).map({True: "Có gói bảo vệ", False: "Không gói bảo vệ"})
 df_merged["ChurnNumeric"] = (df_merged["Churn"] == "Yes").astype(int)
 ''', language='python')
+
+        with tab_code_story:
+            st.markdown("""
+            ### 📖 KHAI PHÁ INSIGHT & KỂ CHUYỆN DỮ LIỆU (DATA STORYTELLING)
+            *Tại sao phải Tiền xử lý dữ liệu và tạo đặc trưng mới? Mục tiêu là để phục vụ câu chuyện dữ liệu thực tế và nhận diện 3 điểm nghẽn kích hoạt Churn:*
+
+            #### 1. Ba Điểm Nghẽn Kích Hoạt Rời Mạng (3 Churn Bottlenecks):
+            * **Chương 1 - 'Cú sốc năm đầu tiên' (First-Year Churn Trap):**
+              * Thuê bao mới trong 12 tháng đầu có tỷ lệ Churn lên tới **47.44%** do chưa quen dịch vụ và gặp sự cố kỹ thuật ban đầu.
+              * *Kết nối tiền xử lý:* Trường `TenureGroup` (0-12 tháng) được sinh ra để trực quan hóa hiện tượng này.
+            * **Chương 2 - 'Nghịch lý cáp quang Fiber Optic' (The Fiber Optic Paradox):**
+              * Khách dùng Cáp quang trả cước cao nhất ($70 - $100/tháng) nhưng lại Churn cao kỷ lục (**41.89%**, hợp đồng tháng lên đến **54.6%**) nếu không có dịch vụ bảo mật & hỗ trợ kỹ thuật đi kèm.
+              * *Kết nối tiền xử lý:* Thuộc tính `HasProtectionPackage` và `TotalServicesSubscribed` chứng minh: có TechSupport/OnlineSecurity thì Churn giảm hơn 60% (xuống dưới 16%).
+            * **Chương 3 - 'Ma sát thanh toán Séc điện tử' (Payment Friction):**
+              * Khách trả bằng Séc điện tử (*Electronic check*) Churn tới **45.29%** so với thanh toán tự động Auto-Pay (**15.5%**) do cảm giác xót tiền và bất tiện khi thao tác thủ công mỗi tháng.
+              * *Kết nối tiền xử lý:* Thuộc tính `ChargeDeviation` (đo sốc cước phí) và `PaymentMethod`.
+
+            ---
+            #### 2. Bốn Chân Dung Khách Hàng Thực Tế (4 Customer Personas):
+            | Chân dung khách hàng | Đặc điểm nhận diện | Tỷ lệ Churn rủi ro | Chiến lược hành động đề xuất |
+            | :--- | :--- | :---: | :--- |
+            | **Persona 1: Alex**<br>*(Tân Thuê Bao Công Nghệ)* | Nam 28 tuổi, thâm niên 3 tháng, HĐ tháng, Cáp quang $95/tháng, Séc điện tử, không TechSupport. | 🚨 **78.4% (Cực kỳ nguy hiểm)** | Tặng ngay 3 tháng gói bảo vệ Fiber Shield Bundle + Khuyến mãi $5 chuyển sang Auto-Pay. |
+            | **Persona 2: David**<br>*(Hộ Gia Đình Nhạy Cảm Giá)* | Nam 45 tuổi, thâm niên 14 tháng, HĐ 1 năm sắp hết hạn, Internet DSL + TV $65/tháng. | ⚠️ **52.1% (Rủi ro trung bình)** | CSKH gọi trước 30 ngày, tặng ưu đãi chiết khấu 10% khi gia hạn hợp đồng 1-2 năm. |
+            | **Persona 3: Sarah**<br>*(Thuê Bao Ổn Định Tiềm Năng)* | Nữ 35 tuổi, thâm niên 36 tháng, HĐ 1 năm gia hạn lần 3, Cáp quang có bảo mật $80/tháng, Thẻ tín dụng Auto. | 🛡️ **12.8% (An toàn)** | Chăm sóc khách hàng tự động, giới thiệu dịch vụ giải trí nâng cao. |
+            | **Persona 4: Robert**<br>*(Thuê Bao Trung Thành VIP)* | Nam 62 tuổi, thâm niên 68 tháng, HĐ 2 năm, Thoại + DSL $55/tháng, Ngân hàng tự động. | 💎 **2.3% (Cực kỳ trung thành)** | Tri ân khách hàng thân thiết, tặng điểm thưởng VIP và gói bảo hiểm thiết bị miễn phí. |
+            """)
 
         with tab_code_lr:
             st.markdown(r"""

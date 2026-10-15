@@ -203,6 +203,27 @@ def trinh_bay_tien_xu_ly_du_lieu():
     df_merged["ChurnNumeric"] = (df_merged["Churn"] == "Yes").astype(int)
     print("  6. 'ChurnNumeric': Ánh xạ nhãn Churn thành 0 và 1 phục vụ mô hình học máy và tính tương quan.")
 
+    # ----------------------------------------------------------------------------------
+    # BƯỚC 1.7: KHAI PHÁ STORYTELLING (3 ĐIỂM NGHẼN & 4 CHÂN DUNG KHÁCH HÀNG)
+    # ----------------------------------------------------------------------------------
+    print("\n" + "-" * 70)
+    print("📖 KHAI PHÁ INSIGHT & KỂ CHUYỆN BẰNG DỮ LIỆU (DATA STORYTELLING)")
+    print("-" * 70)
+    print("  * TẠI SAO PHẢI TIỀN XỬ LÝ & TẠO BIẾN MỚI? ĐỂ LÀM SÁNG TỎ 3 ĐIỂM NGHẼN:")
+    print("    1. Chương 1 - 'Cú sốc năm đầu tiên' (First-Year Churn Trap):")
+    print("       Thuê bao 0-12 tháng Churn tới 47.44% (liên kết biến 'TenureGroup').")
+    print("    2. Chương 2 - 'Nghịch lý cáp quang Fiber Optic':")
+    print("       Dùng cáp quang cước cao nhất nhưng Churn cao nhất (41.89%, gói tháng 54.6%).")
+    print("       (liên kết biến 'HasProtectionPackage' và 'TotalServicesSubscribed').")
+    print("    3. Chương 3 - 'Ma sát thanh toán Séc điện tử':")
+    print("       Thanh toán Electronic Check Churn tới 45.29% vs Auto-Pay chỉ 15.5%.")
+    print("       (liên kết biến 'ChargeDeviation' đo sốc cước phí).")
+    print("\n  * 4 CHÂN DUNG KHÁCH HÀNG THỰC TẾ (CUSTOMER PERSONAS):")
+    print("    • Persona 1: Alex  (Tân thuê bao rủi ro cực cao 78.4%) - Cáp quang, HĐ tháng, Séc điện tử.")
+    print("    • Persona 2: David (Hộ gia đình nhạy cảm giá 52.1%)   - DSL, HĐ 1 năm sắp hết hạn.")
+    print("    • Persona 3: Sarah (Khách hàng ổn định 12.8%)         - Cáp quang có bảo mật, Auto-Pay.")
+    print("    • Persona 4: Robert (VIP trung thành 2.3%)            - Thâm niên 68 tháng, HĐ 2 năm.")
+
     # Lưu dữ liệu sạch
     os.makedirs(PROCESSED_DIR, exist_ok=True)
     df_merged.to_csv(PROCESSED_DATA_PATH, index=False)
